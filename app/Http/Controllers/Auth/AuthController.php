@@ -99,6 +99,17 @@ class AuthController extends Controller
 
     }
 
+    public function logout() 
+    {
+        auth()->logout();
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'user successfully logged out', 
+        ]);
+    }
+
     public function createNewToken($token)
     {
         return response()->json([
