@@ -15,6 +15,14 @@ use App\Http\Controllers\Auth\AuthController;
 |
 */
 
+Route::fallback(function () {
+    return response()->json([
+        'success' => false,
+        'code' => 404,
+        'message' => 'Not Found', 
+    ]);
+});
+
 Route::middleware('api')->group(function (){
     Route::prefix('v1')->group(function (){
         Route::prefix('users')->group(function (){
@@ -22,8 +30,12 @@ Route::middleware('api')->group(function (){
             Route::post('login', [AuthController::class, 'login']);
             Route::post('logout', [AuthController::class, 'logout']);
             Route::post('refreshToken', [AuthController::class, 'refresh']);
-            Route::get('me', [AuthController::class, 'userProfile']);
-            Route::get('editProfile', [AuthController::class, 'editProfile']);
+
+            Route::prefix('me')->group(function () {
+                Route::get('profile', [AuthController::class, 'userProfile']);
+                Route::put('editProfile', [AuthController::class, 'editProfile']);
+                Route::put('updateUserPassword', [AuthController::class, 'updateUserPassword']);
+            });
         });
     });
 });

@@ -149,6 +149,43 @@ class AuthController extends Controller
             'message' => 'Success edit profile', 
             'data' => $user
         ]);
+    }
+
+    public function updateUserPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'new_password' => 'string|min:6',
+            'confirm_password' => 'string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $new_password = $request->new_password;
+        $confirm_password = $request->confirm_password;
+
+        if ($new_password !== $confirm_password) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'password do not match', 
+                'data' => null
+            ]);
+        }else{
+            $user = auth()->user();
+            $user->password = bcrypt($request->new_password);
+
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success update password', 
+                'data' => $user
+            ]);
+        }
+
 
     }
 
