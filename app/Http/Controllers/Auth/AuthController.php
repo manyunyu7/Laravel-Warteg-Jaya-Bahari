@@ -185,8 +185,6 @@ class AuthController extends Controller
                 'data' => $user
             ]);
         }
-
-
     }
 
     public function createNewToken($token)
