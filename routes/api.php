@@ -23,6 +23,7 @@ Route::middleware('api')->group(function (){
             Route::post('logout', [AuthController::class, 'logout']);
             Route::post('refreshToken', [AuthController::class, 'refresh']);
             Route::get('me', [AuthController::class, 'userProfile']);
+            Route::get('editProfile', [AuthController::class, 'editProfile']);
         });
     });
 });

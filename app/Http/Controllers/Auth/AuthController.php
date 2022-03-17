@@ -125,6 +125,33 @@ class AuthController extends Controller
         ]);
     }
 
+    public function editProfile( Request $request)
+    {
+
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|between:2,100',
+            'email' => 'string|email|max:100|unique:users',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = auth()->user();
+            
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success edit profile', 
+            'data' => $user
+        ]);
+
+    }
+
     public function createNewToken($token)
     {
         return response()->json([
