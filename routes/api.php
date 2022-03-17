@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\MasjidController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,14 @@ Route::middleware('api')->group(function (){
                 Route::put('editProfile', [AuthController::class, 'editProfile']);
                 Route::put('updateUserPassword', [AuthController::class, 'updateUserPassword']);
             });
+        });
+
+        Route::prefix('masjids')->group(function(){
+            Route::post('create', [MasjidController::class, 'store']);
+            Route::get('showAll', [MasjidController::class, 'show']);
+            Route::get('{id}', [MasjidController::class, 'index']);
+            Route::put('edit', [MasjidController::class, 'edit']);
+            Route::delete('delete', [MasjidController::class, 'destroy']);
         });
     });
 });
