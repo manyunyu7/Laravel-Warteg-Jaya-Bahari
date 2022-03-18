@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Main\MasjidController;
-
+use App\Http\Controllers\Main\PrayerTimeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,5 +46,7 @@ Route::middleware('api')->group(function (){
             Route::post('edit/{id}', [MasjidController::class, 'update']);
             Route::delete('delete', [MasjidController::class, 'destroy']);
         });
+
+        Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
     });
 });
