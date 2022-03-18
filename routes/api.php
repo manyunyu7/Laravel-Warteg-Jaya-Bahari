@@ -43,7 +43,7 @@ Route::middleware('api')->group(function (){
             Route::post('create', [MasjidController::class, 'store']);
             Route::get('showAll', [MasjidController::class, 'show']);
             Route::get('{id}', [MasjidController::class, 'index']);
-            Route::put('edit', [MasjidController::class, 'edit']);
+            Route::post('edit/{id}', [MasjidController::class, 'update']);
             Route::delete('delete', [MasjidController::class, 'destroy']);
         });
     });

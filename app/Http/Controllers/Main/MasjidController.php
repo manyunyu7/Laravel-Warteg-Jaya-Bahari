@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Models\Masjid;
 use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class MasjidController extends Controller
@@ -53,7 +54,7 @@ class MasjidController extends Controller
                     return response()->json([
                         'success' => true,
                         'code' => 200,
-                        'message' => 'success registered user', 
+                        'message' => 'success store masjid', 
                         'data' => $masjid
                     ]);
                 }
@@ -75,7 +76,7 @@ class MasjidController extends Controller
                     return response()->json([
                         'success' => true,
                         'code' => 200,
-                        'message' => 'success registered user', 
+                        'message' => 'success store masjid', 
                         'data' => $masjid
                     ]);
                 }
@@ -120,6 +121,66 @@ class MasjidController extends Controller
                 'code' => 200,
                 'message' => 'success get detail masjid', 
                 'data' => $masjid
+            ]);
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'name' => 'string|between:6,100',
+            'lat' => 'between:-90,90',
+            'long' => 'between:-180,180',
+            'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+
+        $masjid = Masjid::findOrFail($id);
+        $masjid->name = $request->name;
+        $masjid->lat = $request->lat;
+        $masjid->long = $request->long;
+
+        if ($request->hasFile('img')) {
+            $path = public_path('uploads/img/masjid/').$masjid->img;
+
+            if (file_exists($path)) {
+                try {
+                    unlink($path);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $e
+                    ]);
+                }
+            }
+
+            $file = $request->file('img');
+            $ekstension = $file->getClientOriginalExtension();
+            $name = time().'_'.$request->name.'.'.$ekstension;
+            $request->img->move(public_path('uploads/img/masjids'), $name);
+
+            $masjid->img = $name;
+        }
+
+        if ($masjid->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update masjid', 
+                'data' => $masjid
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed update masjid', 
+                'data' => null
             ]);
         }
     }

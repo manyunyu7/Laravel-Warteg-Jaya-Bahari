@@ -10,4 +10,9 @@ class Masjid extends Model
     use HasFactory;
 
     protected $fillable = ['name','lat','long','img'];
+
+    public function ratings()
+    {
+        $this->hasMany(MasjidReview::class);
+    }
 }
