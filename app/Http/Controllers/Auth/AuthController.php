@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -141,6 +142,30 @@ class AuthController extends Controller
             
         $user->name = $request->name;
         $user->email = $request->email;
+
+        if ($request->hasFile('img')) {
+            $path = public_path('uploads/img/users/').$user->img;
+
+            if (file_exists($path)) {
+                try {
+                    unlink($path);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $e
+                    ]);
+                }
+            }
+
+            $file = $request->file('img');
+            $ekstension = $file->getClientOriginalExtension();
+            $name = time().'_'.Auth::user()->name.'.'.$ekstension;
+            $request->img->move(public_path('uploads/img/users'), $name);
+
+            $user->photo = $name;
+        }
+
         $user->save();
 
         return response()->json([
