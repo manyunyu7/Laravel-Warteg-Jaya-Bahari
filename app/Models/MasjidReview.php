@@ -20,4 +20,9 @@ class MasjidReview extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function rating()
+    {
+        return $this->belongsTo(Rating::class);
+    }
 }
