@@ -187,6 +187,48 @@ class AuthController extends Controller
         }
     }
 
+    public function uploadProfilePicture(Request $request)
+    {
+        
+
+        $validator = Validator::make($request->all(),
+        [
+            'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
+        ],
+        [
+            'img.image' => 'image must be a valid image'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $userName = Auth::user()->name;
+
+        $file = $request->file('img');
+        $ekstension = $file->getClientOriginalExtension();
+        $name = time() .'_'.$userName.'.'.$ekstension;
+        $request->img->move(public_path('uploads/img/users'), $name);
+        $user = auth()->user();
+        $user->photo = $name;
+
+        if ($user->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success upload photo', 
+                'data' => $user
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed upload photo', 
+                'data' => $user
+            ]);
+        }
+    }
+
     public function createNewToken($token)
     {
         return response()->json([

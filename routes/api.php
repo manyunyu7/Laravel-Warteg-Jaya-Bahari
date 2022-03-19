@@ -38,6 +38,7 @@ Route::middleware('api')->group(function (){
                 Route::get('profile', [AuthController::class, 'userProfile']);
                 Route::put('editProfile', [AuthController::class, 'editProfile']);
                 Route::put('updateUserPassword', [AuthController::class, 'updateUserPassword']);
+                Route::post('uploadPhoto', [AuthController::class, 'uploadProfilePicture']);
             });
         });
 
