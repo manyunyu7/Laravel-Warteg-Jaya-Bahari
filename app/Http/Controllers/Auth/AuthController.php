@@ -144,7 +144,7 @@ class AuthController extends Controller
         $user->email = $request->email;
 
         if ($request->hasFile('img')) {
-            $path = public_path('uploads/img/users/').$user->img;
+            $path = public_path('uploads/img/users/').$request->img;
 
             if (file_exists($path)) {
                 try {
