@@ -58,6 +58,7 @@ Route::middleware('api')->group(function (){
             Route::get('getAll', [MasjidReviewController::class, 'index']);
             Route::get('reviewDetail/{reviewId}', [MasjidReviewController::class, 'show']);
             Route::post('updateReview/{reviewId}', [MasjidReviewController::class, 'update']);
+            Route::delete('deleteReview/{reviewId}', [MasjidReviewController::class, 'destroy']);
         });
     });
 });

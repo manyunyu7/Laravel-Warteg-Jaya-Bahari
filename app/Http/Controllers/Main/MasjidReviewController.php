@@ -228,8 +228,46 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($reviewId)
     {
-        //
+        $review = MasjidReview::find($reviewId);
+
+        if ($review == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => "masjid review not found"
+            ]);
+        }
+
+        $path = public_path('uploads/img/masjid_reviews/').$review->img;
+
+        if (file_exists($path)) {
+            try {
+                unlink($path);
+            } catch (Throwable $e) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        if ($review->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success delete review masjid', 
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed delete review masjid', 
+            ]);
+        }
+
+        
     }
 }
