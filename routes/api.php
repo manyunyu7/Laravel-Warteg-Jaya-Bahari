@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Main\MasjidController;
+use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\QiblaController;
 
@@ -52,5 +53,9 @@ Route::middleware('api')->group(function (){
 
         Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
         Route::get('qibla/{lat}/{long}', [QiblaController::class, 'getQibla']);
+
+        Route::prefix('reviewMasjid')->group(function (){
+            Route::post('store/{idMasjid}', [MasjidReviewController::class, 'store']);
+        });
     });
 });
