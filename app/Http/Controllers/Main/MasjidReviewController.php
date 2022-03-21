@@ -18,7 +18,23 @@ class MasjidReviewController extends Controller
      */
     public function index()
     {
-        //
+        $review = MasjidReview::all();
+
+        if ($review->count() > 0) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success add review masjid', 
+                'data' => $review
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'data not found', 
+                'data' => null
+            ]);
+        }
     }
 
     /**

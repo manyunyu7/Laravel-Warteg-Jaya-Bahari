@@ -23,7 +23,7 @@ Route::fallback(function () {
     return response()->json([
         'success' => false,
         'code' => 404,
-        'message' => 'Not Found', 
+        'message' => 'Route Not Found', 
     ]);
 });
 
@@ -56,6 +56,7 @@ Route::middleware('api')->group(function (){
 
         Route::prefix('reviewMasjid')->group(function (){
             Route::post('store/{idMasjid}', [MasjidReviewController::class, 'store']);
+            Route::get('getAll', [MasjidReviewController::class, 'index']);
         });
     });
 });
