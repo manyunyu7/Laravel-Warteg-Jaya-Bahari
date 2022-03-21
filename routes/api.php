@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Main\MasjidController;
@@ -55,8 +54,9 @@ Route::middleware('api')->group(function (){
         Route::get('qibla/{lat}/{long}', [QiblaController::class, 'getQibla']);
 
         Route::prefix('reviewMasjid')->group(function (){
-            Route::post('store/{idMasjid}', [MasjidReviewController::class, 'store']);
+            Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
             Route::get('getAll', [MasjidReviewController::class, 'index']);
+            Route::get('reviewDetail/{reviewId}', [MasjidReviewController::class, 'show']);
         });
     });
 });

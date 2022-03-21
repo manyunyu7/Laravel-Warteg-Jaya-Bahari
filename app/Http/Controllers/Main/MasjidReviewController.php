@@ -18,14 +18,14 @@ class MasjidReviewController extends Controller
      */
     public function index()
     {
-        $review = MasjidReview::all();
+        $reviews = MasjidReview::all();
 
-        if ($review->count() > 0) {
+        if ($reviews->count() > 0) {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success add review masjid', 
-                'data' => $review
+                'data' => $reviews
             ]);
         }else{
             return response()->json([
@@ -53,7 +53,7 @@ class MasjidReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $idMasjid)
+    public function store(Request $request, $masjidId)
     {
         $validator = Validator::make($request->all(), 
             [
@@ -73,7 +73,7 @@ class MasjidReviewController extends Controller
 
             $review = new MasjidReview();
 
-            $review->masjid_id = $idMasjid;
+            $review->masjid_id = $masjidId;
             $review->user_id = Auth::id();
             $review->rating_id = $request->rating_id;
             $review->comment = $request->comment;
@@ -111,9 +111,25 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($reviewId)
     {
-        
+        $review = MasjidReview::findOrFail($reviewId);
+
+        if (! $review->exists()) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'review not found', 
+                'data' => null
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get data review', 
+                'data' => $review
+            ]);
+        }
     }
 
     /**
@@ -134,9 +150,9 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $reviewId)
     {
-        //
+        
     }
 
     /**
