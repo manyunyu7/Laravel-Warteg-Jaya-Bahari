@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class MasjidReviewController extends Controller
 {
@@ -152,7 +153,73 @@ class MasjidReviewController extends Controller
      */
     public function update(Request $request, $reviewId)
     {
-        
+        $validator = Validator::make($request->all(), 
+        [
+            'rating_id' => 'integer', Rule::in([1,2]),
+            'comment' => 'string|min:3|max:1000',
+            'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
+        ],
+        [
+            'rating_id.required' => 'rating_id cannot be empty',
+            'comment.required' => 'comment cannot be empty',
+            'img.image' => 'Image must be and image',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $review = MasjidReview::find($reviewId);
+
+        if ($review == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => "masjid review not found"
+            ]);
+        }
+
+        $review->rating_id = $request->rating_id;
+        $review->comment = $request->comment;
+
+        if ($request->hasFile('img')) {
+            $path = public_path('uploads/img/masjid_reviews/').$review->img;
+
+            if (file_exists($path)) {
+                try {
+                    unlink($path);
+                } catch (Throwable $e) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            $file = $request->file('img');
+            $ekstension = $file->getClientOriginalExtension();
+            $name = time().'_masjidReview'.'.'.$ekstension;
+            $request->img->move(public_path('uploads/img/masjid_reviews'), $name);
+
+            $review->img = $name;
+        }
+
+        if ($review->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update review masjid', 
+                'data' => $review
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed update review masjid', 
+                'data' => null
+            ]);
+        }
     }
 
     /**
