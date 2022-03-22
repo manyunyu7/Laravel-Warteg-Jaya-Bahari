@@ -6,6 +6,7 @@ use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
+use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\QiblaController;
 
 /*
@@ -68,6 +69,14 @@ Route::middleware('api')->group(function (){
             Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
             Route::put('update/{keywordId}', [KeywordController::class, 'update']);
             Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
+        });
+
+        Route::prefix('products')->group(function (){
+            Route::post('store', [ProductController::class, 'store']);
+            Route::get('all', [ProductController::class, 'index']);
+            Route::get('detail/{productId}', [ProductController::class, 'show']);
+            Route::post('update/{productId}', [ProductController::class, 'update']);
+            Route::delete('delete/{productId}', [ProductController::class, 'destroy']);
         });
     });
 });
