@@ -96,7 +96,7 @@ class KeywordController extends Controller
     {
         $keyword = Keyword::find($keywordId);
 
-        if (! $keyword->exists()) {
+        if ($keyword == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
@@ -147,7 +147,7 @@ class KeywordController extends Controller
 
         $keyword = Keyword::find($keywordId);
 
-        if (!$keyword) {
+        if ($keyword == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
@@ -187,7 +187,7 @@ class KeywordController extends Controller
     {
         $keyword = Keyword::find($keywordId);
 
-        if (!$keyword) {
+        if ($keyword == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
