@@ -11,6 +11,8 @@ class Keyword extends Model
 
     protected $fillable = ['id','name'];
 
+    public $timestamps = false;
+
     public function products()
     {
         return $this->belongsToMany(Product::class);

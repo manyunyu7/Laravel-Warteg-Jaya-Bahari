@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
@@ -59,6 +60,14 @@ Route::middleware('api')->group(function (){
             Route::get('reviewDetail/{reviewId}', [MasjidReviewController::class, 'show']);
             Route::post('updateReview/{reviewId}', [MasjidReviewController::class, 'update']);
             Route::delete('deleteReview/{reviewId}', [MasjidReviewController::class, 'destroy']);
+        });
+
+        Route::prefix('keyword')->group(function (){
+            Route::post('store', [KeywordController::class, 'store']);
+            Route::get('all', [KeywordController::class, 'index']);
+            Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
+            Route::put('update/{keywordId}', [KeywordController::class, 'update']);
+            Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
         });
     });
 });
