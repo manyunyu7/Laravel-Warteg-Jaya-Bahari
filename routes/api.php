@@ -52,7 +52,7 @@ Route::middleware('api')->group(function (){
             Route::delete('delete', [MasjidController::class, 'destroy']);
         });
 
-        Route::get('qibla/{lat}/{long}', [QiblaController::class, 'getQibla']);
+        Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
 
         Route::prefix('reviewMasjid')->group(function (){
             Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);

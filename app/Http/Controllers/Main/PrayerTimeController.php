@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
-class QiblaController extends Controller
+class PrayerTimeController extends Controller
 {
-    public function getQibla($lat,$long) 
+    public function getPrayTime($city)
     {
         $client = new Client();
-        $uri = "http://api.aladhan.com/v1/qibla/".$lat."/".$long;
+        $uri = "https://api.pray.zone/v2/times/today.json?city=".$city;
 
         $response = $client->request('GET', $uri, [
             'verify' => false,
