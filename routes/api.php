@@ -53,7 +53,6 @@ Route::middleware('api')->group(function (){
         });
 
         Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
-        Route::get('qibla/{lat}/{long}', [QiblaController::class, 'getQibla']);
 
         Route::prefix('reviewMasjid')->group(function (){
             Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
