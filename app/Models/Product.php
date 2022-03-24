@@ -9,10 +9,16 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','keyword_id', 'name', 'description', 'producent', 'img'];
+    protected $fillable = ['id','certification_id', 'name', 'img',];
 
-    public function keywords()
+    public function certification()
     {
-        return $this->belongsToMany(Keyword::class);
+        return $this->hasOne(Certification::class);
     }
+
+    public function information()
+    {
+        return $this->belongsto(ProductInformation::class);
+    }
+
 }
