@@ -25,4 +25,9 @@ class MasjidReview extends Model
     {
         return $this->belongsTo(Rating::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(MasjidReviewImage::class);
+    }
 }

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RolesSeeder::class,
             RatingSeeder::class,
             KeywordSeeder::class,
+            CertificationSeeder::class,
         ]);
     }
 }

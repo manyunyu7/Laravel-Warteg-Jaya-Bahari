@@ -26,6 +26,7 @@ class AuthController extends Controller
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
                 'confirm_password' => 'required|string|min:6',
+                'phone_number' => 'required|string|min:11'
             ],
             [
                 'name.required' => 'name cannot be empty',
@@ -33,6 +34,7 @@ class AuthController extends Controller
                 'roles_id.required' => 'roles cannot be empty',
                 'password.required' => 'password cannot be empty',
                 'confirm_password.required' => 'confirm_password cannot be empty',
+                'phone_number.required' => 'phone number cannot be empty',
             ]
         );
 
@@ -56,6 +58,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'roles_id' => $request->roles_id,
             'email' => $request->email,
+            'phone_number' => $request->phone_number,
             'password' => bcrypt($request->password)
         ]);
 
