@@ -56,17 +56,15 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(),
         [
-            "keyword_id" => "required|integer",
+            "certification_id" => "required|integer",
             "name" => "required|string|between:3,100",
-            "description" => "required|string|min:3|max:1000",
-            "producent" => "required|string|between:6,100",
+            "code" => "required|string|min:3|max:1000",
             'img' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
-            "keyword_id.integer" => "keyword_id must be an number",
+            "certification_id.integer" => "certification_id must be an number",
             "name.required" => "name cannot be empty",
-            "description.required" => "description cannot be empty",
-            "producent.required" => "producent cannot be empty",
+            "code.required" => "code cannot be empty",
             "img.image" => "Image must be an image",
         ]);
 
@@ -75,10 +73,9 @@ class ProductController extends Controller
         }
 
         $product = new Product();
-        $product->keyword_id = $request->keyword_id;
+        $product->certification_id = $request->certification_id;
         $product->name = $request->name;
-        $product->description = $request->description;
-        $product->producent = $request->producent;
+        $product->code = $request->code;
 
         $file = $request->file('img');
         $ekstension = $file->getClientOriginalExtension();
@@ -154,17 +151,15 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(),
         [
-            "keyword_id" => "integer",
+            "certification_id" => "integer",
             "name" => "string|between:3,100",
-            "description" => "string|min:3|max:1000",
-            "producent" => "string|between:6,100",
+            "code" => "string|min:3|max:1000",
             'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
-            "keyword_id.integer" => "keyword_id must be an number",
-            "name.string" => "name must be an text",
-            "description.string" => "description must be an text",
-            "producent.string" => "producent must be an text",
+            "certification_id.integer" => "certification_id must be an number",
+            "name.string" => "name must be an string",
+            "code.required" => "code must be an string",
             "img.image" => "Image must be an image",
         ]);
 
@@ -183,10 +178,9 @@ class ProductController extends Controller
             ]);
         }
 
-        $product->keyword_id = $request->keyword_id;
+        $product->certification_id = $request->certification_id;
         $product->name = $request->name;
-        $product->description = $request->description;
-        $product->producent = $request->producent;
+        $product->code = $request->code;
 
         if ($request->hasFile('img')) {
             $path = public_path('uploads/img/products/').$product->img;
