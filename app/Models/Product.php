@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','certification_id', 'name', 'img',];
+    protected $fillable = ['id','certification_id', 'name','code', 'img',];
 
     public function certification()
     {

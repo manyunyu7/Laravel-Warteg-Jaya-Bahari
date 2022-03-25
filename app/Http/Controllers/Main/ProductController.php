@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
@@ -56,7 +57,7 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(),
         [
-            "certification_id" => "required|integer",
+            "certification_id" => "string", Rule::in([1,2,3,4]),
             "name" => "required|string|between:3,100",
             "code" => "required|string|min:3|max:1000",
             'img' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
