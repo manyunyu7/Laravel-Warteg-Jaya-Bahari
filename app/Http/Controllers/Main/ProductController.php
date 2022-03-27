@@ -59,7 +59,7 @@ class ProductController extends Controller
         [
             "certification_id" => "string", Rule::in([1,2,3,4]),
             "name" => "required|string|between:3,100",
-            "code" => "required|string|min:3|max:1000",
+            "code" => "required|string|min:3|max:100s0",
             'img' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
