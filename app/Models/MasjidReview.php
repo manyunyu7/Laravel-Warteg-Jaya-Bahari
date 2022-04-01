@@ -9,7 +9,7 @@ class MasjidReview extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'masjid_id', 'rating', 'comment'];
+    protected $fillable = ['user_id', 'masjid_id', 'rating_id', 'comment'];
 
     public function masjid()
     {

@@ -9,6 +9,8 @@ class MasjidReviewImage extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['masjid_review_id', 'path',];
+
     public function masjidReview()
     {
         return $this->belongsTo(MasjidReview::class);
