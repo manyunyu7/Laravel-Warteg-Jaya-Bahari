@@ -10,6 +10,11 @@ class Masjid extends Model
     use HasFactory;
 
     protected $fillable = ['name','lat','long','img'];
+    protected $casts = [
+        'operating_start' => 'hh:mm',
+        'operating_end' => 'hh:mm',
+        'facilities' => 'array',
+    ];
 
     public function reviews()
     {
