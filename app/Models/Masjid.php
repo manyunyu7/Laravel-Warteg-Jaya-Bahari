@@ -15,4 +15,9 @@ class Masjid extends Model
     {
         $this->hasMany(MasjidReview::class);
     }
+
+    public function type()
+    {
+        $this->belongsTo(MasjidType::class);
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropColumnCertificationIdOnProductsTable extends Migration
+class AddingTypeIdColumMasjidsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class DropColumnCertificationIdOnProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('certification_id');
+        Schema::table('masjids', function (Blueprint $table) {
+            $table->unsignedBigInteger('type_id')->after('name');
+            $table->foreign('type_id')->references('id')->on('masjid_types');
         });
     }
 
@@ -25,7 +26,7 @@ class DropColumnCertificationIdOnProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
+        Schema::table('masjids', function (Blueprint $table) {
             //
         });
     }

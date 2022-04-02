@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RatingSeeder::class,
             KeywordSeeder::class,
             CertificationSeeder::class,
+            MasjidTypeSeeder::class,
         ]);
     }
 }

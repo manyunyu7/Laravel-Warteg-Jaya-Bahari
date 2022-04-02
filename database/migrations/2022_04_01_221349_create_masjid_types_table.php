@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCerficitaionsTable extends Migration
+class CreateMasjidTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCerficitaionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('certifications', function (Blueprint $table) {
+        Schema::create('masjid_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
         });
@@ -26,6 +26,6 @@ class CreateCerficitaionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('certifications');
+        Schema::dropIfExists('masjid_types');
     }
 }
