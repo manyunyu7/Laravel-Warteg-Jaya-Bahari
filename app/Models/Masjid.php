@@ -9,10 +9,8 @@ class Masjid extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','lat','long','img'];
+    protected $fillable = ['name','lat','long','img','type_id', 'facilities', 'phone', 'operating_start', 'operating_end', 'address'];
     protected $casts = [
-        'operating_start' => 'hh:mm',
-        'operating_end' => 'hh:mm',
         'facilities' => 'array',
     ];
 
