@@ -7,6 +7,7 @@ use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
+use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\QiblaController;
 
 /*
@@ -60,6 +61,7 @@ Route::middleware('api')->group(function (){
             Route::get('reviewDetail/{reviewId}', [MasjidReviewController::class, 'show']);
             Route::post('updateReview/{reviewId}', [MasjidReviewController::class, 'update']);
             Route::delete('deleteReview/{reviewId}', [MasjidReviewController::class, 'destroy']);
+            Route::post('uploadImage/{reviewId}', [MasjidReviewController::class, 'uploadImage']);
         });
 
         Route::prefix('keyword')->group(function (){
@@ -76,6 +78,14 @@ Route::middleware('api')->group(function (){
             Route::get('detail/{productId}', [ProductController::class, 'show']);
             Route::post('update/{productId}', [ProductController::class, 'update']);
             Route::delete('delete/{productId}', [ProductController::class, 'destroy']);
+        });
+
+        Route::prefix('productInformation')->group(function(){
+            Route::post('store', [ProductInformationController::class,'store' ]);
+            Route::get('all', [ProductInformationController::class, 'index']);
+            Route::get('detail/{informationId}', [ProductInformationController::class, 'show']);
+            Route::put('update/{informationId}', [ProductInformationController::class, 'update']);
+            Route::delete('delete/{informationId}', [ProductInformationController::class, 'destroy']);
         });
     });
 });

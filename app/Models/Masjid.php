@@ -9,10 +9,18 @@ class Masjid extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','lat','long','img'];
+    protected $fillable = ['name','lat','long','img','type_id', 'facilities', 'phone', 'operating_start', 'operating_end', 'address'];
+    protected $casts = [
+        'facilities' => 'array',
+    ];
 
     public function reviews()
     {
         $this->hasMany(MasjidReview::class);
+    }
+
+    public function type()
+    {
+        $this->belongsTo(MasjidType::class);
     }
 }

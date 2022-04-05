@@ -9,7 +9,7 @@ class MasjidReview extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'masjid_id', 'rating', 'comment', 'img'];
+    protected $fillable = ['user_id', 'masjid_id', 'rating_id', 'comment'];
 
     public function masjid()
     {
@@ -24,5 +24,10 @@ class MasjidReview extends Model
     public function rating()
     {
         return $this->belongsTo(Rating::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(MasjidReviewImage::class);
     }
 }
