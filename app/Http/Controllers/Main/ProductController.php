@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class ProductController extends Controller
@@ -58,12 +58,14 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(),
         [
             "certification_id" => "string", Rule::in([1,2,3,4]),
+            "category_id" => "required|string", Rule::in([1,2,3,4,5,6,7,8,9,10,11,12]),
             "name" => "required|string|between:3,100",
-            "code" => "required|string|min:3|max:100s0",
+            "code" => "required|string|min:3|max:100",
             'img' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
             "certification_id.integer" => "certification_id must be an number",
+            "category_id.integer" => "category_id cannot be empty",
             "name.required" => "name cannot be empty",
             "code.required" => "code cannot be empty",
             "img.image" => "Image must be an image",
@@ -75,6 +77,7 @@ class ProductController extends Controller
 
         $product = new Product();
         $product->certification_id = $request->certification_id;
+        $product->category_id = $request->category_id;
         $product->name = $request->name;
         $product->code = $request->code;
 
@@ -153,12 +156,14 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(),
         [
             "certification_id" => "integer",
+            "category_id" => "integer",
             "name" => "string|between:3,100",
             "code" => "string|min:3|max:1000",
             'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
             "certification_id.integer" => "certification_id must be an number",
+            "category_id" => "category_id must be an number",
             "name.string" => "name must be an string",
             "code.required" => "code must be an string",
             "img.image" => "Image must be an image",
@@ -180,6 +185,7 @@ class ProductController extends Controller
         }
 
         $product->certification_id = $request->certification_id;
+        $product->category_id = $request->category_id;
         $product->name = $request->name;
         $product->code = $request->code;
 
