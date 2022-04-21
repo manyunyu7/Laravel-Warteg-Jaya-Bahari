@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\ForumController;
 use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
-use App\Http\Controllers\Main\QiblaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +86,14 @@ Route::middleware('api')->group(function (){
             Route::get('detail/{informationId}', [ProductInformationController::class, 'show']);
             Route::put('update/{informationId}', [ProductInformationController::class, 'update']);
             Route::delete('delete/{informationId}', [ProductInformationController::class, 'destroy']);
+        });
+
+        Route::prefix('forum')->group(function (){
+            Route::post('store', [ForumController::class, 'store']);
+            Route::get('all', [ForumController::class, 'index']);
+            Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
+            Route::put('update/{forumId}', [ForumController::class, 'update']);
+            Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
         });
     });
 });
