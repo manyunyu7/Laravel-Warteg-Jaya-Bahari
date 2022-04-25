@@ -91,21 +91,19 @@ Route::middleware('api')->group(function (){
         });
 
         Route::prefix('forums')->group(function (){
-            Route::prefix('posts')->group(function (){
-                Route::post('store', [ForumController::class, 'store']);
-                Route::get('all', [ForumController::class, 'index']);
-                Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
-                Route::put('update/{forumId}', [ForumController::class, 'update']);
-                Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
-            });
-            
-            Route::prefix('comments')->group(function (){
-                Route::post('store', [ForumCommentController::class, 'store']);
-                Route::get('all', [ForumCommentController::class, 'index']);
-                Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
-                Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
-                Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
-            });
+            Route::post('store', [ForumController::class, 'store']);
+            Route::get('all', [ForumController::class, 'index']);
+            Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
+            Route::put('update/{forumId}', [ForumController::class, 'update']);
+            Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
+        });
+
+        Route::prefix('comments')->group(function (){
+            Route::post('store', [ForumCommentController::class, 'store']);
+            Route::get('all', [ForumCommentController::class, 'index']);
+            Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
+            Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
+            Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
         });
     });
 });
