@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             CertificationSeeder::class,
             MasjidTypeSeeder::class,
             ProductCategorySeeder::class,
-            ForumCategory::class,
+            ForumCategorySeeder::class,
         ]);
     }
 }
