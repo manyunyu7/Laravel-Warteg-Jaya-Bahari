@@ -63,6 +63,21 @@ class User extends Authenticatable implements JWTSubject
 
     public function masjidReviews()
     {
-        $this->hasMany(MasjidReview::class);
+        return $this->hasMany(MasjidReview::class);
+    }
+
+    public function forums()
+    {
+        return $this->hasMany(Forum::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ForumComment::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(ForumLike::class);
     }
 }

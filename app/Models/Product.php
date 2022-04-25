@@ -21,4 +21,8 @@ class Product extends Model
         return $this->belongsto(ProductInformation::class);
     }
 
+    public function category()
+    {
+        return $this->belongsto(ProductCategory::class);
+    }
 }

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             KeywordSeeder::class,
             CertificationSeeder::class,
             MasjidTypeSeeder::class,
+            ProductCategorySeeder::class,
+            ForumCategorySeeder::class,
         ]);
     }
 }
