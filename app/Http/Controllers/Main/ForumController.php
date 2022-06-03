@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Forum;
+use App\Models\ForumLike;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -204,6 +205,46 @@ class ForumController extends Controller
                     'message' => 'success delete forum',
                 ]);
             }
+        }
+    }
+
+    public function likeForum($forumId)
+    {
+        $forum = Forum::find($forumId);
+
+        if ($forum == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'forum not found',
+            ]);
+        }
+
+        
+        if (ForumLike::where('user_id', Auth::user()->id)->exists() && ForumLike::where('forum_id', $forumId)->exists()) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'you have already like forum',
+            ]);
+        }
+
+        $forumLike = new ForumLike();
+        $forumLike->user_id = Auth::user()->id;
+        $forumLike->forum_id = $forumId;
+
+        if ($forumLike->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success like forum',
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed like forum',
+            ]);
         }
     }
 }

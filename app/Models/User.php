@@ -80,4 +80,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(ForumLike::class);
     }
+
+    public function commentLikes()
+    {
+        return $this->hasMany(CommentLike::class);
+    }
 }

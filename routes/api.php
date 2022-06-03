@@ -96,6 +96,7 @@ Route::middleware('api')->group(function (){
             Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
             Route::put('update/{forumId}', [ForumController::class, 'update']);
             Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
+            Route::post('like/{forumId}', [ForumController::class, 'likeForum']);
         });
 
         Route::prefix('comments')->group(function (){
@@ -104,6 +105,7 @@ Route::middleware('api')->group(function (){
             Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
             Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
             Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
+            Route::post('like/{commentId}', [ForumCommentController::class, 'likeComment']);
         });
     });
 });
