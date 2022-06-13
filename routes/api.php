@@ -10,6 +10,7 @@ use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
+use App\Http\Controllers\Main\RestoranController;
 use App\Models\ForumComment;
 
 /*
@@ -106,6 +107,12 @@ Route::middleware('api')->group(function (){
             Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
             Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
             Route::post('like/{commentId}', [ForumCommentController::class, 'likeComment']);
+        });
+
+        Route::prefix('restoran')->group(function(){
+            Route::post('store', [RestoranController::class, 'store']);
+            Route::get('all', [RestoranController::class, 'index']);
+            Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
         });
     });
 });
