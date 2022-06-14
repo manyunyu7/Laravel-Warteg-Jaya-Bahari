@@ -112,7 +112,11 @@ Route::middleware('api')->group(function (){
         Route::prefix('restoran')->group(function(){
             Route::post('store', [RestoranController::class, 'store']);
             Route::get('all', [RestoranController::class, 'index']);
+            Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
+            Route::get('all/byCertification', [RestoranController::class, 'sortByCertification']);
             Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
+            Route::post('update/{restoId}', [RestoranController::class, 'update']);
+            Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
         });
     });
 });
