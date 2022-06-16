@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\FavoriteController;
 use App\Http\Controllers\Main\ForumCommentController;
 use App\Http\Controllers\Main\ForumController;
 use App\Http\Controllers\Main\KeywordController;
@@ -111,12 +112,20 @@ Route::middleware('api')->group(function (){
 
         Route::prefix('restoran')->group(function(){
             Route::post('store', [RestoranController::class, 'store']);
+            Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
             Route::get('all', [RestoranController::class, 'index']);
+            Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
             Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
             Route::get('all/byCertification', [RestoranController::class, 'sortByCertification']);
             Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
             Route::post('update/{restoId}', [RestoranController::class, 'update']);
             Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
+        });
+
+        Route::prefix('favorites')->group(function(){
+            Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
+            Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
+            Route::get('/', [FavoriteController::class, 'getAllFavorite']);
         });
     });
 });

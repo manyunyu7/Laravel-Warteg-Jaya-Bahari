@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restoran;
+use App\Models\TypeFood;
+use App\Models\UserFavorite;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -237,9 +240,25 @@ class RestoranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function getTypeFood()
     {
-        //
+        $food = TypeFood::all();
+
+        if($food == null){
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'food type not found', 
+                'data' => null
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get type food data', 
+                'data' => $food
+            ]);
+        }
     }
 
     /**
@@ -375,6 +394,40 @@ class RestoranController extends Controller
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete restoran', 
+            ]);
+        }
+    }
+
+    public function addFavorite($restoId)
+    {
+        $restoranId = Restoran::find($restoId);
+        $favorite = new UserFavorite();
+        $user = Auth::id();
+
+        if ($restoranId == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'restoran not found'
+            ]);
+        }
+
+        $favorite->user_id = $user;
+        $favorite->restoran_id = $restoId;
+
+        if ($favorite->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success adding favorite restoran',
+                'data' => $favorite
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed adding favorite restoran',
+                'data' => null
             ]);
         }
     }

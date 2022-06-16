@@ -23,4 +23,9 @@ class Masjid extends Model
     {
         $this->belongsTo(MasjidType::class);
     }
+
+    public function userFavorite()
+    {
+        $this->belongsToMany(FavoriteMasjid::class);
+    }
 }

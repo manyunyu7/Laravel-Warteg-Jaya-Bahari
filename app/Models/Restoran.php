@@ -13,4 +13,9 @@ class Restoran extends Model
     {
         return $this->belongsTo(TypeFood::class);
     }
+
+    public function userFavorite()
+    {
+        return $this->belongsToMany(FavoriteRestoran::class);
+    }
 }
