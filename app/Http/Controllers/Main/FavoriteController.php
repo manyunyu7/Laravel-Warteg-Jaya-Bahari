@@ -83,10 +83,105 @@ class FavoriteController extends Controller
 
     public function getAllFavorite()
     {
-        $user = Auth::id();
-        $resto = FavoriteRestoran::find($user);
-        $masjid = FavoriteMasjid::find($user);
+        $restorans = DB::table('favorite_restorans')->where('user_id', Auth::id())
+                    ->join('restorans', 'favorite_restorans.restorans_id', '=', 'restorans.id')
+                    ->select('favorite_restorans.user_id' ,'restorans.name')
+                    ->get();
+        
+        $masjids = DB::table('favorite_masjids')->where('user_id', Auth::id())
+                    ->join('masjids', 'favorite_masjids.masjid_id', '=', 'masjids.id')
+                    ->select('favorite_masjids.user_id','masjids.name')
+                    ->get();
+        
+        if ($restorans && $masjids == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'favorite data not found', 
+                'data' => null
+            ]);
+        }
+        
+        if ($restorans == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'restorans favorite data not found', 
+                'data' => $masjids
+            ]);
+        }
 
-        dd($resto->restorans_id->restorans->name, $masjid->masjid_id->masjids->name);
+        if ($masjids == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'masjids favorite data not found', 
+                'data' => $restorans
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success get data restorans', 
+            'data' => [
+                "Restorans"=> $restorans, 
+                "Masjid"=>$masjids
+            ]
+        ]);
+    }
+
+    public function deleteResto($favId)
+    {
+        $resto = FavoriteRestoran::find($favId);
+
+        if ($resto == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'restoran fav not found'
+            ]);
+        }
+
+        if ($resto->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success delete restoran fav'
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed delete restoran fav'
+            ]);
+        }
+    }
+
+    public function deleteMasjid($favId)
+    {
+        $masjid = FavoriteMasjid::find($favId);
+
+        if ($masjid == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'masjid fav not found'
+            ]);
+        }
+
+        if ($masjid->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success delete masjid fav'
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed delete masjid fav'
+            ]);
+        }
     }
 }

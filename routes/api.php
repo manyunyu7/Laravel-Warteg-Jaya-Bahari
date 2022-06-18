@@ -126,6 +126,8 @@ Route::middleware('api')->group(function (){
             Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
             Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
             Route::get('/', [FavoriteController::class, 'getAllFavorite']);
+            Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
+            Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
         });
     });
 });
