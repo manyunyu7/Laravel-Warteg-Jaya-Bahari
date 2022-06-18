@@ -397,38 +397,4 @@ class RestoranController extends Controller
             ]);
         }
     }
-
-    public function addFavorite($restoId)
-    {
-        $restoranId = Restoran::find($restoId);
-        $favorite = new UserFavorite();
-        $user = Auth::id();
-
-        if ($restoranId == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'restoran not found'
-            ]);
-        }
-
-        $favorite->user_id = $user;
-        $favorite->restoran_id = $restoId;
-
-        if ($favorite->save()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success adding favorite restoran',
-                'data' => $favorite
-            ]);
-        }else{
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'failed adding favorite restoran',
-                'data' => null
-            ]);
-        }
-    }
 }

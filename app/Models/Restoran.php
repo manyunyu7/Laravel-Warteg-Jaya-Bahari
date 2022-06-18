@@ -18,4 +18,9 @@ class Restoran extends Model
     {
         return $this->belongsToMany(FavoriteRestoran::class);
     }
+
+    public function operatingHours()
+    {
+        return $this->hasMany(RestoranOperatingHour::class);
+    }
 }

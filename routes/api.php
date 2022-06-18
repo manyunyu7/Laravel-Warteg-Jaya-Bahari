@@ -8,6 +8,7 @@ use App\Http\Controllers\Main\ForumController;
 use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
+use App\Http\Controllers\Main\OperatingHourController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
@@ -113,6 +114,7 @@ Route::middleware('api')->group(function (){
         Route::prefix('restoran')->group(function(){
             Route::post('store', [RestoranController::class, 'store']);
             Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
+            Route::post('operatingHour/{restoId}', [OperatingHourController::class, 'store']);
             Route::get('all', [RestoranController::class, 'index']);
             Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
             Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
