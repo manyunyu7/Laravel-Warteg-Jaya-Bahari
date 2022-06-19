@@ -13,6 +13,7 @@ use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\RestoranController;
+use App\Http\Controllers\Main\RestoranReviewController;
 use App\Models\ForumComment;
 
 /*
@@ -130,6 +131,11 @@ Route::middleware('api')->group(function (){
             Route::get('/', [FavoriteController::class, 'getAllFavorite']);
             Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
             Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
+        });
+
+        Route::prefix('reviewResto')->group(function(){
+            Route::post('store/{restoId}', [RestoranReviewController::class, 'store']);
+            Route::get('allReview/{restoId}', [RestoranReviewController::class, 'show']);
         });
     });
 });

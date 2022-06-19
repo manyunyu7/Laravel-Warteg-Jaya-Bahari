@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restoran;
+use App\Models\RestoranReview;
 use App\Models\TypeFood;
 use App\Models\UserFavorite;
 use Exception;
@@ -183,7 +184,7 @@ class RestoranController extends Controller
         $file = $request->file('image');
         $ekstension = $file->getClientOriginalExtension();
         $name = time().'_'.$restoran->name.'.'.$ekstension;
-        $request->image->move(public_path('uploads/resto'),$name);
+        $request->image->move(public_path('uploads/img/resto'),$name);
 
         $restoran->image = $name;
         $restoran->is_visible = $restoran->is_visible === "1" ? true : false;
@@ -216,6 +217,13 @@ class RestoranController extends Controller
     public function show($restoId)
     {
         $restoran = Restoran::find($restoId);
+        $totReview = RestoranReview::where('restoran_id', $restoId)->count();
+        $rating1 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 1)->get()->count();
+        $rating2= RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
+        $rating3 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 3)->get()->count();
+        $rating4 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 4)->get()->count();
+        $rating5 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 5)->get()->count();
+        $sum = ($rating1+$rating2+$rating3+$rating4+$rating5)/5;
 
         if ($restoran == null) {
             return response()->json([
@@ -229,7 +237,11 @@ class RestoranController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get detail restoran', 
-                'data' => $restoran
+                'data' => [
+                    'detailResto' => $restoran,
+                    'totalReview' => $totReview,
+                    'totRating' => $sum,
+                ]
             ]);
         }
     }

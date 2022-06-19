@@ -15,4 +15,9 @@ class Rating extends Model
     {
         $this->hasMany(MasjidReview::class);
     }
+
+    public function restorans()
+    {
+        $this->hasMany(RestoranReview::class);
+    }
 }
