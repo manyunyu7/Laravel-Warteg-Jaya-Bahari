@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\Masjid;
 use App\Models\MasjidReview;
 use App\Models\MasjidReviewImage;
 use Illuminate\Validation\Rule;
@@ -13,48 +14,6 @@ use Throwable;
 
 class MasjidReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $reviews = MasjidReview::all();
-
-        if ($reviews->count() > 0) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success add review masjid',
-                'data' => $reviews
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'data not found',
-                'data' => null
-            ]);
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, $masjidId)
     {
         $validator = Validator::make(
@@ -165,31 +124,70 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($reviewId)
+    public function show($masjidId, Request $request)
     {
-        $review = MasjidReview::find($reviewId);
+        $page = $request->page;
+        $perPage = $request->perPage;
+        $isPaginate = $request->isPaginate === 'true'? true: false;
+        $review = MasjidReview::where('masjid_id', $masjidId)->paginate($perPage, ['*'], 'page', $page);
+        $reviews = MasjidReview::where('masjid_id', $masjidId)->get();
+        $tot = $reviews->count();
+        $rating1 = MasjidReview::where('rating_id', 1)->count();
+        $rating2 = MasjidReview::where('rating_id', 2)->count();
+        $rating3 = MasjidReview::where('rating_id', 3)->count();
+        $rating4 = MasjidReview::where('rating_id', 4)->count();
+        $rating5 = MasjidReview::where('rating_id', 5)->count();
+        $avg = ($rating1+$rating2+$rating3+$rating4+$rating5)/5.0;
 
-        if (! Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'code' => 401,
-                'message' => 'Login First',
-            ]);
-        }
+        if (!$isPaginate) {
+            if ($reviews == null) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'review not found',
+                    'data' => null
+                ]);
+            }
 
-        if ($review == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'review not found',
-                'data' => null
-            ]);
-        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get data review',
-                'data' => $review
+                'data' => [
+                    'dataReview' => $reviews,
+                    'rating1' => $rating1,
+                    'rating2' => $rating2,
+                    'rating3' => $rating3,
+                    'rating4' => $rating4,
+                    'rating5' => $rating5,
+                    'totalReview' => $tot,
+                    'averageReview' => $avg
+                ]
+            ]);
+        } else {
+            if ($review == null) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'review not found',
+                    'data' => null
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get data review',
+                'data' => [
+                    'dataReview' => $review,
+                    'rating1' => $rating1,
+                    'rating2' => $rating2,
+                    'rating3' => $rating3,
+                    'rating4' => $rating4,
+                    'rating5' => $rating5,
+                    'totalReview' => $tot,
+                    'averageReview' => $avg
+                ]
             ]);
         }
     }

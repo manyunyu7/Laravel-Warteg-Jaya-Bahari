@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Masjid;
+use App\Models\MasjidReview;
+use App\Models\MasjidReviewImage;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -246,5 +248,48 @@ class MasjidController extends Controller
                 'data' => null
             ]);
         }
+    }
+
+    public function getMasjidPhoto($masjidId)
+    {
+        $masjid = Masjid::where('id', $masjidId)->first();
+        $masjidReview = MasjidReview::where('masjid_id', $masjidId)->get();
+
+        if ($masjid == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'masjid_review not found',
+                'data' => null
+            ]);
+        }
+
+        $arrPath = array();
+        array_push($arrPath, url('/').'/'. $masjid->img);
+        foreach($masjidReview as $item)
+        {
+            $masjidPhotos = MasjidReviewImage::where('masjid_review_id', $item->id)->get();
+            foreach ($masjidPhotos as $img) {
+                array_push($arrPath, url('/').'/'. $img->path);
+            }
+        }
+
+        if (!$arrPath) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed get masjid photos',
+                'data' => null
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get masjid photos',
+                'data' => $arrPath
+            ]);
+        }
+        
+
     }
 }
