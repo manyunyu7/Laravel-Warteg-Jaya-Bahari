@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Models\Restoran;
 use App\Models\RestoranReview;
+use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
 use App\Models\UserFavorite;
 use Exception;
@@ -406,6 +407,48 @@ class RestoranController extends Controller
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete restoran', 
+            ]);
+        }
+    }
+
+    public function getRestoPhotos($restoId, Request $request)
+    {
+        $resto = Restoran::where('id', $restoId)->first();
+        $restoReview = RestoranReview::where('restoran_id', $resto->id)->get();
+
+        if ($resto == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'restoran review not found',
+                'data' => null
+            ]);
+        }
+
+        $arrPath = array();
+        array_push($arrPath, url('/').'/'. $resto->iamge);
+        foreach($restoReview as $item)
+        {
+            $restoPhotos = RestoranReviewImage::where('restoran_review_id', $item->id)->get();
+            foreach($restoPhotos as $img)
+            {
+                array_push($arrPath, url('/').'/'. $img->path);
+            }
+        }
+
+        if (!$arrPath) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed get restoran photos',
+                'data' => null
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get restoran photos',
+                'data' => $arrPath
             ]);
         }
     }

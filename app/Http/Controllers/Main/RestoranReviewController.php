@@ -61,25 +61,29 @@ class RestoranReviewController extends Controller
         $review = new RestoranReview();
 
         if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+            $files = array();
+
+            if ($image != null) {
+                foreach ($image as $img)
+                {
+                    $path = 'uploads/img/resto_reviews/';
+                    $name = Auth::user()->name.'_'.uniqid().'.'.$img->getClientOriginalExtension();
+                    if ($img->move($path,$name)) {
+                        $files[] = $path.$name;
+                    }
+                }
+            }
+
             $review->user_id = Auth::id();
             $review->restoran_id = $restoId;
             $review->rating_id = $request->rating_id;
             $review->comment = $request->comment;
 
             if ($review->save()) {
-                $files = array();
-        
-                $destination = 'uploads/img/resto_reviews/';
-                foreach($request->file('image') as $img)
-                {
-                    $ekstension = $img->getClientOriginalExtension();
-                    $name = time().'resto_review'.'.'.$ekstension;
-                    if ($img->move($destination, $name)) {
-                        $files[] = $destination.$name;
-                    }
-                }
 
-                foreach($files as $file) 
+                foreach($files as $file)
                 {
                     $reviewImage = new RestoranReviewImage();
                     $reviewImage->restoran_review_id = $review->id;
@@ -93,6 +97,7 @@ class RestoranReviewController extends Controller
                     'message' => 'success add review restoran',
                     'data' => $review
                 ]);
+                
             }else{
                 return response()->json([
                     'success' => false,
@@ -133,15 +138,20 @@ class RestoranReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($restoId)
+    public function show($restoId, Request $request)
     {
-        $restoReviews = RestoranReview::find($restoId);
-        $rating1 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 1)->get()->count();
-        $rating2= RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
-        $rating3 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 3)->get()->count();
-        $rating4 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 4)->get()->count();
-        $rating5 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 5)->get()->count();
-        $totalReview = $rating1 + $rating2 + $rating3 + $rating4 + $rating5;
+        $page = $request->page;
+        $perPage = $request->perPage;
+        $isPaginate = $request->isPaginate === 'true'? true: false;
+        $restoPaginate = RestoranReview::where('restoran_id', $restoId)->paginate($perPage, ['*'], 'page', $page);
+        $restoReviews = RestoranReview::where('restoran_id', $restoId)->get();
+        $rating1 = RestoranReview::where('rating_id', 1)->count();
+        $rating2= RestoranReview::where('rating_id', 2)->get()->count();
+        $rating3 = RestoranReview::where('rating_id', 3)->get()->count();
+        $rating4 = RestoranReview::where('rating_id', 4)->get()->count();
+        $rating5 = RestoranReview::where('rating_id', 5)->get()->count();
+        $totalReviews = $restoReviews->count();
+        $avgReviews = ($rating1 + $rating2 + $rating3 + $rating4 + $rating5)/5.0;
         
         if ($restoReviews == null) {
             return response()->json([
@@ -152,14 +162,8 @@ class RestoranReviewController extends Controller
             ]);
         }
 
-        if (!$restoReviews) {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'failed get resto review',
-                'data' => null
-            ]);
-        }else{
+
+        if (!$isPaginate) {
             return response()->json([
                 'success' => true,
                 'code' => 200,
@@ -171,7 +175,24 @@ class RestoranReviewController extends Controller
                     "rating3" => $rating3,
                     "rating4" => $rating4,
                     "rating5" => $rating5,
-                    "totalReview" => $totalReview,
+                    "totalReview" => $totalReviews,
+                    "averageReview" => $avgReviews
+                ]
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get resto review',
+                'data' => [
+                    "detailReview" => $restoPaginate,
+                    "rating1" => $rating1,
+                    "rating2" => $rating2,
+                    "rating3" => $rating3,
+                    "rating4" => $rating4,
+                    "rating5" => $rating5,
+                    "totalReview" => $totalReviews,
+                    "averageReview" => $avgReviews
                 ]
             ]);
         }

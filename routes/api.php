@@ -121,6 +121,7 @@ Route::middleware('api')->group(function (){
             Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
             Route::get('all/byCertification', [RestoranController::class, 'sortByCertification']);
             Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
+            Route::get('photos/{restoId}', [RestoranController::class, 'getRestoPhotos']);
             Route::post('update/{restoId}', [RestoranController::class, 'update']);
             Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
         });
