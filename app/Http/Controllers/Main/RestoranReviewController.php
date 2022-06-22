@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\MasjidReviewImage;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use Illuminate\Support\Facades\Validator;
@@ -227,8 +228,48 @@ class RestoranReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($reviewId)
     {
-        //
+        $review = RestoranReview::find($reviewId);
+        $image = RestoranReviewImage::where('restoran_review_id', $reviewId)->pluck('path')->all();
+        if ($review == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => "restoran review not found"
+            ]);
+        }else{
+            if ($image != null) {
+                foreach ($image as $img) {
+                    $path = $img;
+                    if (file_exists($path)) {
+                        try {
+                            unlink($path);
+                            RestoranReviewImage::where('path', $img)->delete();
+                        } catch (\Throwable $th) {
+                            return response()->json([
+                                'success' => false,
+                                'code' => 400,
+                                'message' => $th->getMessage(),
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($review->delete()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'success delete review restoran',
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'failed delete review restoran',
+                ]);
+            }
+        }
     }
 }

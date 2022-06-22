@@ -210,63 +210,6 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $reviewId)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'rating_id' => 'integer', Rule::in([1, 2]),
-                'comment' => 'string|min:3|max:1000',
-                'img.*' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
-            ],
-            [
-                'rating_id.required' => 'rating_id cannot be empty',
-                'comment.required' => 'comment cannot be empty',
-                'img.image' => 'image must be an image'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        if (! Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'code' => 401,
-                'message' => 'Login First',
-            ]);
-        }
-
-        $review = MasjidReview::find($reviewId);
-
-        if ($review == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => "masjid review not found"
-            ]);
-        }
-
-        $review->rating_id = $request->rating_id;
-        $review->comment = $request->comment;
-
-        if ($review->save()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success update review masjid',
-                'data' => $review
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'failed update review masjid',
-                'data' => null
-            ]);
-        }
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -277,43 +220,44 @@ class MasjidReviewController extends Controller
     public function destroy($reviewId)
     {
         $review = MasjidReview::find($reviewId);
-        $image = MasjidReviewImage::where('masjid_review_id', $reviewId);
-        if (! Auth::check()) {
+        $image = MasjidReviewImage::where('restoran_review_id', $reviewId)->pluck('path')->all();
+        if ($review == null) {
             return response()->json([
                 'success' => false,
-                'code' => 401,
-                'message' => 'Login First',
+                'code' => 404,
+                'message' => "masjid review not found"
             ]);
         }else{
-            if ($review == null) {
+            if ($image != null) {
+                foreach ($image as $img) {
+                    $path = $img;
+                    if (file_exists($path)) {
+                        try {
+                            unlink($path);
+                            MasjidReviewImage::where('path', $img)->delete();
+                        } catch (\Throwable $th) {
+                            return response()->json([
+                                'success' => false,
+                                'code' => 400,
+                                'message' => $th->getMessage(),
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($review->delete()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'success delete review masjid',
+                ]);
+            } else {
                 return response()->json([
                     'success' => false,
-                    'code' => 404,
-                    'message' => "masjid review not found"
+                    'code' => 400,
+                    'message' => 'failed delete review masjid',
                 ]);
-            }else{
-                try {
-                    $image->delete();
-                } catch (\Throwable $th) {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => $th->getMessage(),
-                    ]);
-                }
-                if ($review->delete()) {
-                    return response()->json([
-                        'success' => true,
-                        'code' => 200,
-                        'message' => 'success delete review masjid',
-                    ]);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => 'failed delete review masjid',
-                    ]);
-                }
             }
         }
     }

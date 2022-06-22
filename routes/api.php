@@ -65,7 +65,6 @@ Route::middleware('api')->group(function (){
         Route::prefix('reviewMasjid')->group(function (){
             Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
             Route::get('/{masjidId}', [MasjidReviewController::class, 'show']);
-            Route::post('updateReview/{reviewId}', [MasjidReviewController::class, 'update']);
             Route::delete('deleteReview/{reviewId}', [MasjidReviewController::class, 'destroy']);
             Route::post('uploadImage/{reviewId}', [MasjidReviewController::class, 'uploadImage']);
         });
@@ -137,6 +136,7 @@ Route::middleware('api')->group(function (){
         Route::prefix('reviewResto')->group(function(){
             Route::post('store/{restoId}', [RestoranReviewController::class, 'store']);
             Route::get('allReview/{restoId}', [RestoranReviewController::class, 'show']);
+            Route::delete('deleteReview/{reviewId}', [RestoranReviewController::class, 'destroy']);
         });
     });
 });
