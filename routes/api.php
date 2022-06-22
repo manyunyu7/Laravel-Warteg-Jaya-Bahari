@@ -35,11 +35,17 @@ Route::fallback(function () {
     ]);
 });
 
-Route::middleware('api')->group(function (){
+
+Route::prefix('v1')->group(function (){
+    Route::prefix('users')->group(function (){
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+    });
+});
+
+Route::middleware('jwt.verify')->group(function (){
     Route::prefix('v1')->group(function (){
         Route::prefix('users')->group(function (){
-            Route::post('register', [AuthController::class, 'register']);
-            Route::post('login', [AuthController::class, 'login']);
             Route::post('logout', [AuthController::class, 'logout']);
             Route::post('refreshToken', [AuthController::class, 'refresh']);
 
