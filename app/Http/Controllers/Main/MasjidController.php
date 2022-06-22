@@ -155,6 +155,42 @@ class MasjidController extends Controller
         }
     }
 
+    public function getByType(Request $request, $typeId)
+    {
+        $isPaginate = $request->isPaginate === 'true'? true: false;
+        $perPage = $request->perPage;
+        $page = $request->page;
+
+        if (!$isPaginate) {
+            $masjids = Masjid::where('type_id', $typeId)->get();
+
+            if ($masjids == null) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'Masjid Not Found',
+                    'data' => null
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get all masjid data',
+                'data' => $masjids
+            ]);
+        } else {
+            $paginate = Masjid::where('type_id', $typeId)->paginate($perPage, ['*'], 'page', $page);
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success pagination masjid',
+                'data' => $paginate
+            ]);
+        }
+    }
+    
+
     public function index($id)
     {
         $masjid = Masjid::where('id', $id)->get();

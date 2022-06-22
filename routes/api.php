@@ -61,6 +61,7 @@ Route::middleware('jwt.verify')->group(function (){
             Route::post('create', [MasjidController::class, 'store']);
             Route::get('showAll', [MasjidController::class, 'show']);
             Route::get('photos/{masjidId}', [MasjidController::class, 'getMasjidPhoto']);
+            Route::get('/byType/{typeId}', [MasjidController::class, 'getByType']);
             Route::get('{id}', [MasjidController::class, 'index']);
             Route::post('edit/{id}', [MasjidController::class, 'update']);
             Route::delete('delete', [MasjidController::class, 'destroy']);
