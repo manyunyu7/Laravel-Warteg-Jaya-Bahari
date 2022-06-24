@@ -100,4 +100,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(RestoranReview::class);
     }
+
+    public function otp()
+    {
+        return $this->hasOne(UserOTP::class);
+    }
 }

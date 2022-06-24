@@ -40,7 +40,9 @@ Route::prefix('v1')->group(function (){
     Route::prefix('users')->group(function (){
         Route::post('register', [AuthController::class, 'register']);
         Route::post('login', [AuthController::class, 'login']);
-    });
+        Route::post('request-otp', [AuthController::class, 'requestOTP']);
+        Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
+    }); 
 });
 
 Route::middleware('jwt.verify')->group(function (){
