@@ -266,4 +266,9 @@ class AuthController extends Controller
             'user' => auth()->user(),
         ]);
     }
+
+    public function refreshToken()
+    {
+        return $this->createNewToken(auth()->refresh());
+    }
 }
