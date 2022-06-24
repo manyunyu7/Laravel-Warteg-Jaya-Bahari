@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             MasjidTypeSeeder::class,
             ProductCategorySeeder::class,
             ForumCategorySeeder::class,
+            FoodCategorySeeder::class,
         ]);
     }
 }
