@@ -105,4 +105,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(UserOTP::class);
     }
+
+    public function restoran()
+    {
+        return $this->hasOne(Restoran::class);
+    }
 }

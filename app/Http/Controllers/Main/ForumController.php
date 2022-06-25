@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Models\Forum;
 use App\Models\ForumLike;
+use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,11 +62,13 @@ class ForumController extends Controller
             'category_id' => 'required|integer', Rule::in([1, 2, 3, 4,5,6]),
             'title' => 'required|string|min:4',
             'body' => 'required|string|min:3|max:1000',
+            'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
             'category_id.required' => 'category_id cannot be empty',
             'title.required' => 'title cannot be empty',
             'body.required' => 'body cannot be empty',
+            'img.image' => 'Image must be and image',
         ]);
 
         if ($validator->fails()) {
@@ -73,6 +76,42 @@ class ForumController extends Controller
         }
 
         $forum = new Forum();
+        if ($request->hasFile('img')) {
+            $img = $request->file('img');
+            $path = '/uploads/img/forums/';
+            $ekstension = $img->getClientOriginalExtension();
+            $name = 'Forum'.'_'.Auth::user()->name."_".uniqid().'.'.$ekstension;
+            if ($request->img->move(public_path($path), $name)) {
+                $forum->user_id = Auth::id();
+                $forum->category_id = $request->category_id;
+                $forum->title = $request->title;
+                $forum->body = $request->body;
+                $forum->img = $path.$name;
+
+                if ($forum->save()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'Success store forum',
+                        'data' => $forum,
+                    ]);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'Failed store forum',
+                        'data' => null,
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'Failed upload image',
+                    'data' => null,
+                ]);
+            }
+        }
         $forum->user_id = Auth::id();
         $forum->category_id = $request->category_id;
         $forum->title = $request->title;
@@ -147,11 +186,13 @@ class ForumController extends Controller
             'category_id' => 'integer', Rule::in([1, 2, 3, 4,5,6]),
             'title' => 'string|min:4',
             'body' => 'string|min:3|max:1000',
+            'img' => 'image:jpeg,png,jpg,gif,svg|max:2048',
         ],
         [
             'category_id.integer' => 'category_id must be a number',
             'title.string' => 'title must be a string',
             'body.string' => 'body must be a string',
+            'img.image' => 'Image must be and image',
         ]);
 
         if ($validator->fails()) {
@@ -163,6 +204,45 @@ class ForumController extends Controller
         $forum->category_id = $request->category_id;
         $forum->title = $request->title;
         $forum->body = $request->body;
+
+        if ($request->hasFile('img')) {
+            $oldImage = public_path('uploads/img/forums/') . $forum->img;
+
+            if (file_exists($oldImage)) {
+                try {
+                    unlink($oldImage);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $e
+                    ]);
+                }
+            }
+
+            $img = $request->file('img');
+            $path = '/uploads/img/forums/';
+            $ekstension = $img->getClientOriginalExtension();
+            $name = 'Forum'.'_'.Auth::user()->name."_".uniqid().'.'.$ekstension;
+            if ($request->img->move(public_path($path), $name)) {
+                $forum->img = $path.$name;
+
+                if ($forum->save()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'Success store forum',
+                        'data' => $forum,
+                    ]);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'Failed store forum',
+                        'data' => null,
+                    ]);
+                }
+        }
 
         if ($forum->save()) {
             return response()->json([
@@ -180,6 +260,7 @@ class ForumController extends Controller
             ]);
         }
     }
+}
 
     /**
      * Remove the specified resource from storage.
