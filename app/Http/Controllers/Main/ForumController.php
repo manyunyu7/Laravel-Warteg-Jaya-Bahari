@@ -206,7 +206,7 @@ class ForumController extends Controller
         $forum->body = $request->body;
 
         if ($request->hasFile('img')) {
-            $oldImage = public_path('uploads/img/forums/') . $forum->img;
+            $oldImage = public_path($forum->img);
 
             if (file_exists($oldImage)) {
                 try {
@@ -231,14 +231,14 @@ class ForumController extends Controller
                     return response()->json([
                         'success' => true,
                         'code' => 200,
-                        'message' => 'Success store forum',
+                        'message' => 'Success update forum',
                         'data' => $forum,
                     ]);
                 }else{
                     return response()->json([
                         'success' => false,
                         'code' => 400,
-                        'message' => 'Failed store forum',
+                        'message' => 'Failed update forum',
                         'data' => null,
                     ]);
                 }
