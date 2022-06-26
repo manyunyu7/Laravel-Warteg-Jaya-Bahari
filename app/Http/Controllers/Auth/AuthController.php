@@ -97,6 +97,15 @@ class AuthController extends Controller
                 'data' => null
             ]);
         }
+        $user = User::where('email',$request->email)->first();
+        if ($user->email_verified_at == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Verified first', 
+                'data' => null
+            ]);
+        }
 
         return $this->createNewToken($token);
 
