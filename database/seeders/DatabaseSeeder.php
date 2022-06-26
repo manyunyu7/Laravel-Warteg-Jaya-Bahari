@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ProductCategorySeeder::class,
             ForumCategorySeeder::class,
             FoodCategorySeeder::class,
+            TypeFoodSeeder::class,
         ]);
     }
 }

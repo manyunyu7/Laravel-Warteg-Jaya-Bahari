@@ -145,7 +145,6 @@ class RestoranController extends Controller
             "certification_id" => "required|string", Rule::in([1,2,3,4]),
             "description" => "required|string|min:10|max:600 ",
             "address" => "required|string|min:10|max:600 ",
-            "operating_hour" => "required|string|min:5",
             "phone_number" => "required|string|min:11",
             "lat" => 'required|between:-90,90',
             "long" => 'required|between:-180,180',
@@ -158,7 +157,6 @@ class RestoranController extends Controller
             "certification_id.required" => "certification cannot be empty",
             "description.required" => "description cannot be empty",
             "address.required" => "address cannot be empty",
-            "operating_hour.required" => "operating_hour cannot be empty",
             "phone_number.required" => "phone_number cannot be empty",
             "lat.required" => "latitude cannot be empty",
             "long.required" => "longitude cannot be empty",
@@ -173,11 +171,11 @@ class RestoranController extends Controller
 
         $restoran = new Restoran();
         $restoran->name = $request->name;
+        $restoran->user_id = Auth::id();
         $restoran->type_food_id = $request->type_food_id;
         $restoran->certification_id = $request->certification_id;
         $restoran->description = $request->description;
         $restoran->address = $request->address;
-        $restoran->operating_hour = $request->operating_hour;
         $restoran->phone_number = $request->phone_number;
         $restoran->lat = $request->lat;
         $restoran->long = $request->long;
@@ -290,7 +288,6 @@ class RestoranController extends Controller
             "certification_id" => "required|string", Rule::in([1,2,3,4]),
             "description" => "required|string|min:10|max:600 ",
             "address" => "required|string|min:10|max:600 ",
-            "operating_hour" => "required|string|min:5",
             "phone_number" => "required|string|min:11",
             "lat" => 'required|between:-90,90',
             "long" => 'required|between:-180,180',
@@ -303,7 +300,6 @@ class RestoranController extends Controller
             "certification_id.required" => "certification cannot be empty",
             "description.required" => "description cannot be empty",
             "address.required" => "address cannot be empty",
-            "operating_hour.required" => "operating_hour cannot be empty",
             "phone_number.required" => "phone_number cannot be empty",
             "lat.required" => "latitude cannot be empty",
             "long.required" => "longitude cannot be empty",
@@ -327,11 +323,11 @@ class RestoranController extends Controller
         }
 
         $restoran->name = $request->name;
+        $restoran->user_id = Auth::id();
         $restoran->type_food_id = $request->type_food_id;
         $restoran->certification_id = $request->certification_id;
         $restoran->description = $request->description;
         $restoran->address = $request->address;
-        $restoran->operating_hour = $request->operating_hour;
         $restoran->phone_number = $request->phone_number;
         $restoran->lat = $request->lat;
         $restoran->long = $request->long;

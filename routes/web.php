@@ -13,10 +13,3 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('cms')->group(function(){
-    Route::prefix('admin')->group(function(){
-        Route::get('index', function(){
-            return view('admin.index');
-        })->name('admin-index');
-    });
-});

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Main\FavoriteController;
+use App\Http\Controllers\Main\FoodController;
 use App\Http\Controllers\Main\ForumCommentController;
 use App\Http\Controllers\Main\ForumController;
 use App\Http\Controllers\Main\KeywordController;
@@ -147,6 +148,12 @@ Route::middleware('jwt.verify')->group(function (){
             Route::post('store/{restoId}', [RestoranReviewController::class, 'store']);
             Route::get('allReview/{restoId}', [RestoranReviewController::class, 'show']);
             Route::delete('deleteReview/{reviewId}', [RestoranReviewController::class, 'destroy']);
+        });
+
+        Route::prefix('foods')->group(function(){
+            Route::post('store', [FoodController::class,'store']);
+            Route::get('getFood/{restoId}/{categoryId}', [FoodController::class,'getFood']);
+            Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
         });
     });
 });
