@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Restoran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -39,6 +40,16 @@ class FoodController extends Controller
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $restricted = Restoran::where('id', $restoran_id)->first()->user_id;
+
+        if ($restricted != Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'code' => 403,
+                'message' => 'Restriced user cannot create food',
+            ]);
         }
 
         $food = new Food();
@@ -131,6 +142,18 @@ class FoodController extends Controller
         }
 
         if ($food->delete()) {
+            $img = public_path($food->img);
+            if (file_exists($img)) {
+                try {
+                    unlink($img);
+                } catch (\Throwable $th) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $th->getMessage(),
+                    ]);
+                }
+            }
             return response()->json([
                 'success' => true,
                 'code' => 200,
