@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\Masjid;
 use App\Models\MasjidReview;
 use App\Models\MasjidReviewImage;
 use Illuminate\Validation\Rule;
@@ -13,48 +14,6 @@ use Throwable;
 
 class MasjidReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $reviews = MasjidReview::all();
-
-        if ($reviews->count() > 0) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success add review masjid',
-                'data' => $reviews
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'data not found',
-                'data' => null
-            ]);
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, $masjidId)
     {
         $validator = Validator::make(
@@ -78,53 +37,83 @@ class MasjidReviewController extends Controller
         $image = $request->file('img');
         $files = array();
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return response()->json([
                 'success' => false,
                 'code' => 401,
                 'message' => 'Login First',
             ]);
         }else{
-            $destination = 'uploads/img/masjid_reviews/';
-            foreach($image as $img)
-            {
-                $ekstension = $img->getClientOriginalExtension();
-                $name = time().'masjid_review'.'.'.$ekstension;
-                if ($img->move($destination,$name)) {
-                    $files[] = $destination.$name;
-                }
-            }
 
-            $review = new MasjidReview();
+            if ($request->hasFile('img')) {
+                $dataFile = array();
 
-            $review->masjid_id = $masjidId;
-            $review->user_id = Auth::id();
-            $review->rating_id = $request->rating_id;
-            $review->comment = $request->comment;
-
-            if ($review->save()) {
-
-                foreach($files as $file)
+                if($image != null)
                 {
-                    $reviewImage = new MasjidReviewImage();
-                    $reviewImage->masjid_review_id = $review->id;
-                    $reviewImage->path = $file;
-                    $reviewImage->save();
+                    foreach($image as $files)
+                    {
+                        $destination = 'uploads/img/masjid_reviews/';
+                        $name = Auth::user()->name."_".uniqid().'.'.$files->getClientOriginalExtension();
+                        if ($files->move($destination, $name)) {
+                            $dataFile[] = $destination.$name;
+                        }
+                    }
                 }
-
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'success add review masjid',
-                    'data' => $review
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => 'failed add review masjid',
-                    'data' => null
-                ]);
+    
+                $review = new MasjidReview();
+    
+                $review->masjid_id = $masjidId;
+                $review->user_id = Auth::id();
+                $review->rating_id = $request->rating_id;
+                $review->comment = $request->comment;
+    
+                if ($review->save()) {
+    
+                    foreach($dataFile as $file)
+                    {
+                        $reviewImage = new MasjidReviewImage();
+                        $reviewImage->masjid_review_id = $review->id;
+                        $reviewImage->path = $file;
+                        $reviewImage->save();
+                    }
+    
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'success add review masjid',
+                        'data' => $review
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'failed add review masjid',
+                        'data' => null
+                    ]);
+                }
+            }else{
+                $review = new MasjidReview();
+    
+                $review->masjid_id = $masjidId;
+                $review->user_id = Auth::id();
+                $review->rating_id = $request->rating_id;
+                $review->comment = $request->comment;
+    
+                if ($review->save()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'success add review masjid',
+                        'data' => $review
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'failed add review masjid',
+                        'data' => null
+                    ]);
+                }
             }
         }
     }
@@ -135,31 +124,70 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($reviewId)
+    public function show($masjidId, Request $request)
     {
-        $review = MasjidReview::find($reviewId);
+        $page = $request->page;
+        $perPage = $request->perPage;
+        $isPaginate = $request->isPaginate === 'true'? true: false;
+        $review = MasjidReview::where('masjid_id', $masjidId)->paginate($perPage, ['*'], 'page', $page);
+        $reviews = MasjidReview::where('masjid_id', $masjidId)->get();
+        $tot = $reviews->count();
+        $rating1 = MasjidReview::where('rating_id', 1)->count();
+        $rating2 = MasjidReview::where('rating_id', 2)->count();
+        $rating3 = MasjidReview::where('rating_id', 3)->count();
+        $rating4 = MasjidReview::where('rating_id', 4)->count();
+        $rating5 = MasjidReview::where('rating_id', 5)->count();
+        $avg = ($rating1+$rating2+$rating3+$rating4+$rating5)/5.0;
 
-        if (! Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'code' => 401,
-                'message' => 'Login First',
-            ]);
-        }
+        if (!$isPaginate) {
+            if ($reviews == null) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'review not found',
+                    'data' => null
+                ]);
+            }
 
-        if ($review == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'review not found',
-                'data' => null
-            ]);
-        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get data review',
-                'data' => $review
+                'data' => [
+                    'dataReview' => $reviews,
+                    'rating1' => $rating1,
+                    'rating2' => $rating2,
+                    'rating3' => $rating3,
+                    'rating4' => $rating4,
+                    'rating5' => $rating5,
+                    'totalReview' => $tot,
+                    'averageReview' => $avg
+                ]
+            ]);
+        } else {
+            if ($review == null) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'review not found',
+                    'data' => null
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success get data review',
+                'data' => [
+                    'dataReview' => $review,
+                    'rating1' => $rating1,
+                    'rating2' => $rating2,
+                    'rating3' => $rating3,
+                    'rating4' => $rating4,
+                    'rating5' => $rating5,
+                    'totalReview' => $tot,
+                    'averageReview' => $avg
+                ]
             ]);
         }
     }
@@ -182,63 +210,6 @@ class MasjidReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $reviewId)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'rating_id' => 'integer', Rule::in([1, 2]),
-                'comment' => 'string|min:3|max:1000',
-                'img.*' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
-            ],
-            [
-                'rating_id.required' => 'rating_id cannot be empty',
-                'comment.required' => 'comment cannot be empty',
-                'img.image' => 'image must be an image'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        if (! Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'code' => 401,
-                'message' => 'Login First',
-            ]);
-        }
-
-        $review = MasjidReview::find($reviewId);
-
-        if ($review == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => "masjid review not found"
-            ]);
-        }
-
-        $review->rating_id = $request->rating_id;
-        $review->comment = $request->comment;
-
-        if ($review->save()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success update review masjid',
-                'data' => $review
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'failed update review masjid',
-                'data' => null
-            ]);
-        }
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -249,43 +220,44 @@ class MasjidReviewController extends Controller
     public function destroy($reviewId)
     {
         $review = MasjidReview::find($reviewId);
-        $image = MasjidReviewImage::where('masjid_review_id', $reviewId);
-        if (! Auth::check()) {
+        $image = MasjidReviewImage::where('restoran_review_id', $reviewId)->pluck('path')->all();
+        if ($review == null) {
             return response()->json([
                 'success' => false,
-                'code' => 401,
-                'message' => 'Login First',
+                'code' => 404,
+                'message' => "masjid review not found"
             ]);
         }else{
-            if ($review == null) {
+            if ($image != null) {
+                foreach ($image as $img) {
+                    $path = $img;
+                    if (file_exists($path)) {
+                        try {
+                            unlink($path);
+                            MasjidReviewImage::where('path', $img)->delete();
+                        } catch (\Throwable $th) {
+                            return response()->json([
+                                'success' => false,
+                                'code' => 400,
+                                'message' => $th->getMessage(),
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($review->delete()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'success delete review masjid',
+                ]);
+            } else {
                 return response()->json([
                     'success' => false,
-                    'code' => 404,
-                    'message' => "masjid review not found"
+                    'code' => 400,
+                    'message' => 'failed delete review masjid',
                 ]);
-            }else{
-                try {
-                    $image->delete();
-                } catch (\Throwable $th) {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => $th->getMessage(),
-                    ]);
-                }
-                if ($review->delete()) {
-                    return response()->json([
-                        'success' => true,
-                        'code' => 200,
-                        'message' => 'success delete review masjid',
-                    ]);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => 'failed delete review masjid',
-                    ]);
-                }
             }
         }
     }

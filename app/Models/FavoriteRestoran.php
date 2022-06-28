@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Rating extends Model
+class FavoriteRestoran extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
-    public function masjids()
+    public function user()
     {
-        $this->hasMany(MasjidReview::class);
+        return $this->belongsTo(User::class);
     }
 
     public function restorans()
     {
-        $this->hasMany(RestoranReview::class);
+        return $this->hasMany(Restoran::class);
     }
 }

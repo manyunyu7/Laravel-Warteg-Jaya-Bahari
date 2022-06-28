@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KeywordSeeder extends Seeder
+class FoodCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,10 +14,18 @@ class KeywordSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('keywords')->insert([
+        DB::table('food_categories')->insert([
             [
                 'id' => 1,
                 'name' => 'Halal',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Non Halal',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Alcohol',
             ]
         ]);
     }

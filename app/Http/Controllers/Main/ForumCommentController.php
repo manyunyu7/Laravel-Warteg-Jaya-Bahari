@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\CommentLike;
 use App\Models\ForumComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -197,6 +198,45 @@ class ForumCommentController extends Controller
                     'message' => 'success delete comment',
                 ]);
             }
+        }
+    }
+
+    public function likeComment($commendId)
+    {
+        $comment = ForumComment::find($commendId);
+
+        if ($comment == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'comment not found',
+            ]);
+        }
+
+        if (CommentLike::where('user_id', Auth::user()->id)->exists() && CommentLike::where('comment_id', $commendId)->exists()) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'you have already like comment',
+            ]);
+        }
+
+        $commentLike  = new CommentLike();
+        $commentLike->user_id = Auth::user()->id;
+        $commentLike->comment_id = $commendId;
+
+        if ($commentLike->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success like comment',
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed like forum',
+            ]);
         }
     }
 }

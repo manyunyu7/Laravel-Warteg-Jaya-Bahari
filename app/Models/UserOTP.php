@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ForumLike extends Model
+class UserOTP extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['user_id', 'otp', 'valid_until'];
+
     public $timestamps = false;
-
-    protected $fillable = ['user_id', 'forum_id'];
-
-    public function forum()
-    {
-        return $this->belongsTo(Forum::class);
-    }
 
     public function user()
     {

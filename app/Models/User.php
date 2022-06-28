@@ -6,11 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    use  HasFactory, Notifiable;
+    use  HasApiTokens,HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -79,5 +80,35 @@ class User extends Authenticatable implements JWTSubject
     public function likes()
     {
         return $this->hasMany(ForumLike::class);
+    }
+
+    public function commentLikes()
+    {
+        return $this->hasMany(CommentLike::class);
+    }
+
+    public function restoFavorites()
+    {
+        return $this->hasMany(FavoriteRestoran::class);
+    }
+
+    public function masjidFavorites()
+    {
+        return $this->hasMany(FavoriteMasjid::class);
+    }
+
+    public function restoranReviews()
+    {
+        return $this->hasMany(RestoranReview::class);
+    }
+
+    public function otp()
+    {
+        return $this->hasOne(UserOTP::class);
+    }
+
+    public function restoran()
+    {
+        return $this->hasOne(Restoran::class);
     }
 }

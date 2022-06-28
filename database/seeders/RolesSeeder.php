@@ -27,10 +27,6 @@ class RolesSeeder extends Seeder
                 'id' => 3,
                 'roles' => 'Restoran',
             ],
-            [
-                'id' => 4,
-                'roles' => 'Homestay',
-            ]
         ]);
     }
 }
