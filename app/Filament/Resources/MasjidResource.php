@@ -9,7 +9,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use App\Models\Masjid;
-use Filament\Forms;
+use Filament\Resources\str;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -18,6 +18,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Actions\LinkAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Livewire\TemporaryUploadedFile;
 
 class MasjidResource extends Resource
 {
@@ -50,12 +51,15 @@ class MasjidResource extends Resource
                 TextInput::make('long')->required(),
                 Textarea::make('facilities')->required(),
                 FileUpload::make('img')->image()
-                    ->panelAspectRatio('4:1')
+                    ->panelAspectRatio('4:1')->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
+                        return (string) ('public/uploads/' .uniqid().'_'. $file->getClientOriginalName());
+                    })
                 ]);
     }
 
     public static function table(Table $table): Table
     {
+        $img = TextColumn::make('img');
         return $table
             ->columns([
                 TextColumn::make('id')->searchable()->sortable(),
@@ -68,16 +72,13 @@ class MasjidResource extends Resource
                 TextColumn::make('address')->searchable()->sortable(),
                 TextColumn::make('lat')->searchable()->sortable(),
                 TextColumn::make('long')->searchable()->sortable(),
-                ImageColumn::make('photo_url'),
+                TextColumn::make('path'),
             ])->prependActions([
                 LinkAction::make('delete')
-                ->action(fn (MasterCourse $record)=>$record->delete())
+                ->action(fn (Masjid $record)=>$record->delete())
                 ->requiresConfirmation()
                 ->icon('heroicon-o-trash')
                 ->color('danger')
-            ])
-            ->filters([
-                //
             ]);
     }
     
