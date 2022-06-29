@@ -20,7 +20,7 @@ class MasjidReviewResource extends Resource
 {
     protected static ?string $model = MasjidReview::class;
 
-    protected static ?string $navigationGroup = 'Prayer';
+    protected static ?string $navigationGroup = 'Prayers';
 
     protected static ?string $navigationIcon = 'heroicon-o-annotation';
 

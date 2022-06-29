@@ -24,7 +24,7 @@ class MasjidResource extends Resource
 {
     protected static ?string $model = Masjid::class;
 
-    protected static ?string $navigationGroup = 'Prayer';
+    protected static ?string $navigationGroup = 'Prayers';
 
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
@@ -52,7 +52,7 @@ class MasjidResource extends Resource
                 Textarea::make('facilities')->required(),
                 FileUpload::make('img')->image()
                     ->panelAspectRatio('4:1')->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
-                        return (string) ('public/uploads/' .uniqid().'_'. $file->getClientOriginalName());
+                        return (string) ('public/uploads/' .'Masjids_'.uniqid().'_'. $file->getClientOriginalName());
                     })
                 ]);
     }
