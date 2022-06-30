@@ -11,6 +11,17 @@ class MasjidType extends Model
 
     public $timestamps = false;
 
+    protected static function booted()
+    {
+        static::deleted(function ($masjid) {
+            unlink(public_path('storage/'.$masjid->img));
+        });
+
+        static::updated(function ($masjid) {
+            unlink(public_path('storage/'.$masjid->img));
+        });
+    }
+
     public function masjids()
     {
         $this->hasMany(Masjid::class);

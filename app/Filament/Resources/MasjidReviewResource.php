@@ -45,7 +45,7 @@ class MasjidReviewResource extends Resource
                 TextColumn::make('comment')->sortable()->searchable(),
             ])->prependActions([
                 LinkAction::make('delete')
-                ->action(fn (Masjid $record)=>$record->delete())
+                ->action(fn (MasjidReview $record)=>$record->delete())
                 ->requiresConfirmation()
                 ->icon('heroicon-o-trash')
                 ->color('danger')
@@ -63,7 +63,6 @@ class MasjidReviewResource extends Resource
     {
         return [
             'index' => Pages\ListMasjidReviews::route('/'),
-            'create' => Pages\CreateMasjidReview::route('/create'),
             'edit' => Pages\EditMasjidReview::route('/{record}/edit'),
         ];
     }    

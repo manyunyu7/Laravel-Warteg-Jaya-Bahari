@@ -14,6 +14,18 @@ class Masjid extends Model
         'facilities' => 'array',
     ];
 
+    protected static function booted()
+    {
+        static::deleted(function ($masjid) {
+            unlink(public_path('storage/'.$masjid->img));
+        });
+
+        // static::saved(function ($masjid) {
+        //     unlink(public_path('storage/'.$masjid->img));
+        // });
+
+    }
+
     public function reviews()
     {
         $this->hasMany(MasjidReview::class);

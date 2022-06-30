@@ -50,19 +50,17 @@ class MasjidResource extends Resource
                 TextInput::make('lat')->required(),
                 TextInput::make('long')->required(),
                 Textarea::make('facilities')->required(),
-                FileUpload::make('img')->image()
+                FileUpload::make('img')->image()->directory('uploads/masjids')
                     ->panelAspectRatio('4:1')->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
-                        return (string) ('public/uploads/' .'Masjids_'.uniqid().'_'. $file->getClientOriginalName());
+                        return (string) ('Masjid_'.uniqid().'_'. $file->getClientOriginalName());
                     })
                 ]);
     }
 
     public static function table(Table $table): Table
     {
-        $img = TextColumn::make('img');
         return $table
             ->columns([
-                TextColumn::make('id')->searchable()->sortable(),
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('type_id')->searchable()->sortable(),
                 TextColumn::make('facilities')->searchable()->sortable(),
@@ -72,7 +70,7 @@ class MasjidResource extends Resource
                 TextColumn::make('address')->searchable()->sortable(),
                 TextColumn::make('lat')->searchable()->sortable(),
                 TextColumn::make('long')->searchable()->sortable(),
-                TextColumn::make('path'),
+                ImageColumn::make('img'),
             ])->prependActions([
                 LinkAction::make('delete')
                 ->action(fn (Masjid $record)=>$record->delete())
@@ -93,7 +91,6 @@ class MasjidResource extends Resource
     {
         return [
             'index' => Pages\ListMasjids::route('/'),
-            'create' => Pages\CreateMasjid::route('/create'),
             'edit' => Pages\EditMasjid::route('/{record}/edit'),
         ];
     }    

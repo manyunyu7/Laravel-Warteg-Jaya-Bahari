@@ -2,26 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\MasjidTypeResource\Pages;
-use App\Filament\Resources\MasjidTypeResource\RelationManagers;
-use App\Models\MasjidType;
-use Filament\Forms;
+use App\Filament\Resources\ProductCategoryResource\Pages;
+use App\Filament\Resources\ProductCategoryResource\RelationManagers;
+use App\Models\ProductCategory;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\LinkAction;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class MasjidTypeResource extends Resource
+class ProductCategoryResource extends Resource
 {
-    protected static ?string $model = MasjidType::class;
+    protected static ?string $model = ProductCategory::class;
 
-    protected static ?string $navigationGroup = 'Prayers';
+    protected static ?string $navigationGroup = 'Products';
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-list';
+    protected static ?string $navigationIcon = 'heroicon-o-view-grid';
 
     public static function form(Form $form): Form
     {
@@ -35,11 +34,10 @@ class MasjidTypeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->searchable()->sortable(),
-                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('name')->sortable()->searchable(),
             ])->prependActions([
                 LinkAction::make('delete')
-                ->action(fn (Masjid $record)=>$record->delete())
+                ->action(fn (ProductCategory $record)=>$record->delete())
                 ->requiresConfirmation()
                 ->icon('heroicon-o-trash')
                 ->color('danger')
@@ -56,8 +54,8 @@ class MasjidTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMasjidTypes::route('/'),
-            'edit' => Pages\EditMasjidType::route('/{record}/edit'),
+            'index' => Pages\ListProductCategories::route('/'),
+            'edit' => Pages\EditProductCategory::route('/{record}/edit'),
         ];
     }    
 }

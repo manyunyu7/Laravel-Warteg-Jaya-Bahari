@@ -29,6 +29,11 @@ class MasjidReviewImageResource extends Resource
     {
         return $form
             ->schema([
+                BelongsToSelect::make('masjid_review_id')->relationship('masjidReview', 'masjid_id')->required(),
+                FileUpload::make('path')->image()->directory('uploads/masjid_reviews')
+                    ->panelAspectRatio('4:1')->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
+                        return (string) ('MasjidReview_'.uniqid().'_'. $file->getClientOriginalName());
+                    })
             ]);
     }
 
@@ -52,7 +57,6 @@ class MasjidReviewImageResource extends Resource
     {
         return [
             'index' => Pages\ListMasjidReviewImages::route('/'),
-            'create' => Pages\CreateMasjidReviewImage::route('/create'),
             'edit' => Pages\EditMasjidReviewImage::route('/{record}/edit'),
         ];
     }    

@@ -9,7 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListMasjidTypes extends ListRecords
 {
     protected static string $resource = MasjidTypeResource::class;
-
+    
     protected function getActions(): array
     {
         return [
