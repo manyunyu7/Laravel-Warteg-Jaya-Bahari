@@ -13,6 +13,7 @@ use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\LinkAction;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Livewire\TemporaryUploadedFile;
@@ -29,11 +30,6 @@ class MasjidReviewImageResource extends Resource
     {
         return $form
             ->schema([
-                BelongsToSelect::make('masjid_review_id')->relationship('masjidReview', 'masjid_id')->required(),
-                FileUpload::make('path')->image()->directory('uploads/masjid_reviews')
-                    ->panelAspectRatio('4:1')->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
-                        return (string) ('MasjidReview_'.uniqid().'_'. $file->getClientOriginalName());
-                    })
             ]);
     }
 
@@ -42,7 +38,7 @@ class MasjidReviewImageResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('masjidReview.name')->sortable()->searchable(),
-                TextColumn::make('path'),
+                ImageColumn::make('path'),
             ]);
     }
     
@@ -57,7 +53,6 @@ class MasjidReviewImageResource extends Resource
     {
         return [
             'index' => Pages\ListMasjidReviewImages::route('/'),
-            'edit' => Pages\EditMasjidReviewImage::route('/{record}/edit'),
         ];
     }    
 }

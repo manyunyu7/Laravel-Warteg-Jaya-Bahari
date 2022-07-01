@@ -23,9 +23,13 @@ class EditMasjid extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {  
-        if (isset($record->img)) {
-            unlink(public_path('storage/'. $record->img));
+        if (isset($this->form->getState()['img'])) {
+            $path = public_path('storage/'. $record->img);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
+
         $record->update($data);
 
         return $record;

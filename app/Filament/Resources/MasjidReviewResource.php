@@ -39,6 +39,7 @@ class MasjidReviewResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->sortable()->searchable(),
                 TextColumn::make('masjid.name')->sortable()->searchable(),
                 TextColumn::make('user.name')->sortable()->searchable(),
                 TextColumn::make('rating.name')->sortable()->searchable(),
