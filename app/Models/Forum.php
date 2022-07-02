@@ -9,7 +9,14 @@ class Forum extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'user_id', 'title', 'body'];
+    protected $fillable = ['category_id', 'user_id', 'title', 'body', 'img'];
+
+    protected static function booted()
+    {
+        static::deleted(function ($forum) {
+            unlink(public_path('storage/'.$forum->img));
+        });
+    }
 
     public function category()
     {
