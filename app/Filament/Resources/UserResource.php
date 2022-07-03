@@ -5,11 +5,13 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Field;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -31,17 +33,19 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')->required(),
+                FileUpload::make('photo')->image()->directory('uploads/users')
+                    ->panelAspectRatio('4:1')->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
+                        return (string) ('User_'.uniqid().'_'. $file->getClientOriginalName());
+                    }),
                 Select::make('roles_id')
                 ->options([
                     '1' => 'Admin',
                     '2' => 'Customer',
-                    '3' => 'Restoran',
                 ]),
-                FileUpload::make('img')->image()->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
-                        return (string) ('public/uploads/' .'User_'.uniqid().'.'. $file->getClientOriginalExtension());
-                    }),
+                TextInput::make('phone_number')->required(),
                 TextInput::make('email')->required(),
-                DateTimePicker::make('email_verified_at'),
+                TextInput::make('password')->password()->dehydrateStateUsing(fn ($state) => Hash::make($state))->required(),
+                TextInput::make('passwordConfirmation')->password()->same('password')->required(),
             ]);
     }
 
@@ -51,12 +55,13 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('id')->searchable()->sortable(),
                 TextColumn::make('roles_id')->sortable()->searchable(),
-                ImageColumn::make('photo')->searchable()->sortable(),
+                ImageColumn::make('photo')->rounded(),
+                TextColumn::make('phone_number')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
                 TextColumn::make('email_verified_at')->searchable()->sortable(),
             ])->prependActions([
                 LinkAction::make('delete')
-                ->action(fn (Masjid $record)=>$record->delete())
+                ->action(fn (User $record)=>$record->delete())
                 ->requiresConfirmation()
                 ->icon('heroicon-o-trash')
                 ->color('danger')

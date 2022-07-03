@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +11,25 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail, FilamentUser
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail, FilamentUser, HasAvatar
 {
     use  HasApiTokens,HasFactory, Notifiable;
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->photo;
+    }
 
     public function canAccessFilament(): bool
     {
         return str_ends_with($this->roles_id, '1') && $this->hasVerifiedEmail();
+    }
+
+    protected static function booted()
+    {
+        static::deleted(function ($product) {
+            unlink(public_path('storage/'.$product->img));
+        });
     }
 
     /**
@@ -27,6 +40,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
     protected $fillable = [
         'name',
         'email',
+        'photo',
         'roles_id',
         'phone_number',
         'password',
