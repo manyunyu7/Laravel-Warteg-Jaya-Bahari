@@ -39,39 +39,39 @@ class StatsOverview extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make("{$this->getPrayerTime()->meta->timezone} Fajr", $this->getPrayerTime()->timings->Fajr)
+            Card::make("Asia/Seoul Fajr", $this->getPrayerTime()->timings->Fajr)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Sunrise", $this->getPrayerTime()->timings->Sunrise)
+            Card::make("Asia/Seoul Sunrise", $this->getPrayerTime()->timings->Sunrise)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Dhuhr", $this->getPrayerTime()->timings->Dhuhr)
+            Card::make("Asia/Seoul Dhuhr", $this->getPrayerTime()->timings->Dhuhr)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Asr", $this->getPrayerTime()->timings->Asr)
+            Card::make("Asia/Seoul Asr", $this->getPrayerTime()->timings->Asr)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Sunset", $this->getPrayerTime()->timings->Sunset)
+            Card::make("Asia/Seoul Sunset", $this->getPrayerTime()->timings->Sunset)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Maghrib", $this->getPrayerTime()->timings->Maghrib)
+            Card::make("Asia/Seoul Maghrib", $this->getPrayerTime()->timings->Maghrib)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Isha", $this->getPrayerTime()->timings->Isha)
+            Card::make("Asia/Seoul Isha", $this->getPrayerTime()->timings->Isha)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Imsak", $this->getPrayerTime()->timings->Imsak)
+            Card::make("Asia/Seoul Imsak", $this->getPrayerTime()->timings->Imsak)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),
-            Card::make("{$this->getPrayerTime()->meta->timezone} Midnight", $this->getPrayerTime()->timings->Midnight)
+            Card::make("Asia/Seoul Midnight", $this->getPrayerTime()->timings->Midnight)
                 ->description($this->getPrayerTime()->date->readable)
                 ->descriptionIcon('heroicon-s-user-group')
                 ->color('success'),

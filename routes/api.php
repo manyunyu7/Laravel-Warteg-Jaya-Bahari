@@ -44,8 +44,6 @@ Route::prefix('v1')->group(function (){
         Route::post('request-otp', [AuthController::class, 'requestOTP']);
         Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
     }); 
-
-    Route::get('prayTime/', [PrayerTimeController::class, 'getPrayTime']);
 });
 
 
