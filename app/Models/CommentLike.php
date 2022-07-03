@@ -9,7 +9,7 @@ class CommentLike extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'forum_id'];
+    protected $fillable = ['user_id', 'comment_id'];
 
     public function user()
     {

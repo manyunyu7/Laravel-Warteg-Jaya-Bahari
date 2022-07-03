@@ -9,16 +9,23 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','certification_id', 'name','code', 'img',];
+    protected $fillable = ['id','certification_id','category_id', 'name','code', 'img',];
+
+    protected static function booted()
+    {
+        static::deleted(function ($product) {
+            unlink(public_path('storage/'.$product->img));
+        });
+    }
 
     public function certification()
     {
-        return $this->hasOne(Certification::class);
+        return $this->belongsTo(Certification::class);
     }
 
     public function information()
     {
-        return $this->belongsto(ProductInformation::class);
+        return $this->hasOne(ProductInformation::class);
     }
 
     public function category()

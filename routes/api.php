@@ -46,6 +46,7 @@ Route::prefix('v1')->group(function (){
     }); 
 });
 
+
 Route::middleware('jwt.verify')->group(function (){
     Route::prefix('v1')->group(function (){
         Route::post('refreshToken', [AuthController::class, 'refreshToken']);
@@ -70,8 +71,6 @@ Route::middleware('jwt.verify')->group(function (){
             Route::post('edit/{id}', [MasjidController::class, 'update']);
             Route::delete('delete', [MasjidController::class, 'destroy']);
         });
-
-        Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
 
         Route::prefix('reviewMasjid')->group(function (){
             Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
