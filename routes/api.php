@@ -44,7 +44,10 @@ Route::prefix('v1')->group(function (){
         Route::post('request-otp', [AuthController::class, 'requestOTP']);
         Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
     }); 
+
+    Route::get('prayTime/', [PrayerTimeController::class, 'getPrayTime']);
 });
+
 
 Route::middleware('jwt.verify')->group(function (){
     Route::prefix('v1')->group(function (){
@@ -70,8 +73,6 @@ Route::middleware('jwt.verify')->group(function (){
             Route::post('edit/{id}', [MasjidController::class, 'update']);
             Route::delete('delete', [MasjidController::class, 'destroy']);
         });
-
-        Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
 
         Route::prefix('reviewMasjid')->group(function (){
             Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
