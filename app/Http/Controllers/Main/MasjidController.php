@@ -49,21 +49,25 @@ class MasjidController extends Controller
             $file = $request->file('img');
             $path = 'uploads/img/masjids/';
             $ekstension = $file->getClientOriginalExtension();
-            $name = time() . '_' . $request->name . '.' . $ekstension;
+            $name = time() . '_'. '.' . $ekstension;
             $request->img->move(public_path($path), $name);
 
-            $masjid = Masjid::create([
-                'name' => $request->name,
-                'type_id' => $request->type_id,
-                'facilities' => $request->facilities,
-                'phone' => '+82 '.$request->phone,
-                'operating_start' => $request->operating_start,
-                'operating_end' => $request->operating_end,
-                'address' => $request->address,
-                'lat' => $request->lat,
-                'long' => $request->long,
-                'img' => $path.$name
-            ]);
+
+            // for ($i=1; $i <= 1000 ; $i++) { 
+                $masjid = Masjid::create([
+                    'name' => $request->name,
+                    'type_id' => $request->type_id,
+                    'facilities' => $request->facilities,
+                    'phone' => '+82 '.$request->phone,
+                    'operating_start' => $request->operating_start,
+                    'operating_end' => $request->operating_end,
+                    'address' => "address ",
+                    'lat' => $request->lat,
+                    'long' => $request->long,
+                    'img' => $path.$name
+                ]);
+            // }
+            
 
             if (!$masjid) {
                 return response()->json([
@@ -99,7 +103,7 @@ class MasjidController extends Controller
                     'code' => 400,
                     'message' => 'Failed store masjid data',
                     'data' => null
-                ]);
+                ],400);
             } else {
                 return response()->json([
                     'success' => true,
@@ -134,7 +138,12 @@ class MasjidController extends Controller
                 'data' => $masjids
             ]);
         } else {
-            $paginate = DB::table('masjids')->orderBy('name', 'asc')->paginate(4);
+            $perPage = $request->perPage;
+            if($perPage==null){
+                $perPage==1;
+            }
+            $page = $request->page;
+            $paginate = Masjid::paginate(10,['*'],'page',$page);
             if (!$paginate) {
                 return response()->json([
                     'success' => false,

@@ -31,6 +31,10 @@ class RatingSeeder extends Seeder
                 'id' => 4,
                 'name' => 'Bagus',
             ],
+            [
+                'id' => 5,
+                'name' => 'Sangat Bagus',
+            ],
         ]);
     }
 }

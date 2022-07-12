@@ -30,15 +30,15 @@ class Masjid extends Model
 
     public function getAllphotosAttribute()
     {
-        $masjidReviews = MasjidReview::where("masjid_id", '=', $this->id)->get();
+        // $masjidReviews = MasjidReview::where("masjid_id", '=', $this->id)->get();
         $arrayPhotoUrl = array();
-        array_push($arrayPhotoUrl, $this->img);
-        foreach ($masjidReviews as $item) {
-            $masjidPhotos = MasjidReviewImage::where("review_id", '=', $item->id);
-            foreach ($masjidPhotos as $itemPhoto) {
-                array_push($arrayPhotoUrl, $itemPhoto->path);
-            }
-        }
+        // array_push($arrayPhotoUrl, $this->img);
+        // foreach ($masjidReviews as $item) {
+        //     $masjidPhotos = MasjidReviewImage::where("review_id", '=', $item->id);
+        //     foreach ($masjidPhotos as $itemPhoto) {
+        //         array_push($arrayPhotoUrl, $itemPhoto->path);
+        //     }
+        // }
         return $arrayPhotoUrl;
     }
 
@@ -91,15 +91,22 @@ class Masjid extends Model
                 $ratings5 += 1;
             }
         }
+        $totalRatings = ((1.0*$ratings1)+(2.0*$ratings2)+(3.0*$ratings3)+(4.0*$ratings4)+(5.0*$ratings5));
 
-        $avg = ($ratings1 + $ratings2 + $ratings3 + $ratings4 + $ratings5) / 5.0;
-        $object->avg = $avg;
+        $ratingCounts = $masjidReviews->count();
+        $avg=0;
+
+        if($totalRatings!=0){
+        $avg = $totalRatings/$ratingCounts;
+        }
+
+        $object->avg = round($avg);
         $object->rating1 = $ratings1;
         $object->rating2 = $ratings2;
         $object->rating3 = $ratings3;
         $object->rating4 = $ratings4;
         $object->rating5 = $ratings5;
-        return strval($avg);
+        return round($avg);
     }
 
     //end #mobreq

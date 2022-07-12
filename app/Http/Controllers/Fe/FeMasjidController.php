@@ -6,12 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Masjid;
 use App\Models\MasjidReview;
 use App\Models\MasjidReviewImage;
-use App\Models\Rating;
 use Illuminate\Http\Request;
-use Exception;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use stdClass;
 
 class FeMasjidController extends Controller
@@ -38,7 +33,7 @@ class FeMasjidController extends Controller
         $perPage = $request->perPage;
         $object = new stdClass();
         $masjidReviews = MasjidReview::where("masjid_id", '=', $masjidId)->paginate($perPage,['*'],'page',$page);
-       
+
         $AllReviews = MasjidReview::where("masjid_id",'=',$masjidId)->get();
         $reviewCount = $this->getReviewCount($AllReviews);
         $object->reviews = $masjidReviews;
@@ -48,8 +43,6 @@ class FeMasjidController extends Controller
 
     public function getReviewCount($datas)
     {
-        $ratings = Rating::all();
-        $ratingCategory = "";
         $object = new stdClass();
 
         $ratings1 = 0;
@@ -78,10 +71,17 @@ class FeMasjidController extends Controller
             }
         }
 
-        $avg = ($ratings1+$ratings2+$ratings3+$ratings4+$ratings5)/5.0;
 
+        $totalRatings = ((1.0*$ratings1)+(2.0*$ratings2)+(3.0*$ratings3)+(4.0*$ratings4)+(5.0*$ratings5));
+        $ratingCounts = $datas->count();
+        $avg=0;
 
-        $object->avg = $avg;
+        if($totalRatings!=0){
+        $avg = $totalRatings/$ratingCounts;
+        }
+
+        
+        $object->avg = round($avg);
         $object->rating1 = $ratings1;
         $object->rating2 = $ratings2;
         $object->rating3 = $ratings3;

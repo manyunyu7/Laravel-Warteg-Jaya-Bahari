@@ -15,7 +15,7 @@ class AddingRatingColumnFromMasjidReveiwsTable extends Migration
     {
         Schema::table('masjid_reviews', function (Blueprint $table) {
             $table->unsignedBigInteger('rating_id')->after('user_id');
-            $table->foreign('rating_id')->references('id')->on('ratings');
+            $table->foreign('rating_id')->references('id')->on('ratings')->onDelete("cascade");
         });
     }
 
