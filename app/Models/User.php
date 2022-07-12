@@ -2,15 +2,35 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail, FilamentUser, HasAvatar
 {
-    use  HasFactory, Notifiable;
+    use  HasApiTokens,HasFactory, Notifiable;
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function canAccessFilament(): bool
+    {
+        return str_ends_with($this->roles_id, '1') && $this->hasVerifiedEmail();
+    }
+
+    protected static function booted()
+    {
+        static::deleted(function ($product) {
+            unlink(public_path('storage/'.$product->img));
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +40,7 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'photo',
         'roles_id',
         'phone_number',
         'password',
@@ -61,6 +82,11 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function role()
+    {
+        return $this->hasOne('user_roles');
+    }
+
     public function masjidReviews()
     {
         return $this->hasMany(MasjidReview::class);
@@ -79,5 +105,35 @@ class User extends Authenticatable implements JWTSubject
     public function likes()
     {
         return $this->hasMany(ForumLike::class);
+    }
+
+    public function commentLikes()
+    {
+        return $this->hasMany(CommentLike::class);
+    }
+
+    public function restoFavorites()
+    {
+        return $this->hasMany(FavoriteRestoran::class);
+    }
+
+    public function masjidFavorites()
+    {
+        return $this->hasMany(FavoriteMasjid::class);
+    }
+
+    public function restoranReviews()
+    {
+        return $this->hasMany(RestoranReview::class);
+    }
+
+    public function otp()
+    {
+        return $this->hasOne(UserOTP::class);
+    }
+
+    public function restoran()
+    {
+        return $this->hasOne(Restoran::class);
     }
 }

@@ -16,5 +16,8 @@ class Rating extends Model
         $this->hasMany(MasjidReview::class);
     }
 
-    protected $fillable = ["id",'desc'];
+    public function restorans()
+    {
+        $this->hasMany(RestoranReview::class);
+    }
 }

@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OtpEmail;
 use App\Models\User;
+use App\Models\UserOTP;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), 
@@ -95,6 +94,15 @@ class AuthController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'email or password incorrect', 
+                'data' => null
+            ]);
+        }
+        $user = User::where('email',$request->email)->first();
+        if ($user->email_verified_at == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Verified first', 
                 'data' => null
             ]);
         }
@@ -267,5 +275,89 @@ class AuthController extends Controller
             'expires_in' => auth('api')->factory()->getTTL()*60,
             'user' => auth()->user(),
         ]);
+    }
+
+    public function refreshToken()
+    {
+        return $this->createNewToken(auth()->refresh());
+    }
+
+    public function requestOTP(Request $request)
+    {
+        $user = User::where("email", $request->email)->first();
+
+        if (!$user->id) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'User id not found', 
+                'data' => null
+            ]);
+        }
+
+        do {
+            $otp = rand(1000, 9999);
+            $check = UserOTP::where('otp', $otp)->exists();
+        } while ($check);
+
+        $userOTP = UserOTP::updateOrCreate(
+            [
+                "user_id" => $user->id,
+            ],
+            [
+                "otp" => $otp,
+                "valid_until" => Carbon::now()->addMinutes(30),
+            ]
+        );
+        
+        if (!$userOTP) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed create OTP', 
+                'data' => null
+            ]);
+        }
+
+        Mail::to($request->email)->send(new OtpEmail($otp, $user->name));
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'OTP send succesfully', 
+        ]);
+    }
+
+    public function verifyOTP(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        $checkOTP = UserOTP::where('user_id', $user->id)->where('otp',$request->otp)->first();
+
+        if (!empty($checkOTP)) {
+            if (Carbon::now()->lessThanOrEqualTo($checkOTP->valid_until)){
+                User::where('email',$user->email)->update([
+                    "email_verified_at" => Carbon::now(),
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'Success Verified account', 
+                ]);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'code' => 401,
+                    'message' => 'OTP Code Expired', 
+                ]);
+            }
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'OTP Code Not Found', 
+            ]);
+        }
+        
     }
 }

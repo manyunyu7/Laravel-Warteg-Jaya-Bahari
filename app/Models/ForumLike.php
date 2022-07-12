@@ -9,6 +9,8 @@ class ForumLike extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = ['user_id', 'forum_id'];
 
     public function forum()
