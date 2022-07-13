@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TableForums extends BaseWidget
 {
-    // protected ?string $columnSpan = 'full';
     protected function getTableQuery(): Builder
     {
         return Forum::query()->latest()->limit(10);
