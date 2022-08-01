@@ -24,14 +24,14 @@ class ProductInformationController extends Controller
                 'code' => 404,
                 'message' => 'informations data not found', 
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get informations', 
                 'data' => $informations
-            ]);
+            ],200);
         }
     }
 
@@ -86,14 +86,14 @@ class ProductInformationController extends Controller
                 'code' => 200,
                 'message' => 'success add information', 
                 'data' => $information
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add information', 
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -113,14 +113,14 @@ class ProductInformationController extends Controller
                 'code' => 404,
                 'message' => 'information detail not found', 
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get information detail', 
                 'data' => $information
-            ]);
+            ],200);
         }
     }
 
@@ -168,7 +168,7 @@ class ProductInformationController extends Controller
                 'code' => 404,
                 'message' => 'informations not found', 
                 'data' => null
-            ]);
+            ],404);
         }
 
         $information->allergy = $request->allergy;
@@ -181,14 +181,14 @@ class ProductInformationController extends Controller
                 'code' => 200,
                 'message' => 'success update information data', 
                 'data' => $information
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update information data', 
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -208,20 +208,20 @@ class ProductInformationController extends Controller
                 'code' => 404,
                 'message' => 'information not found', 
                 'data' => null
-            ]);
+            ],404);
         }else{
             if ($information->delete()) {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success delete information data', 
-                ]);
+                ],200);
             }else{
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'failed delete information data', 
-                ]);
+                ],400);
             }
         }
     }

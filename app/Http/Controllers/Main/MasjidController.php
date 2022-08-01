@@ -73,14 +73,14 @@ class MasjidController extends Controller
                     'code' => 400,
                     'message' => 'Failed store masjid data',
                     'data' => null
-                ]);
+                ],400);
             } else {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success store masjid',
                     'data' => $masjid
-                ]);
+                ],200);
             }
         } else {
             $masjid = Masjid::create([
@@ -101,14 +101,14 @@ class MasjidController extends Controller
                     'code' => 400,
                     'message' => 'Failed store masjid data',
                     'data' => null
-                ]);
+                ],400);
             } else {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success store masjid',
                     'data' => $masjid
-                ]);
+                ],200);
             }
         }
     }
@@ -126,7 +126,7 @@ class MasjidController extends Controller
                     'code' => 404,
                     'message' => 'Masjid Not Found',
                     'data' => null
-                ]);
+                ],404);
             }
 
             return response()->json([
@@ -134,7 +134,7 @@ class MasjidController extends Controller
                 'code' => 200,
                 'message' => 'success get all masjid data',
                 'data' => $masjids
-            ]);
+            ],200);
         } else {
             $paginate = DB::table('masjids')->orderBy('name', 'asc')->paginate(4);
             if (!$paginate) {
@@ -143,14 +143,14 @@ class MasjidController extends Controller
                     'code' => 400,
                     'message' => 'failed pagination masjid',
                     'data' => null
-                ]);
+                ],400);
             } else {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success pagination masjid',
                     'data' => $paginate
-                ]);
+                ],200);
             }
         }
     }
@@ -170,7 +170,7 @@ class MasjidController extends Controller
                     'code' => 404,
                     'message' => 'Masjid Not Found',
                     'data' => null
-                ]);
+                ],404);
             }
 
             return response()->json([
@@ -178,7 +178,7 @@ class MasjidController extends Controller
                 'code' => 200,
                 'message' => 'success get all masjid data',
                 'data' => $masjids
-            ]);
+            ],200);
         } else {
             $paginate = Masjid::where('type_id', $typeId)->paginate($perPage, ['*'], 'page', $page);
             return response()->json([
@@ -186,7 +186,7 @@ class MasjidController extends Controller
                 'code' => 200,
                 'message' => 'success pagination masjid',
                 'data' => $paginate
-            ]);
+            ],200);
         }
     }
     
@@ -201,14 +201,14 @@ class MasjidController extends Controller
                 'code' => 404,
                 'message' => 'Masjid Not Found',
                 'data' => null
-            ]);
+            ],404);
         } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get detail masjid',
                 'data' => $masjid
-            ]);
+            ],200);
         }
     }
 
@@ -257,7 +257,7 @@ class MasjidController extends Controller
                         'success' => false,
                         'code' => 400,
                         'message' => $e
-                    ]);
+                    ],400);
                 }
             }
 
@@ -275,14 +275,14 @@ class MasjidController extends Controller
                 'code' => 200,
                 'message' => 'success update masjid',
                 'data' => $masjid
-            ]);
+            ],200);
         } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update masjid',
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -297,7 +297,7 @@ class MasjidController extends Controller
                 'code' => 404,
                 'message' => 'masjid_review not found',
                 'data' => null
-            ]);
+            ],404);
         }
 
         $arrPath = array();
@@ -316,14 +316,14 @@ class MasjidController extends Controller
                 'code' => 400,
                 'message' => 'failed get masjid photos',
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get masjid photos',
                 'data' => $arrPath
-            ]);
+            ],200);
         }
         
 

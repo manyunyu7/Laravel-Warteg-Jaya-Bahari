@@ -42,7 +42,7 @@ class MasjidReviewController extends Controller
                 'success' => false,
                 'code' => 401,
                 'message' => 'Login First',
-            ]);
+            ],400);
         }else{
 
             if ($request->hasFile('img')) {
@@ -82,14 +82,14 @@ class MasjidReviewController extends Controller
                         'code' => 200,
                         'message' => 'success add review masjid',
                         'data' => $review
-                    ]);
+                    ],200);
                 } else {
                     return response()->json([
                         'success' => false,
                         'code' => 400,
                         'message' => 'failed add review masjid',
                         'data' => null
-                    ]);
+                    ],400);
                 }
             }else{
                 $review = new MasjidReview();
@@ -105,14 +105,14 @@ class MasjidReviewController extends Controller
                         'code' => 200,
                         'message' => 'success add review masjid',
                         'data' => $review
-                    ]);
+                    ],200);
                 } else {
                     return response()->json([
                         'success' => false,
                         'code' => 400,
                         'message' => 'failed add review masjid',
                         'data' => null
-                    ]);
+                    ],400);
                 }
             }
         }
@@ -146,7 +146,7 @@ class MasjidReviewController extends Controller
                     'code' => 404,
                     'message' => 'review not found',
                     'data' => null
-                ]);
+                ],404);
             }
 
             return response()->json([
@@ -163,7 +163,7 @@ class MasjidReviewController extends Controller
                     'totalReview' => $tot,
                     'averageReview' => $avg
                 ]
-            ]);
+            ],200);
         } else {
             if ($review == null) {
                 return response()->json([
@@ -171,7 +171,7 @@ class MasjidReviewController extends Controller
                     'code' => 404,
                     'message' => 'review not found',
                     'data' => null
-                ]);
+                ],404);
             }
 
             return response()->json([
@@ -188,7 +188,7 @@ class MasjidReviewController extends Controller
                     'totalReview' => $tot,
                     'averageReview' => $avg
                 ]
-            ]);
+            ],200);
         }
     }
 
@@ -226,7 +226,7 @@ class MasjidReviewController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => "masjid review not found"
-            ]);
+            ],404);
         }else{
             if ($image != null) {
                 foreach ($image as $img) {
@@ -240,7 +240,7 @@ class MasjidReviewController extends Controller
                                 'success' => false,
                                 'code' => 400,
                                 'message' => $th->getMessage(),
-                            ]);
+                            ],400);
                         }
                     }
                 }
@@ -251,13 +251,13 @@ class MasjidReviewController extends Controller
                     'success' => true,
                     'code' => 200,
                     'message' => 'success delete review masjid',
-                ]);
+                ],200);
             } else {
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'failed delete review masjid',
-                ]);
+                ],400);
             }
         }
     }

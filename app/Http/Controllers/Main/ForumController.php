@@ -28,14 +28,14 @@ class ForumController extends Controller
                 'code' => 200,
                 'message' => 'success get all forum data',
                 'data' => $forums
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed get all forum data',
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -94,14 +94,14 @@ class ForumController extends Controller
                         'code' => 200,
                         'message' => 'Success store forum',
                         'data' => $forum,
-                    ]);
+                    ],200);
                 }else{
                     return response()->json([
                         'success' => false,
                         'code' => 400,
                         'message' => 'Failed store forum',
                         'data' => null,
-                    ]);
+                    ],400);
                 }
             }else{
                 return response()->json([
@@ -109,7 +109,7 @@ class ForumController extends Controller
                     'code' => 400,
                     'message' => 'Failed upload image',
                     'data' => null,
-                ]);
+                ],400);
             }
         }
         $forum->user_id = Auth::id();
@@ -123,14 +123,14 @@ class ForumController extends Controller
                 'code' => 200,
                 'message' => 'Success store forum',
                 'data' => $forum,
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed store forum',
                 'data' => null,
-            ]);
+            ],400);
         }
     }
 
@@ -150,14 +150,14 @@ class ForumController extends Controller
                 'code' => 404,
                 'message' => 'forum not found',
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'Success get detail forum',
                 'data' => $forum
-            ]);
+            ],200);
         }
     }
 
@@ -216,7 +216,7 @@ class ForumController extends Controller
                         'success' => false,
                         'code' => 400,
                         'message' => $e
-                    ]);
+                    ],400);
                 }
             }
 
@@ -233,14 +233,14 @@ class ForumController extends Controller
                         'code' => 200,
                         'message' => 'Success update forum',
                         'data' => $forum,
-                    ]);
+                    ],200);
                 }else{
                     return response()->json([
                         'success' => false,
                         'code' => 400,
                         'message' => 'Failed update forum',
                         'data' => null,
-                    ]);
+                    ],400);
                 }
         }
 
@@ -250,14 +250,14 @@ class ForumController extends Controller
                 'code' => 200,
                 'message' => 'Success upadate forum',
                 'data' => $forum,
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed update forum',
                 'data' => null,
-            ]);
+            ],400);
         }
     }
 }
@@ -277,14 +277,14 @@ class ForumController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'forum not found',
-            ]);
+            ],404);
         }else{
             if ($forum->delete()) {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success delete forum',
-                ]);
+                ],200);
             }
         }
     }
@@ -298,7 +298,7 @@ class ForumController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'forum not found',
-            ]);
+            ],404);
         }
 
         
@@ -307,7 +307,7 @@ class ForumController extends Controller
                 'success' => false,
                 'code' => 400,
                 'message' => 'you have already like forum',
-            ]);
+            ],400);
         }
 
         $forumLike = new ForumLike();
@@ -319,13 +319,13 @@ class ForumController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success like forum',
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed like forum',
-            ]);
+            ],400);
         }
     }
 }

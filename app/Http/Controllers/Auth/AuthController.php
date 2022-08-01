@@ -95,7 +95,7 @@ class AuthController extends Controller
                 'code' => 404,
                 'message' => 'email or password incorrect', 
                 'data' => null
-            ]);
+            ], 404);
         }
         $user = User::where('email',$request->email)->first();
         if ($user->email_verified_at == null) {
@@ -104,7 +104,7 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'Verified first', 
                 'data' => null
-            ]);
+            ],400);
         }
 
         return $this->createNewToken($token);
@@ -119,7 +119,7 @@ class AuthController extends Controller
             'success' => true,
             'code' => 200,
             'message' => 'user successfully logged out', 
-        ]);
+        ],200);
     }
 
     public function refresh() 
@@ -134,7 +134,7 @@ class AuthController extends Controller
             'code' => 200,
             'message' => 'Success get user profile', 
             'data' => auth()->user()
-        ]);
+        ],200);
     }
 
     public function editProfile( Request $request)
@@ -165,7 +165,7 @@ class AuthController extends Controller
                         'success' => false,
                         'code' => 400,
                         'message' => $e
-                    ]);
+                    ],400);
                 }
             }
 
@@ -184,7 +184,7 @@ class AuthController extends Controller
             'code' => 200,
             'message' => 'Success edit profile', 
             'data' => $user
-        ]);
+        ],200);
     }
 
     public function updateUserPassword(Request $request)
@@ -207,7 +207,7 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'password do not match', 
                 'data' => null
-            ]);
+            ],400);
         }else{
             $user = auth()->user();
             $user->password = bcrypt($request->new_password);
@@ -219,7 +219,7 @@ class AuthController extends Controller
                 'code' => 200,
                 'message' => 'Success update password', 
                 'data' => $user
-            ]);
+            ],200);
         }
     }
 
@@ -254,14 +254,14 @@ class AuthController extends Controller
                 'code' => 200,
                 'message' => 'Success upload photo', 
                 'data' => $user
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed upload photo', 
                 'data' => $user
-            ]);
+            ],400);
         }
     }
 
@@ -272,7 +272,7 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL()*60,
             'user' => auth()->user(),
-        ]);
+        ],200);
     }
 
     public function refreshToken()
@@ -290,7 +290,7 @@ class AuthController extends Controller
                 'code' => 404,
                 'message' => 'User id not found', 
                 'data' => null
-            ]);
+            ],404);
         }
 
         do {
@@ -314,7 +314,7 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'Failed create OTP', 
                 'data' => null
-            ]);
+            ],400);
         }
 
         Mail::to($request->email)->send(new OtpEmail($otp, $user->name));
@@ -323,7 +323,7 @@ class AuthController extends Controller
             'success' => true,
             'code' => 200,
             'message' => 'OTP send succesfully', 
-        ]);
+        ],200);
     }
 
     public function verifyOTP(Request $request)
@@ -341,20 +341,20 @@ class AuthController extends Controller
                     'success' => true,
                     'code' => 200,
                     'message' => 'Success Verified account', 
-                ]);
+                ],200);
             }else{
                 return response()->json([
                     'success' => false,
                     'code' => 401,
                     'message' => 'OTP Code Expired', 
-                ]);
+                ],401);
             }
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 404,
                 'message' => 'OTP Code Not Found', 
-            ]);
+            ],404);
         }
         
     }

@@ -34,14 +34,14 @@ class RestoranController extends Controller
                     'code' => 400,
                     'message' => 'Failed get restorans data', 
                     'data' => null
-                ]);
+                ],400);
             }else{
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success get restorans data', 
                     'data' => $restorans
-                ]);
+                ],200);
             }
         }else{
             $paginate = DB::table('restorans')->orderBy('name', 'asc')->paginate(4);
@@ -52,14 +52,14 @@ class RestoranController extends Controller
                     'code' => 400,
                     'message' => 'failed paginate restorans data',
                     'data' => null
-                ]);
+                ],400);
             }else{
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success paginate restorans data',
                     'data' => $paginate
-                ]);
+                ],200);
             }
         }
 
@@ -80,7 +80,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ]);
+            ],404);
         }
 
         if (!$restoByTypeFood) {
@@ -89,14 +89,14 @@ class RestoranController extends Controller
                 'code' => 400,
                 'message' => 'failed get restorans data by type of food',
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get restorans data by type of food',
                 'data' => $restoByTypeFood
-            ]);
+            ],200);
         }
     }
 
@@ -110,7 +110,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ]);
+            ],404);
         }
 
         if (!$restoByCertifciation) {
@@ -119,14 +119,14 @@ class RestoranController extends Controller
                 'code' => 400,
                 'message' => 'failed get restorans data by certification',
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get restorans data by certification',
                 'data' => $restoByCertifciation
-            ]);
+            ],200);
         }
     }
 
@@ -195,14 +195,14 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success add restoran', 
                 'data' => $restoran
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add restoran', 
                 'data' => null
-            ]);
+            ],400);
         }
         
     }
@@ -230,7 +230,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found', 
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
@@ -241,7 +241,7 @@ class RestoranController extends Controller
                     'totalReview' => $totReview,
                     'totRating' => $sum,
                 ]
-            ]);
+            ],200);
         }
     }
 
@@ -261,14 +261,14 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'food type not found', 
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get type food data', 
                 'data' => $food
-            ]);
+            ],200);
         }
     }
 
@@ -319,7 +319,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found', 
                 'data' => null
-            ]);
+            ],404);
         }
 
         $restoran->name = $request->name;
@@ -343,7 +343,7 @@ class RestoranController extends Controller
                         'success' => false,
                         'code' => 400,
                         'message' => $e->getMessage(),
-                    ]);
+                    ],400);
                 }
             }
             $file = $request->file('image');
@@ -362,14 +362,14 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran data', 
                 'data' => $restoran
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update restoran data', 
                 'data' => null
-            ]);
+            ],400);
         }
 
     }
@@ -389,7 +389,7 @@ class RestoranController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'restoran not found'
-            ]);
+            ],404);
         }
 
         if ($restoran->delete()) {
@@ -397,13 +397,13 @@ class RestoranController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success delete restoran'
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete restoran', 
-            ]);
+            ],400);
         }
     }
 
@@ -418,7 +418,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran review not found',
                 'data' => null
-            ]);
+            ],404);
         }
 
         $arrPath = array();
@@ -438,14 +438,14 @@ class RestoranController extends Controller
                 'code' => 400,
                 'message' => 'failed get restoran photos',
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get restoran photos',
                 'data' => $arrPath
-            ]);
+            ],200);
         }
     }
 }

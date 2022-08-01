@@ -97,7 +97,7 @@ class RestoranReviewController extends Controller
                     'code' => 200,
                     'message' => 'success add review restoran',
                     'data' => $review
-                ]);
+                ],200);
                 
             }else{
                 return response()->json([
@@ -105,7 +105,7 @@ class RestoranReviewController extends Controller
                     'code' => 400,
                     'message' => 'failed add review restoran',
                     'data' => null
-                ]);
+                ],400);
             }
         }else{
             $review->user_id = Auth::id();
@@ -119,14 +119,14 @@ class RestoranReviewController extends Controller
                     'code' => 200,
                     'message' => 'success add review restoran',
                     'data' => $review
-                ]);
+                ],200);
             }else{
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'failed add review restoran',
                     'data' => null
-                ]);
+                ],400);
             }
 
         }
@@ -160,7 +160,7 @@ class RestoranReviewController extends Controller
                 'code' => 404,
                 'message' => 'resto review not found',
                 'data' => null
-            ]);
+            ],404);
         }
 
 
@@ -179,7 +179,7 @@ class RestoranReviewController extends Controller
                     "totalReview" => $totalReviews,
                     "averageReview" => $avgReviews
                 ]
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => true,
@@ -195,39 +195,10 @@ class RestoranReviewController extends Controller
                     "totalReview" => $totalReviews,
                     "averageReview" => $avgReviews
                 ]
-            ]);
+            ],200);
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($reviewId)
     {
         $review = RestoranReview::find($reviewId);
@@ -237,7 +208,7 @@ class RestoranReviewController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => "restoran review not found"
-            ]);
+            ],404);
         }else{
             if ($image != null) {
                 foreach ($image as $img) {
@@ -251,7 +222,7 @@ class RestoranReviewController extends Controller
                                 'success' => false,
                                 'code' => 400,
                                 'message' => $th->getMessage(),
-                            ]);
+                            ],400);
                         }
                     }
                 }
@@ -262,13 +233,13 @@ class RestoranReviewController extends Controller
                     'success' => true,
                     'code' => 200,
                     'message' => 'success delete review restoran',
-                ]);
+                ],200);
             } else {
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'failed delete review restoran',
-                ]);
+                ],400);
             }
         }
     }
