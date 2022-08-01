@@ -142,18 +142,18 @@ class FoodController extends Controller
         }
 
         if ($food->delete()) {
-            $img = public_path($food->img);
-            if (file_exists($img)) {
-                try {
-                    unlink($img);
-                } catch (\Throwable $th) {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => $th->getMessage(),
-                    ],400);
-                }
-            }
+            // $img = public_path($food->img);
+            // if (file_exists($img)) {
+            //     try {
+            //         unlink($img);
+            //     } catch (\Throwable $th) {
+            //         return response()->json([
+            //             'success' => false,
+            //             'code' => 400,
+            //             'message' => $th->getMessage(),
+            //         ],400);
+            //     }
+            // }
             return response()->json([
                 'success' => true,
                 'code' => 200,
