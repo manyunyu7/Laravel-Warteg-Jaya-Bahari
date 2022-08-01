@@ -34,6 +34,11 @@ class Restoran extends Model
         return $this->hasMany(Food::class);
     }
 
+    public function foodCategory()
+    {
+        return $this->hasMany(FoodCategory::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

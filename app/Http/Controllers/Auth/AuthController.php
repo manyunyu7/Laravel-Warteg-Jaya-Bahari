@@ -322,7 +322,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'OTP send succesfully', 
+            'message' => 'OTP send succesfully to '.$request->email, 
         ],200);
     }
 

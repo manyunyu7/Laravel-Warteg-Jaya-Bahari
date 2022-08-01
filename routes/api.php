@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Main\FavoriteController;
+use App\Http\Controllers\Main\FoodCategoryController;
 use App\Http\Controllers\Main\FoodController;
 use App\Http\Controllers\Main\ForumCommentController;
 use App\Http\Controllers\Main\ForumController;
@@ -15,7 +16,6 @@ use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\RestoranController;
 use App\Http\Controllers\Main\RestoranReviewController;
-use App\Models\ForumComment;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,6 +153,14 @@ Route::middleware('jwt.verify')->group(function (){
             Route::post('store', [FoodController::class,'store']);
             Route::get('getFood/{restoId}/{categoryId}', [FoodController::class,'getFood']);
             Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
+            Route::prefix('category')->group(function(){
+                Route::get('allCategory', [FoodCategoryController::class, 'index']);
+                Route::get('byResto/{restoId}',[FoodCategoryController::class, 'getByRestoran']);
+                Route::get('detail/{categoryId}',[FoodCategoryController::class, 'getDetail']);
+                Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
+                Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
+                Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+            });
         });
     });
 });
