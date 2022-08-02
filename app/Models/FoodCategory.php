@@ -9,8 +9,15 @@ class FoodCategory extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function foods()
     {
         return $this->hasMany(Food::class);
+    }
+
+    public function restorans()
+    {
+        return $this->hasMany(Restoran::class);
     }
 }

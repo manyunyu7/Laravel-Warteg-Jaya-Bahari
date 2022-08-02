@@ -26,14 +26,14 @@ class ProductController extends Controller
                 'code' => 400,
                 'message' => 'Failed get products data', 
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get products data', 
                 'data' => $products
-            ]);
+            ],200);
         }
     }
 
@@ -94,14 +94,14 @@ class ProductController extends Controller
                 'code' => 200,
                 'message' => 'success add product', 
                 'data' => $product
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add product', 
                 'data' => null
-            ]);
+            ],400);
         }
 
     }
@@ -122,14 +122,14 @@ class ProductController extends Controller
                 'code' => 404,
                 'message' => 'product not found', 
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get data product', 
                 'data' => $product
-            ]);
+            ],200);
         }
     }
 
@@ -181,7 +181,7 @@ class ProductController extends Controller
                 'code' => 404,
                 'message' => 'product not found', 
                 'data' => null
-            ]);
+            ],404);
         }
 
         $product->certification_id = $request->certification_id;
@@ -200,7 +200,7 @@ class ProductController extends Controller
                         'success' => false,
                         'code' => 400,
                         'message' => $e->getMessage(),
-                    ]);
+                    ],400);
                 }
             }
 
@@ -218,14 +218,14 @@ class ProductController extends Controller
                 'code' => 200,
                 'message' => 'success update product data', 
                 'data' => $product
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update prodct data', 
                 'data' => null
-            ]);
+            ],400);
         }
 
     }
@@ -246,7 +246,7 @@ class ProductController extends Controller
                 'code' => 404,
                 'message' => 'product not found', 
                 'data' => null
-            ]);
+            ],404);
         }
 
         if ($product->delete()) {
@@ -254,13 +254,13 @@ class ProductController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success delete product'
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete product', 
-            ]);
+            ],400);
         }
     }
 }

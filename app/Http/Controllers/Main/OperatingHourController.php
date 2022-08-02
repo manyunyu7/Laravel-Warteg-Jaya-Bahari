@@ -37,7 +37,7 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ]);
+            ],404);
         }
 
         if($checkHour == 7)
@@ -47,7 +47,7 @@ class OperatingHourController extends Controller
                 'code' => 400,
                 'message' => 'operating hour cannot be more than 7 data',
                 'data' => null
-            ]);
+            ],400);
         }
 
         $operatingHour = new RestoranOperatingHour();
@@ -61,14 +61,14 @@ class OperatingHourController extends Controller
                 'code' => 200,
                 'message' => 'success store restoran operating hour data',
                 'data' => $operatingHour
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed store restoran operating hour data',
                 'data' => null
-            ]);
+            ,400]);
         }
     }
 }

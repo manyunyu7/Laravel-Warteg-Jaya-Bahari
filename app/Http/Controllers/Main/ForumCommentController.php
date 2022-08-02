@@ -26,14 +26,14 @@ class ForumCommentController extends Controller
                 'code' => 200,
                 'message' => 'success get all comment data',
                 'data' => $comments
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed get all comment data',
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -80,14 +80,14 @@ class ForumCommentController extends Controller
                 'code' => 200,
                 'message' => 'Success to add comment',
                 'data' => $comment,
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed to add comment',
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -107,14 +107,14 @@ class ForumCommentController extends Controller
                 'code' => 404,
                 'message' => 'Comment not found',
                 'data' => null
-            ]);
+            ],404);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'Success get detail comment',
                 'data' => $comment
-            ]);
+            ],200);
         }
     }
 
@@ -163,14 +163,14 @@ class ForumCommentController extends Controller
                 'code' => 200,
                 'message' => 'Success update comment',
                 'data' => $comment,
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed update comment',
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -189,14 +189,14 @@ class ForumCommentController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'comment not found',
-            ]);
+            ],404);
         }else{
             if ($comment->delete()) {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success delete comment',
-                ]);
+                ],200);
             }
         }
     }
@@ -210,7 +210,7 @@ class ForumCommentController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'comment not found',
-            ]);
+            ],404);
         }
 
         if (CommentLike::where('user_id', Auth::user()->id)->exists() && CommentLike::where('comment_id', $commendId)->exists()) {
@@ -218,7 +218,7 @@ class ForumCommentController extends Controller
                 'success' => false,
                 'code' => 400,
                 'message' => 'you have already like comment',
-            ]);
+            ],400);
         }
 
         $commentLike  = new CommentLike();
@@ -230,13 +230,13 @@ class ForumCommentController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success like comment',
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed like forum',
-            ]);
+            ],400);
         }
     }
 }

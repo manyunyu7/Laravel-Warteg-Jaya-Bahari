@@ -24,7 +24,7 @@ class FavoriteController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'restoran not found'
-            ]);
+            ],404);
         }
 
         $favorite->user_id = $user;
@@ -36,14 +36,14 @@ class FavoriteController extends Controller
                 'code' => 200,
                 'message' => 'success add favorite restoran',
                 'data' => $favorite
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add favorite restoran', 
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -58,7 +58,7 @@ class FavoriteController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'masjid not found'
-            ]);
+            ],404);
         }
 
         $favorite->user_id = $user;
@@ -70,14 +70,14 @@ class FavoriteController extends Controller
                 'code' => 200,
                 'message' => 'success add favorite masjid',
                 'data' => $favorite
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add favorite masjid', 
                 'data' => null
-            ]);
+            ],400);
         }
     }
 
@@ -99,7 +99,7 @@ class FavoriteController extends Controller
                 'code' => 404,
                 'message' => 'favorite data not found', 
                 'data' => null
-            ]);
+            ],404);
         }
         
         if ($restorans == null) {
@@ -108,7 +108,7 @@ class FavoriteController extends Controller
                 'code' => 404,
                 'message' => 'restorans favorite data not found', 
                 'data' => $masjids
-            ]);
+            ],404);
         }
 
         if ($masjids == null) {
@@ -117,7 +117,7 @@ class FavoriteController extends Controller
                 'code' => 404,
                 'message' => 'masjids favorite data not found', 
                 'data' => $restorans
-            ]);
+            ],404);
         }
 
         return response()->json([
@@ -128,7 +128,7 @@ class FavoriteController extends Controller
                 "Restorans"=> $restorans, 
                 "Masjid"=>$masjids
             ]
-        ]);
+        ],200);
     }
 
     public function deleteResto($favId)
@@ -140,7 +140,7 @@ class FavoriteController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'restoran fav not found'
-            ]);
+            ],404);
         }
 
         if ($resto->delete()) {
@@ -148,13 +148,13 @@ class FavoriteController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success delete restoran fav'
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete restoran fav'
-            ]);
+            ],400);
         }
     }
 
@@ -167,7 +167,7 @@ class FavoriteController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'masjid fav not found'
-            ]);
+            ],404);
         }
 
         if ($masjid->delete()) {
@@ -175,13 +175,13 @@ class FavoriteController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success delete masjid fav'
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete masjid fav'
-            ]);
+            ],400);
         }
     }
 }

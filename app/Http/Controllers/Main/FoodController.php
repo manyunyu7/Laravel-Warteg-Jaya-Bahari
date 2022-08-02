@@ -66,13 +66,13 @@ class FoodController extends Controller
                     'success' => false,
                     'code' => 422,
                     'message' => 'quantity must be a number',
-                ]);
+                ], 422);
             }
             $food->quantity = $quantity;
             $food->is_visible = $food->quantity === 0? false: true;
         }
         $food->is_visible = false;
-        
+
 
         $img = $request->file('image');
         $path = 'uploads/img/foods/';
@@ -81,7 +81,7 @@ class FoodController extends Controller
 
         if ($request->image->move(public_path($path),$name)) {
             $food->image = $path.$name;
-            
+
 
             if ($food->save()) {
                 return response()->json([
@@ -89,14 +89,14 @@ class FoodController extends Controller
                     'code' => 200,
                     'message' => 'Success store food',
                     'data' => $food,
-                ]);
+                ],200);
             }else{
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'Failed store food',
                     'data' => null,
-                ]);
+                ],400);
             }
         }else{
             return response()->json([
@@ -104,7 +104,7 @@ class FoodController extends Controller
                 'code' => 400,
                 'message' => 'Failed upload image',
                 'data' => null,
-            ]);
+            ],400);
         }
     }
 
@@ -117,7 +117,7 @@ class FoodController extends Controller
                 'code' => 404,
                 'message' => 'Data not Found',
                 'data' => null,
-            ]);
+            ],404);
         }
 
         return response()->json([
@@ -125,7 +125,7 @@ class FoodController extends Controller
             'code' => 200,
             'message' => 'Success get data foods',
             'data' => $foods,
-        ]);
+        ],200);
     }
 
     public function delete($foodId)
@@ -138,33 +138,33 @@ class FoodController extends Controller
                 'code' => 404,
                 'message' => 'Data food not Found',
                 'data' => null,
-            ]);
+            ],404);
         }
 
         if ($food->delete()) {
-            $img = public_path($food->img);
-            if (file_exists($img)) {
-                try {
-                    unlink($img);
-                } catch (\Throwable $th) {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => $th->getMessage(),
-                    ]);
-                }
-            }
+            // $img = public_path($food->img);
+            // if (file_exists($img)) {
+            //     try {
+            //         unlink($img);
+            //     } catch (\Throwable $th) {
+            //         return response()->json([
+            //             'success' => false,
+            //             'code' => 400,
+            //             'message' => $th->getMessage(),
+            //         ],400);
+            //     }
+            // }
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'Success delete data foods',
-            ]);
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed delete data foods',
-            ]);
+            ],400);
         }
     }
 }
