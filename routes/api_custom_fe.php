@@ -7,49 +7,50 @@ use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Fe\FeProductController;
 use App\Http\Controllers\Fe\FeMasjidController;
+use App\Http\Controllers\Fe\FeRestoController;
 
 
 Route::middleware('api')->group(function (){
     Route::prefix('v1')->group(function (){
-        Route::prefix('users')->group(function (){
-            Route::prefix('me')->group(function () {
-                Route::get('profile', [AuthController::class, 'userProfile']);
+
+        Route::prefix("fe")->group(function (){
+            Route::prefix('users')->group(function (){
+                Route::prefix('me')->group(function () {
+                    Route::get('profile', [AuthController::class, 'userProfile']);
+                });
             });
-        });
 
-        Route::prefix('masjids')->group(function(){
-            Route::get('{id}/photos', [FeMasjidController::class, 'getMasjidPhoto']);
-            Route::get('{id}/reviews', [FeMasjidController::class, 'getMasjidReviews']);
-        });
 
-        Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
+            Route::prefix('masjids')->group(function(){
+                Route::get('{id}/photos', [FeMasjidController::class, 'getMasjidPhoto']);
+                Route::get('{id}/reviews', [FeMasjidController::class, 'getMasjidReviews']);
+            });
 
-        Route::prefix('reviewMasjid')->group(function (){
-            Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
-        });
+            Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
 
-        Route::prefix('keyword')->group(function (){
-            Route::post('store', [KeywordController::class, 'store']);
-            Route::get('all', [KeywordController::class, 'index']);
-            Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
-            Route::put('update/{keywordId}', [KeywordController::class, 'update']);
-            Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
-        });
+            Route::prefix('reviewMasjid')->group(function (){
+                Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
+            });
 
-        Route::prefix('products')->group(function (){
-            Route::get('category', [FeProductController::class, 'getProductCategory']);
-        });
+            Route::prefix('keyword')->group(function (){
+                Route::post('store', [KeywordController::class, 'store']);
+                Route::get('all', [KeywordController::class, 'index']);
+                Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
+                Route::put('update/{keywordId}', [KeywordController::class, 'update']);
+                Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
+            });
 
-        Route::prefix('productInformation')->group(function(){
+            Route::prefix('products')->group(function (){
+                Route::get('category', [FeProductController::class, 'getProductCategory']);
+            });
 
-        });
-
-        Route::prefix('forums')->group(function (){
-
-        });
-
-        Route::prefix('comments')->group(function (){
-
+            Route::prefix('restoran')->group(function(){
+                Route::get('all-raw', [FeRestoController::class, 'all-raw']);
+                Route::get('{id}/detail', [FeRestoController::class, 'getDetailRestaurant']);
+                Route::get('cert', [FeRestoController::class, 'getCertif']);
+                Route::get('food-type', [FeRestoController::class, 'getFoodType']);
+                Route::get('nearest', [FeRestoController::class, 'getNearestRestaurant']);
+            });
         });
     });
 });

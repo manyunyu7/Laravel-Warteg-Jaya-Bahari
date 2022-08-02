@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Fe;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ProductCategory;
 
 class FeProductController extends Controller
@@ -12,6 +13,11 @@ class FeProductController extends Controller
     {
         $productCategories = ProductCategory::all();
         return $productCategories;
+    }
+
+    public function getProductByCategory($id){
+        $datas = Product::where("category_id","=",$id)->get();
+        return $datas;
     }
 
 }

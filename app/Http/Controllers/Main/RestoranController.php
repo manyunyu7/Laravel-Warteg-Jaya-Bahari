@@ -32,14 +32,14 @@ class RestoranController extends Controller
                 return response()->json([
                     'success' => false,
                     'code' => 400,
-                    'message' => 'Failed get restorans data', 
+                    'message' => 'Failed get restorans data',
                     'data' => null
                 ]);
             }else{
                 return response()->json([
                     'success' => true,
                     'code' => 200,
-                    'message' => 'success get restorans data', 
+                    'message' => 'success get restorans data',
                     'data' => $restorans
                 ]);
             }
@@ -187,35 +187,38 @@ class RestoranController extends Controller
 
         $restoran->image = $name;
         $restoran->is_visible = $restoran->is_visible === "1" ? true : false;
-        
+
 
         if ($restoran->save()) {
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'success add restoran', 
+                'message' => 'success add restoran',
                 'data' => $restoran
             ]);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed add restoran', 
+                'message' => 'failed add restoran',
                 'data' => null
             ]);
         }
-        
+
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function show($restoId)
     {
         $restoran = Restoran::find($restoId);
+
+        $restoReview = RestoranReview::where('restoran_id', $restoId->id)->get();
+
         $totReview = RestoranReview::where('restoran_id', $restoId)->count();
         $rating1 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 1)->get()->count();
         $rating2= RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
@@ -223,23 +226,31 @@ class RestoranController extends Controller
         $rating4 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 4)->get()->count();
         $rating5 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 5)->get()->count();
         $sum = ($rating1+$rating2+$rating3+$rating4+$rating5)/5;
+        $totalRatings = ((1.0*$rating1)+(2.0*$rating2)+(3.0*$rating3)+(4.0*$rating4)+(5.0*$rating5));
+
+        $ratingCounts = $totReview;
+        $avg=0;
+        if($totalRatings!=0){
+            $avg = $totalRatings/$ratingCounts;
+        }
 
         if ($restoran == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'restoran not found', 
+                'message' => 'restoran not found',
                 'data' => null
             ]);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'success get detail restoran', 
+                'message' => 'success get detail restoran',
                 'data' => [
                     'detailResto' => $restoran,
                     'totalReview' => $totReview,
-                    'totRating' => $sum,
+                    'totalRating' => $sum,
+                    'rating' => $avg,
                 ]
             ]);
         }
@@ -259,14 +270,14 @@ class RestoranController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'food type not found', 
+                'message' => 'food type not found',
                 'data' => null
             ]);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'success get type food data', 
+                'message' => 'success get type food data',
                 'data' => $food
             ]);
         }
@@ -317,7 +328,7 @@ class RestoranController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'restoran not found', 
+                'message' => 'restoran not found',
                 'data' => null
             ]);
         }
@@ -353,21 +364,21 @@ class RestoranController extends Controller
             $restoran->image = $name;
         }
 
-        
+
         $restoran->is_visible = $restoran->is_visible === "1" ? true : false;
 
         if ($restoran->save()) {
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'success update restoran data', 
+                'message' => 'success update restoran data',
                 'data' => $restoran
             ]);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed update restoran data', 
+                'message' => 'failed update restoran data',
                 'data' => null
             ]);
         }
@@ -402,7 +413,7 @@ class RestoranController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed delete restoran', 
+                'message' => 'failed delete restoran',
             ]);
         }
     }

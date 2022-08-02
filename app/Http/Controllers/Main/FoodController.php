@@ -44,13 +44,13 @@ class FoodController extends Controller
 
         $restricted = Restoran::where('id', $restoran_id)->first()->user_id;
 
-        if ($restricted != Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'code' => 403,
-                'message' => 'Restriced user cannot create food',
-            ]);
-        }
+        // if ($restricted != Auth::id()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'code' => 403,
+        //         'message' => 'Restriced user cannot create food',
+        //     ]);
+        // }
 
         $food = new Food();
         $food->restoran_id = $restoran_id;
@@ -75,7 +75,7 @@ class FoodController extends Controller
         
 
         $img = $request->file('image');
-        $path = 'uploads/img/foods';
+        $path = 'uploads/img/foods/';
         $ekstension = $img->getClientOriginalExtension();
         $name = 'Food'.'_'.uniqid().'.'.$ekstension;
 

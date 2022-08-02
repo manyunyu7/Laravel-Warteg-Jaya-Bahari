@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Restoran extends Model
 {
     use HasFactory;
-
+    protected $appends = ["img_full_path"];
     public function typeFood()
     {
         return $this->belongsTo(TypeFood::class);
@@ -37,5 +37,9 @@ class Restoran extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getImgFullPathAttribute(){
+        return asset("uploads/img/resto/".$this->image);
     }
 }

@@ -43,11 +43,11 @@ Route::prefix('v1')->group(function (){
         Route::post('login', [AuthController::class, 'login']);
         Route::post('request-otp', [AuthController::class, 'requestOTP']);
         Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
-    }); 
+    });
 });
 
 
-Route::middleware('jwt.verify')->group(function (){
+//Route::middleware('jwt.verify')->group(function (){
     Route::prefix('v1')->group(function (){
         Route::post('refreshToken', [AuthController::class, 'refreshToken']);
         Route::prefix('users')->group(function (){
@@ -155,4 +155,4 @@ Route::middleware('jwt.verify')->group(function (){
             Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
         });
     });
-});
+//});

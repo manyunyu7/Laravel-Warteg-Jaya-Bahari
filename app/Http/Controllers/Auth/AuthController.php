@@ -18,7 +18,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), 
+        $validator = Validator::make($request->all(),
             [
                 'name' => 'required|string|between:2,100',
                 'roles_id' => 'required|integer', Rule::in([1,2,3,4]),
@@ -48,7 +48,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'password do not match', 
+                'message' => 'password do not match',
                 'data' => null
             ]);
         }
@@ -65,14 +65,14 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Failed registered user', 
+                'message' => 'Failed registered user',
                 'data' => null
             ]);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'Success registered user', 
+                'message' => 'Success registered user',
                 'data' => $data
             ]);
         }
@@ -93,36 +93,36 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'email or password incorrect', 
+                'message' => 'email or password incorrect',
                 'data' => null
             ]);
         }
         $user = User::where('email',$request->email)->first();
-        if ($user->email_verified_at == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'Verified first', 
-                'data' => null
-            ]);
-        }
+//        if ($user->email_verified_at == null) {
+//            return response()->json([
+//                'success' => false,
+//                'code' => 400,
+//                'message' => 'Verified first',
+//                'data' => null
+//            ]);
+//        }
 
         return $this->createNewToken($token);
 
     }
 
-    public function logout() 
+    public function logout()
     {
         auth()->logout();
 
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'user successfully logged out', 
+            'message' => 'user successfully logged out',
         ]);
     }
 
-    public function refresh() 
+    public function refresh()
     {
         return $this->createNewToken(auth()->refresh());
     }
@@ -132,7 +132,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'Success get user profile', 
+            'message' => 'Success get user profile',
             'data' => auth()->user()
         ]);
     }
@@ -150,7 +150,7 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-            
+
         $user->name = $request->name;
         $user->email = $request->email;
 
@@ -182,7 +182,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'Success edit profile', 
+            'message' => 'Success edit profile',
             'data' => $user
         ]);
     }
@@ -205,7 +205,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'password do not match', 
+                'message' => 'password do not match',
                 'data' => null
             ]);
         }else{
@@ -217,7 +217,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'Success update password', 
+                'message' => 'Success update password',
                 'data' => $user
             ]);
         }
@@ -225,7 +225,7 @@ class AuthController extends Controller
 
     public function uploadProfilePicture(Request $request)
     {
-        
+
 
         $validator = Validator::make($request->all(),
         [
@@ -252,14 +252,14 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'Success upload photo', 
+                'message' => 'Success upload photo',
                 'data' => $user
             ]);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Failed upload photo', 
+                'message' => 'Failed upload photo',
                 'data' => $user
             ]);
         }
@@ -290,7 +290,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'User id not found', 
+                'message' => 'User id not found',
                 'data' => null
             ]);
         }
@@ -309,12 +309,12 @@ class AuthController extends Controller
                 "valid_until" => Carbon::now()->addMinutes(30),
             ]
         );
-        
+
         if (!$userOTP) {
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Failed create OTP', 
+                'message' => 'Failed create OTP',
                 'data' => null
             ]);
         }
@@ -324,7 +324,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'OTP send succesfully', 
+            'message' => 'OTP send succesfully',
         ]);
     }
 
@@ -342,22 +342,22 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => true,
                     'code' => 200,
-                    'message' => 'Success Verified account', 
+                    'message' => 'Success Verified account',
                 ]);
             }else{
                 return response()->json([
                     'success' => false,
                     'code' => 401,
-                    'message' => 'OTP Code Expired', 
+                    'message' => 'OTP Code Expired',
                 ]);
             }
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'OTP Code Not Found', 
+                'message' => 'OTP Code Not Found',
             ]);
         }
-        
+
     }
 }

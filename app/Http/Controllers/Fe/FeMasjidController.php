@@ -17,11 +17,11 @@ class FeMasjidController extends Controller
         $masjid = Masjid::where("id", '=', $id)->first();
         $masjidReviews = MasjidReview::where("masjid_id", '=', $id)->get();
         $arrayPhotoUrl = array();
-        array_push($arrayPhotoUrl, url("/") . "/" . $masjid->img);
+        array_push($arrayPhotoUrl, url("/") . "/storage/" . $masjid->img);
         foreach ($masjidReviews as $item) {
             $masjidPhotos = MasjidReviewImage::where("masjid_review_id", '=', $item->id)->get();
             foreach ($masjidPhotos as $itemPhoto) {
-                array_push($arrayPhotoUrl, url('/') . "/" . $itemPhoto->path);
+                array_push($arrayPhotoUrl, url('/') . "/storage/" . $itemPhoto->path);
             }
         }
         return $arrayPhotoUrl;
@@ -80,7 +80,7 @@ class FeMasjidController extends Controller
         $avg = $totalRatings/$ratingCounts;
         }
 
-        
+
         $object->avg = round($avg);
         $object->rating1 = $ratings1;
         $object->rating2 = $ratings2;

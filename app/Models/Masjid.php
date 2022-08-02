@@ -47,15 +47,15 @@ class Masjid extends Model
 
     public function getAllphotosAttribute()
     {
-        // $masjidReviews = MasjidReview::where("masjid_id", '=', $this->id)->get();
+         $masjidReviews = MasjidReview::where("masjid_id", '=', $this->id)->get();
         $arrayPhotoUrl = array();
-        // array_push($arrayPhotoUrl, $this->img);
-        // foreach ($masjidReviews as $item) {
-        //     $masjidPhotos = MasjidReviewImage::where("review_id", '=', $item->id);
-        //     foreach ($masjidPhotos as $itemPhoto) {
-        //         array_push($arrayPhotoUrl, $itemPhoto->path);
-        //     }
-        // }
+         array_push($arrayPhotoUrl, $this->img);
+         foreach ($masjidReviews as $item) {
+             $masjidPhotos = MasjidReviewImage::where("review_id", '=', $item->id);
+             foreach ($masjidPhotos as $itemPhoto) {
+                 array_push($arrayPhotoUrl, $itemPhoto->path);
+             }
+         }
         return $arrayPhotoUrl;
     }
 
