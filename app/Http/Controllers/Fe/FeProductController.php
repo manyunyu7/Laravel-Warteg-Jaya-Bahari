@@ -15,7 +15,7 @@ class FeProductController extends Controller
         return $productCategories;
     }
 
-    public function getProductByCategory($id){
+    public function getByCategory($id){
         $datas = Product::where("category_id","=",$id)->get();
         return $datas;
     }

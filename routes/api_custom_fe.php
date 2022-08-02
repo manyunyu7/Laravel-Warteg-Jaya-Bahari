@@ -42,6 +42,7 @@ Route::middleware('api')->group(function (){
 
             Route::prefix('products')->group(function (){
                 Route::get('category', [FeProductController::class, 'getProductCategory']);
+                Route::get('get-by-category', [FeProductController::class, 'getByCategory']);
             });
 
             Route::prefix('restoran')->group(function(){
