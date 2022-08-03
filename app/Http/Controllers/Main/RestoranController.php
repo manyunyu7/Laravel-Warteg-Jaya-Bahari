@@ -168,7 +168,7 @@ class RestoranController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
-
+        $status = $request->is_visible;
         $restoran = new Restoran();
         $restoran->name = $request->name;
         $restoran->user_id = Auth::id();
@@ -186,7 +186,7 @@ class RestoranController extends Controller
         $request->image->move(public_path('storage'),$name);
 
         $restoran->image = $name;
-        $restoran->is_visible = $restoran->is_visible === "1" ? true : false;
+        $restoran->is_visible = $status  === "0" ? false : true;
         
 
         if ($restoran->save()) {
@@ -333,7 +333,7 @@ class RestoranController extends Controller
         $restoran->long = $request->long;
 
         if ($request->hasFile('image')) {
-            $path = public_path('uploads/img/resto/').$restoran->image;
+            $path = public_path('storage').$restoran->image;
 
             if (file_exists($path)) {
                 try{

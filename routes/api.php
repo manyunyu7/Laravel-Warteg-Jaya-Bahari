@@ -11,6 +11,7 @@ use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\OperatingHourController;
+use App\Http\Controllers\Main\OrderHistoryController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
@@ -160,6 +161,16 @@ Route::middleware('jwt.verify')->group(function (){
                 Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
                 Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
                 Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+            });
+        });
+
+        Route::prefix('orders')->group(function(){
+            Route::prefix('history')->group(function(){
+                Route::post('createHistory/{restoId}', [OrderHistoryController::class, 'store']);
+                Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
+                Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
+                Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
+                Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
             });
         });
     });

@@ -23,4 +23,9 @@ class Food extends Model
     {
         return $this->belongsTo(FoodCategory::class);
     }
+
+    public function orderHistorys()
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
 }

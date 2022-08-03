@@ -61,7 +61,7 @@ class FoodController extends Controller
         $food->price = $request->price;
         if ($request->has('quantity')) {
             $quantity = (int) $request->quantity;
-            if(is_int($quantity)){
+            if(!is_int($quantity)){
                 return response()->json([
                     'success' => false,
                     'code' => 422,
@@ -69,17 +69,17 @@ class FoodController extends Controller
                 ], 422);
             }
             $food->quantity = $quantity;
-            $food->is_visible = $food->quantity === 0? false: true;
+            $food->is_visible = $food->quantity === "0"? false: true;
+        }else{
+            $food->is_visible = false;
         }
-        $food->is_visible = false;
-        
 
         $img = $request->file('image');
-        $path = 'uploads/img/foods';
+        $path = 'storage/';
         $ekstension = $img->getClientOriginalExtension();
         $name = 'Food'.'_'.uniqid().'.'.$ekstension;
 
-        if ($request->image->move(public_path($path),$name)) {
+        if ($request->image->move(public_path('storage'),$name)) {
             $food->image = $path.$name;
             
 

@@ -7,7 +7,6 @@ use App\Models\FoodCategory;
 use App\Models\Restoran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class FoodCategoryController extends Controller
 {
