@@ -125,7 +125,6 @@ Route::middleware('jwt.verify')->group(function (){
         Route::prefix('restoran')->group(function(){
             Route::post('store', [RestoranController::class, 'store']);
             Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
-            Route::post('operatingHour/{restoId}', [OperatingHourController::class, 'store']);
             Route::get('all', [RestoranController::class, 'index']);
             Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
             Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
@@ -134,6 +133,13 @@ Route::middleware('jwt.verify')->group(function (){
             Route::get('photos/{restoId}', [RestoranController::class, 'getRestoPhotos']);
             Route::post('update/{restoId}', [RestoranController::class, 'update']);
             Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
+            Route::prefix('operatingHour')->group(function(){
+                Route::post('create/{restoId}', [OperatingHourController::class, 'store']);
+                Route::get('getByResto/{restoId}', [OperatingHourController::class, 'getByResto']);
+                Route::get('getDetail/{hourId}', [OperatingHourController::class, 'getDetail']);
+                Route::put('edit/{restoId}/{hourId}', [OperatingHourController::class, 'editOperatingHour']);
+                Route::delete('delete/{restoId}/{hourId}', [OperatingHourController::class, 'deleteOperatingHour']);
+            });
         });
 
         Route::prefix('favorites')->group(function(){

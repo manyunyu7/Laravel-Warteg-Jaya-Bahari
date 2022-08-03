@@ -7,6 +7,7 @@ use App\Models\Restoran;
 use App\Models\RestoranOperatingHour;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OperatingHourController extends Controller
 {
@@ -69,6 +70,158 @@ class OperatingHourController extends Controller
                 'message' => 'Failed store restoran operating hour data',
                 'data' => null
             ,400]);
+        }
+    }
+
+    public function getByResto($restoId)
+    {
+        $operatingHour = RestoranOperatingHour::where('restorans_id', $restoId)->get();
+
+        if (!$operatingHour) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'operating hour not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success get operating hour',
+            'data' => $operatingHour
+        ],200);
+    }
+
+    public function getDetail($hourId)
+    {
+        $operatingHour = RestoranOperatingHour::find($hourId);
+
+        if (!$operatingHour) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'operating hour not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success get operating hour',
+            'data' => $operatingHour
+        ],200);
+    }
+
+    public function editOperatingHour(Request $request, $restoId, $hourId)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'day' => 'required|string|min:6|max:255',
+                'hour' => 'required|string|min:6|max:255'
+            ],
+            [
+                'day.required' => 'day cannot be empty',
+                'hour.required' => 'hour cannot be empty'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $checkResto = Restoran::find($restoId);
+
+        if (!$checkResto) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'restoran not found',
+                'data' => null
+            ],404);
+        }
+
+        $cekOperatingHour = RestoranOperatingHour::find($hourId);
+
+        if (!$cekOperatingHour) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'operating hour not found',
+                'data' => null
+            ],404);
+        }
+
+        $cekOperatingHour->restorans_id = $restoId;
+        $cekOperatingHour->day = $request->day;
+        $cekOperatingHour->hour = $request->hour;
+
+        if ($cekOperatingHour->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update restoran operating hour data',
+                'data' => $cekOperatingHour
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed update restoran operating hour data',
+                'data' => null
+            ,400]);
+        }
+
+    }
+
+    public function deleteOperatingHour($restoId, $hourId)
+    {
+        $userId = Auth::id();
+        $restoran = Restoran::find($restoId);
+        $cekOperatingHour = RestoranOperatingHour::find($hourId);
+
+        if (!$cekOperatingHour) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'operating hour not found',
+                'data' => null
+            ],404);
+        }
+
+        if ($cekOperatingHour->restorans_id != $restoId) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Not operating hour restoran',
+                'data' => null
+            ],400);
+        }
+
+        if ($restoran->user_id != $userId) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Access Denied',
+                'data' => null
+            ],400);
+        }
+
+        if ($cekOperatingHour->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Sucessfully deleted operating hour',
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed deleted operating hour',
+            ],400);
         }
     }
 }
