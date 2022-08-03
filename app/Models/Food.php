@@ -35,7 +35,7 @@ class Food extends Model
         $retVal = "";
         foreach ($obj as $key) {
             if($key->id==$this->type_food_id){
-                $retVal = $key->name; 
+                $retVal = $key->name;
             }
         }
         return $retVal;
@@ -46,10 +46,15 @@ class Food extends Model
         $retVal = "";
         foreach ($typeFood as $key) {
             if($key->id==$this->type_food_id){
-                $retVal = $key->name; 
+                $retVal = $key->name;
             }
         }
         return $retVal;
     }
-    
+
+
+    public function orderHistorys()
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
 }

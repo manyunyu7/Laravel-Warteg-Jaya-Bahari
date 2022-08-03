@@ -11,6 +11,7 @@ use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\OperatingHourController;
+use App\Http\Controllers\Main\OrderHistoryController;
 use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
@@ -124,7 +125,6 @@ Route::prefix('v1')->group(function (){
         Route::prefix('restoran')->group(function(){
             Route::post('store', [RestoranController::class, 'store']);
             Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
-            Route::post('operatingHour/{restoId}', [OperatingHourController::class, 'store']);
             Route::get('all', [RestoranController::class, 'index']);
             Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
             Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
@@ -133,6 +133,13 @@ Route::prefix('v1')->group(function (){
             Route::get('photos/{restoId}', [RestoranController::class, 'getRestoPhotos']);
             Route::post('update/{restoId}', [RestoranController::class, 'update']);
             Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
+            Route::prefix('operatingHour')->group(function(){
+                Route::post('create/{restoId}', [OperatingHourController::class, 'store']);
+                Route::get('getByResto/{restoId}', [OperatingHourController::class, 'getByResto']);
+                Route::get('getDetail/{hourId}', [OperatingHourController::class, 'getDetail']);
+                Route::put('edit/{restoId}/{hourId}', [OperatingHourController::class, 'editOperatingHour']);
+                Route::delete('delete/{restoId}/{hourId}', [OperatingHourController::class, 'deleteOperatingHour']);
+            });
         });
 
         Route::prefix('favorites')->group(function(){
@@ -160,6 +167,16 @@ Route::prefix('v1')->group(function (){
                 Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
                 Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
                 Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+            });
+        });
+
+        Route::prefix('orders')->group(function(){
+            Route::prefix('history')->group(function(){
+                Route::post('createHistory/{restoId}', [OrderHistoryController::class, 'store']);
+                Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
+                Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
+                Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
+                Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
             });
         });
     });

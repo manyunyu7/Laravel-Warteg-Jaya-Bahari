@@ -137,4 +137,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
     {
         return $this->hasOne(Restoran::class);
     }
+
+    public function orderHistorys()
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
 }
