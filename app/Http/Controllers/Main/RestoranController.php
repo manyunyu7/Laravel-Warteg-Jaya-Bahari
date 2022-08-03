@@ -180,12 +180,18 @@ class RestoranController extends Controller
         $restoran->lat = $request->lat;
         $restoran->long = $request->long;
 
+
         $file = $request->file('image');
         $ekstension = $file->getClientOriginalExtension();
-        $name = 'restoran'.'_'.time().'_'.$restoran->name.'.'.$ekstension;
-        $request->image->move(public_path('storage'),$name);
 
-        $restoran->image = $name;
+        $name = 'restoran'.'_'.time().'_'.$restoran->name.'.'.$ekstension;
+
+        $savePath = "/uploads/img/resto/";
+        $savePathDB = "$savePath$name";
+        $path = public_path() . "$savePath";
+        $file->move($path, $savePathDB);
+
+        $restoran->image = $savePathDB;
         $restoran->is_visible = $restoran->is_visible === "1" ? true : false;
 
 

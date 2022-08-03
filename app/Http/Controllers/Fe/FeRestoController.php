@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Fe;
 
 use App\Http\Controllers\Controller;
 use App\Models\Certification;
+use App\Models\Food;
 use App\Models\FoodCategory;
 use App\Models\ProductCategory;
 use App\Models\Restoran;
@@ -20,10 +21,24 @@ class FeRestoController extends Controller
         return Restoran::all();
     }
 
+    public function getAllFoodCategoryOnResto($id){
+        $obj = FoodCategory::where("resto_id",'=',"$id")->get();
+        return $obj;
+    }
+
+    public function getAllFoodOnResto($id){
+        $obj = Food::where("restoran_id",'=',$id)->get();
+        return $obj;
+    }
+
     public function getCertif()
     {
         $datas = Certification::all();
         return $datas;
+    }
+
+    public function getFoodRestaurantByCategory($id){
+        return Food::where("category_id",'=',$id)->get();
     }
 
     public function getFoodType(){
@@ -31,10 +46,34 @@ class FeRestoController extends Controller
         return $datas;
     }
 
+    public function storeRestaurantCategory(Request $request,$id){
+        $categoryName = $request->name;
+
+        $obj = new FoodCategory();
+        $obj->resto_id = $id;
+        $obj->name = $categoryName;
+
+        if ($obj->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success',
+                'data' => $obj
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed',
+                'data' => null
+            ],400);
+        }
+    }
+
     public function getNearestRestaurant(Request $request){
         $latitude = $request->lat;
         $longitude = $request->long;
-        
+
         $nearest = Restoran::select(DB::raw('*'))
         // ->orderBy(DB::raw("3959 * acos( cos( radians({$latitude}) ) * cos( radians( lat ) ) * cos( radians( long ) - radians(-{$longitude}) ) + sin( radians({$latitude}) ) * sin(radians(lat)) )"), 'ASC')
         ->get();
@@ -104,13 +143,13 @@ class FeRestoController extends Controller
         }
 
         $arrPath = array();
-        array_push($arrPath, url('/uploads/img/resto').'/'. $resto->image);
+        array_push($arrPath, url(''). $resto->image);
         foreach($restoReview as $item)
         {
             $restoPhotos = RestoranReviewImage::where('restoran_review_id', $item->id)->get();
             foreach($restoPhotos as $img)
             {
-                array_push($arrPath, url('/uploads/img/resto').'/'. $img->path);
+                array_push($arrPath, url('').'/'. $img->path);
             }
         }
 

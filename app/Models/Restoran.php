@@ -45,6 +45,6 @@ class Restoran extends Model
     }
 
     public function getImgFullPathAttribute(){
-        return asset("uploads/img/resto/".$this->image);
+        return url("")."$this->image";
     }
 }

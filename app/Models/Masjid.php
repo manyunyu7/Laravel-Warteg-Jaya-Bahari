@@ -43,7 +43,7 @@ class Masjid extends Model
     }
 
     //start #mobreq
-    protected $appends =  ['category_name', 'allphotos', 'review_avg','review_count'];
+    protected $appends =  ['category_name', 'allphotos', 'review_avg','review_count','img_full_path'];
 
     public function getAllphotosAttribute()
     {
@@ -78,6 +78,10 @@ class Masjid extends Model
         $masjidReviews = MasjidReview::where("masjid_id", '=', $this->id)->get();
 
         return strval($masjidReviews->count());
+    }
+
+    public function getImgFullPathAttribute(){
+        return asset("")."storage/".$this->img;
     }
 
     public function getReviewAvgAttribute()

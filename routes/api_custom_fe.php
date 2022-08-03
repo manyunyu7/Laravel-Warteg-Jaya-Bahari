@@ -42,12 +42,16 @@ Route::middleware('api')->group(function (){
 
             Route::prefix('products')->group(function (){
                 Route::get('category', [FeProductController::class, 'getProductCategory']);
-                Route::get('get-by-category', [FeProductController::class, 'getByCategory']);
+                Route::get('get-by-category/{id}', [FeProductController::class, 'getByCategory']);
             });
 
             Route::prefix('restoran')->group(function(){
                 Route::get('all-raw', [FeRestoController::class, 'all-raw']);
                 Route::get('{id}/detail', [FeRestoController::class, 'getDetailRestaurant']);
+                Route::get('{id}/food-category', [FeRestoController::class, 'getAllFoodCategoryOnResto']);
+                Route::post('{id}/food-category', [FeRestoController::class, 'storeRestaurantCategory']);
+                Route::get('food/category/{id}', [FeRestoController::class, 'getFoodRestaurantByCategory']);
+                Route::get('{id}/food', [FeRestoController::class, 'getAllFoodOnResto']);
                 Route::get('cert', [FeRestoController::class, 'getCertif']);
                 Route::get('food-type', [FeRestoController::class, 'getFoodType']);
                 Route::get('nearest', [FeRestoController::class, 'getNearestRestaurant']);

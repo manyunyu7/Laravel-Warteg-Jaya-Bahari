@@ -42,7 +42,7 @@ class FoodController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $restricted = Restoran::where('id', $restoran_id)->first()->user_id;
+        //$restricted = Restoran::where('id', $restoran_id)->first()->user_id;
 
         // if ($restricted != Auth::id()) {
         //     return response()->json([
