@@ -164,9 +164,11 @@ Route::middleware('jwt.verify')->group(function (){
             });
         });
 
-        Route::prefix('driver')->group(function(){
-            Route::post('register', [DriverController::class, 'registerDriver']);
-            Route::post('login', [DriverController::class, 'loginDriver']);
+        Route::middleware('auth.role:1,3')->group(function (){
+            Route::prefix('driver')->group(function(){
+                Route::post('register', [DriverController::class, 'registerDriver']);
+                Route::post('login', [DriverController::class, 'loginDriver']);
+            });
         });
 
         Route::prefix('orders')->group(function(){

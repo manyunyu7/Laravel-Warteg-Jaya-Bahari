@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\Restoran;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class DriverController extends Controller
 {
-    public function registerDriver(Request $request, $restoId)
+    public function registerDriver(Request $request)
     {
         $validator = Validator::make($request->all(), 
             [
                 'name' => 'required|string|between:2,100',
-                'resto_id' => 'required|integer',
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
                 'confirm_password' => 'required|string|min:6',
@@ -24,7 +25,6 @@ class DriverController extends Controller
             ],
             [
                 'name.required' => 'name cannot be empty',
-                'resto_id.required' => 'resto_id cannot be empty',
                 'email.required' => 'email cannot be empty',
                 'password.required' => 'password cannot be empty',
                 'confirm_password.required' => 'confirm_password cannot be empty',
@@ -36,8 +36,8 @@ class DriverController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $cekResto = Restoran::find($restoId);
-        if (!$cekResto) {
+        $restoId = Restoran::where('user_id', Auth::id())->first();
+        if (!$restoId) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
@@ -58,30 +58,49 @@ class DriverController extends Controller
             ],400);
         }
 
-        $data = User::create([
-            'name' => $request->name,
-            'roles_id' => 4,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'email_verified_at' => Carbon::now(),
-            'password' => bcrypt($request->password)
-        ]);
+        // $data = User::create([
+        //     'name' => $request->name,
+        //     'roles_id' => 4,
+        //     'email' => $request->email,
+        //     'phone_number' => $request->phone_number,
+        //     'email_verified_at' => Carbon::now(),
+        //     'password' => bcrypt($request->password)
+        // ]);
+        
+        // create user with roles driver
+        $user = new User();
+        $user->name = $request->name;
+        $user->roles_id = 4;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+        $user->email_verified_at = Carbon::now();
+        $user->password = bcrypt($request->password);
 
-        if (!$data) {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'Failed registered driver', 
-                'data' => null
-            ],400);
-        }else{
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'Success registered driver', 
-                'data' => $data
-            ],200);
+
+        if ($user->save()) {
+
+            // mapping user to driver
+            $driver = new Driver();
+            $driver->user_id = $user->id;
+            $driver->resto_id =  $restoId->id;
+            $driver->is_available = true;
+            if ($driver->save()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'Success registered driver', 
+                    'data' => $user
+                ],200);
+            }
         }
+
+        return response()->json([
+            'success' => false,
+            'code' => 400,
+            'message' => 'Failed registered driver', 
+            'data' => null
+        ],400);
+        
     }
 
     public function loginDriver(Request $request)
