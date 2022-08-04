@@ -37,22 +37,6 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -83,8 +67,8 @@ class ProductController extends Controller
 
         $file = $request->file('img');
         $ekstension = $file->getClientOriginalExtension();
-        $name = time().'_'.$product->name.'.'.$ekstension;
-        $request->img->move(public_path('uploads/img/products'), $name);
+        $name = 'Product'.'_'.$product->name.'_'.uniqid().'.'.$ekstension;
+        $request->img->move(public_path('storage'), $name);
 
         $product->img = $name;
 
@@ -132,25 +116,28 @@ class ProductController extends Controller
             ],200);
         }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    
+    public function getByCategory($categoryId)
     {
-        //
+        $product = Product::where('category_id', $categoryId)->get();
+        
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'product not found', 
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success get data product by category', 
+            'data' => $product
+        ],200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $productId)
     {
         $validator = Validator::make($request->all(),
@@ -190,7 +177,7 @@ class ProductController extends Controller
         $product->code = $request->code;
 
         if ($request->hasFile('img')) {
-            $path = public_path('uploads/img/products/').$product->img;
+            $path = public_path('storgae').$product->img;
 
             if (file_exists($path)) {
                 try {
@@ -206,8 +193,8 @@ class ProductController extends Controller
 
             $file = $request->file('img');
             $ekstension = $file->getClientOriginalExtension();
-            $name = time().'_'.$product->name.'.'.$ekstension;
-            $request->img->move(public_path('uploads/img/products'), $name);
+            $name = 'Product'.'_'.$product->name.'_'.uniqid().'.'.$ekstension;
+            $request->img->move(public_path('storage'), $name);
 
             $product->img = $name;
         }

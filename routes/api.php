@@ -80,18 +80,11 @@ Route::middleware('jwt.verify')->group(function (){
             Route::post('uploadImage/{reviewId}', [MasjidReviewController::class, 'uploadImage']);
         });
 
-        Route::prefix('keyword')->group(function (){
-            Route::post('store', [KeywordController::class, 'store']);
-            Route::get('all', [KeywordController::class, 'index']);
-            Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
-            Route::put('update/{keywordId}', [KeywordController::class, 'update']);
-            Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
-        });
-
         Route::prefix('products')->group(function (){
             Route::post('store', [ProductController::class, 'store']);
             Route::get('all', [ProductController::class, 'index']);
             Route::get('detail/{productId}', [ProductController::class, 'show']);
+            Route::get('byCategory/{categoryId}', [ProductController::class, 'getByCategory']);
             Route::post('update/{productId}', [ProductController::class, 'update']);
             Route::delete('delete/{productId}', [ProductController::class, 'destroy']);
         });
