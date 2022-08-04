@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\DriverController;
 use App\Http\Controllers\Main\FavoriteController;
 use App\Http\Controllers\Main\FoodCategoryController;
 use App\Http\Controllers\Main\FoodController;
@@ -161,6 +162,11 @@ Route::middleware('jwt.verify')->group(function (){
                 Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
                 Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
             });
+        });
+
+        Route::prefix('driver')->group(function(){
+            Route::post('register', [DriverController::class, 'registerDriver']);
+            Route::post('login', [DriverController::class, 'loginDriver']);
         });
 
         Route::prefix('orders')->group(function(){
