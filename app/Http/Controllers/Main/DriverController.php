@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\Restoran;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -10,11 +11,12 @@ use Illuminate\Support\Facades\Validator;
 
 class DriverController extends Controller
 {
-    public function registerDriver(Request $request)
+    public function registerDriver(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(), 
             [
                 'name' => 'required|string|between:2,100',
+                'resto_id' => 'required|integer',
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
                 'confirm_password' => 'required|string|min:6',
@@ -22,6 +24,7 @@ class DriverController extends Controller
             ],
             [
                 'name.required' => 'name cannot be empty',
+                'resto_id.required' => 'resto_id cannot be empty',
                 'email.required' => 'email cannot be empty',
                 'password.required' => 'password cannot be empty',
                 'confirm_password.required' => 'confirm_password cannot be empty',
@@ -33,6 +36,16 @@ class DriverController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $cekResto = Restoran::find($restoId);
+        if (!$cekResto) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restoran not found', 
+                'data' => null
+            ],404);
+        }
+
         $password = $request->password;
         $password2 = $request->confirm_password;
 
@@ -40,9 +53,9 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'password do not match', 
+                'message' => 'Failed registered driver', 
                 'data' => null
-            ]);
+            ],400);
         }
 
         $data = User::create([
@@ -60,14 +73,14 @@ class DriverController extends Controller
                 'code' => 400,
                 'message' => 'Failed registered driver', 
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'Success registered driver', 
                 'data' => $data
-            ]);
+            ],200);
         }
     }
 

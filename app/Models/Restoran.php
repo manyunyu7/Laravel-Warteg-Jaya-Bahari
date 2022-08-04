@@ -43,4 +43,9 @@ class Restoran extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function drivers()
+    {
+        return $this->hasMany(Driver::class);
+    }
 }
