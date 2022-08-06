@@ -8,7 +8,6 @@ use App\Http\Controllers\Main\FoodCategoryController;
 use App\Http\Controllers\Main\FoodController;
 use App\Http\Controllers\Main\ForumCommentController;
 use App\Http\Controllers\Main\ForumController;
-use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\OperatingHourController;
@@ -121,6 +120,10 @@ Route::middleware('jwt.verify')->group(function (){
         });
 
         Route::prefix('restoran')->group(function(){
+            Route::middleware('auth.role:1,3')->group(function (){
+                Route::get('myResto', [RestoranController::class, 'getRestoByOwner']);
+                Route::get('myDetailResto/{restoran}', [RestoranController::class, 'getRestoDetailByOwner']);
+            });
             Route::post('store', [RestoranController::class, 'store']);
             Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
             Route::get('all', [RestoranController::class, 'index']);

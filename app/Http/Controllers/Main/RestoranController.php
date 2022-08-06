@@ -419,4 +419,53 @@ class RestoranController extends Controller
             ],200);
         }
     }
+
+    public function getRestoByOwner()
+    {
+        $owner = Auth::id();
+        $restoran = Restoran::where('user_id', $owner)->get();
+
+        if (!$restoran) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restoran not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get restorans',
+            'data' => $restoran
+        ],200);
+    }
+
+    public function getRestoDetailByOwner($restoId)
+    {
+        $owner = Auth::id();
+        $restoran = Restoran::where(
+            [
+                'id' => $restoId,
+                'user_id' => $owner
+            ]
+        )->first();
+
+        if (!$restoran) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restoran not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get restorans',
+            'data' => $restoran
+        ],200);
+    }
 }
