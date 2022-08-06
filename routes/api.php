@@ -46,6 +46,10 @@ Route::prefix('v1')->group(function (){
         Route::post('request-otp', [AuthController::class, 'requestOTP']);
         Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
     }); 
+
+    Route::prefix('driver')->group(function(){
+        Route::post('login', [DriverController::class, 'loginDriver']);
+    });
 });
 
 
@@ -164,10 +168,17 @@ Route::middleware('jwt.verify')->group(function (){
             });
         });
 
-        Route::middleware('auth.role:1,3')->group(function (){
-            Route::prefix('driver')->group(function(){
+        Route::prefix('driver')->group(function(){
+            Route::middleware('auth.role:1,3')->group(function (){
                 Route::post('register', [DriverController::class, 'registerDriver']);
-                Route::post('login', [DriverController::class, 'loginDriver']);
+                Route::get('getByResto/{restoId}', [DriverController::class, 'getDriverByResto']);
+                Route::post('editDriver/{driverId}', [DriverController::class, 'editRestoDriver']);
+                Route::delete('deleteDriver/{driverId}', [DriverController::class, 'deleteDriver']);
+            });
+
+            Route::middleware('auth.role:1,4')->group(function(){
+                Route::get('driverProfile',[DriverController::class, 'driverProfile']);
+                Route::post('editMyProfile',[DriverController::class, 'updateDriverProfile']);
             });
         });
 

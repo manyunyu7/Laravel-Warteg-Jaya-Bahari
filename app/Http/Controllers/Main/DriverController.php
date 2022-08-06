@@ -7,6 +7,7 @@ use App\Models\Driver;
 use App\Models\Restoran;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -57,15 +58,6 @@ class DriverController extends Controller
                 'data' => null
             ],400);
         }
-
-        // $data = User::create([
-        //     'name' => $request->name,
-        //     'roles_id' => 4,
-        //     'email' => $request->email,
-        //     'phone_number' => $request->phone_number,
-        //     'email_verified_at' => Carbon::now(),
-        //     'password' => bcrypt($request->password)
-        // ]);
         
         // create user with roles driver
         $user = new User();
@@ -137,4 +129,252 @@ class DriverController extends Controller
         ],200);
     }
 
+    public function getDriverByResto($restoId)
+    {
+        $dataDriver = array();
+        $cekResto = Restoran::find($restoId);
+
+        if (!$cekResto) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restoran not found', 
+                'data' => null,
+            ],404);
+        }
+
+        $drivers = Driver::where('resto_id', $restoId)->get();
+        if (!$drivers) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Driver not found', 
+                'data' => null,
+            ],404);
+        }
+
+        foreach ($drivers as $driver) 
+        {
+            $users = User::where('id', $driver->user_id)->first();
+            $dataDriver[] = [
+                'userData' => $users,
+                'driverId' => $driver->id
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success get all driver',
+            'data' => $dataDriver
+        ],200);
+    }
+
+    public function editRestoDriver(Request $request, $driverId)
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|between:2,100',
+            'phone_number' => 'required|string|min:11',
+            'email' => 'string|email|max:100',
+            'img' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $driver = Driver::find($driverId);
+
+        if ($driver) {
+            $user = User::find($driver->user_id);
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'User not found',
+                    'data' => null,
+                ],404);
+            }
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone_number = $request->phone_number;
+
+            if($request->hasFile('img')) {
+                if ($user->photo != null) {
+                    $path = public_path('storage/').$user->photo;
+
+                    if (file_exists($path)) {
+                        try {
+                            unlink($path);
+                        } catch (Exception $e) {
+                            return response()->json([
+                                'success' => false,
+                                'code' => 400,
+                                'message' => $e->getMessage()
+                            ],400);
+                        }
+                    }
+                }
+
+                $file = $request->file('img');
+                $ekstension = $file->getClientOriginalExtension();
+                $name = 'Driver_'.uniqid().'_'.Auth::user()->name.'.'.$ekstension;
+                $request->img->move(public_path('storage'), $name);
+
+                $user->photo = $name;
+            }
+
+            if ($user->save()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'Success to update driver data',
+                    'data' => $user
+                ],200);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'Failed to update driver data',
+                    'data' => null,
+                ],400);
+            }
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Driver has not registered',
+                'data' => null,
+            ],404);
+        }
+    }
+
+    public function driverProfile()
+    {
+        $profile = auth()->user();
+
+        if (!$profile) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed get user profile', 
+                'data' => null,
+            ],400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get user profile', 
+            'data' => $profile
+        ],200);
+    }
+
+    public function updateDriverProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|between:2,100',
+            'phone_number' => 'required|string|min:11',
+            'email' => 'string|email|max:100',
+            'img' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $driver = auth()->user();
+        $driver->name = $request->name;
+        $driver->email = $request->email;
+        $driver->phone_number = $request->phone_number;
+
+        if($request->hasFile('img')) {
+            if ($driver->photo != null) {
+                $path = public_path('storage/').$driver->photo;
+
+                if (file_exists($path)) {
+                    try {
+                        unlink($path);
+                    } catch (Exception $e) {
+                        return response()->json([
+                            'success' => false,
+                            'code' => 400,
+                            'message' => $e->getMessage()
+                        ],400);
+                    }
+                }
+            }
+
+            $file = $request->file('img');
+            $ekstension = $file->getClientOriginalExtension();
+            $name = 'Driver_'.uniqid().'_'.Auth::user()->name.'.'.$ekstension;
+            $request->img->move(public_path('storage'), $name);
+
+            $driver->photo = $name;
+        }
+
+        if ($driver->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success to update driver data',
+                'data' => $driver
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed to update driver data',
+                'data' => null,
+            ],400);
+        }
+    }
+
+    public function deleteDriver($driverId)
+    {
+        $driver = Driver::find($driverId);
+
+        if (!$driver) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Driver not found',
+                'data' => null,
+            ],404);
+        }
+
+        $user = User::where(
+            [
+                'id' => $driver->user_id,
+                'roles_id' => 4,
+            ]
+        )->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'User not found',
+                'data' => null,
+            ],404);
+        }
+
+        if ($driver->delete() && $user->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success delete driver',
+                'data' => null,
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed delete driver data',
+                'data' => null,
+            ],400);
+        }
+    }
 }
