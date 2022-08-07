@@ -48,4 +48,9 @@ class Restoran extends Model
     {
         return $this->hasMany(Driver::class);
     }
+
+    public function carts()
+    {
+        return $this->hasMany(OrderCart::class);
+    }
 }
