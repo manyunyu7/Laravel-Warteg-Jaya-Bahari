@@ -9,7 +9,11 @@ class OrderCart extends Model
 {
     use HasFactory;
 
-    public function users()
+    protected $casts = [
+        'orders' => 'array',
+    ];
+
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

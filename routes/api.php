@@ -17,6 +17,7 @@ use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\RestoranController;
 use App\Http\Controllers\Main\RestoranReviewController;
+use App\Http\Controllers\OrderCartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -187,11 +188,29 @@ Route::middleware('jwt.verify')->group(function (){
 
         Route::prefix('orders')->group(function(){
             Route::prefix('history')->group(function(){
-                Route::post('createHistory/{restoId}', [OrderHistoryController::class, 'store']);
-                Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
-                Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
-                Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
-                Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
+                Route::middleware('auth.role:1,2')->group(function (){
+                    Route::post('createHistory/{restoId}', [OrderHistoryController::class, 'store']);
+                    Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
+                });
+
+                Route::middleware('auth.role:1,3')->group(function (){
+                    Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
+                    Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
+                    Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
+                });
+            });
+
+            Route::prefix('carts')->group(function(){
+                Route::middleware('auth.role:1,2')->group(function (){
+                    Route::post('createCart/{restoId}', [OrderCartController::class,'createCart']);
+                });
+                Route::get('detailOrder/{orderId}', [OrderCartController::class,'getDetailOrder']);
+                Route::middleware('auth.role:1,3')->group(function (){
+                    Route::get('getAllOrder/{restoId}', [OrderCartController::class,'getAllOrderByResto']);
+                    Route::get('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
+                    Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
+                    Route::put('orderDelivered/{$orderId}', [OrderCartController::class,'orderDelivered']);
+                });
             });
         });
     });
