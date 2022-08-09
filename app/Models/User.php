@@ -144,7 +144,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
 
     public function driver()
     {
-        return $this->belongsTo(Driver::class);
+        return $this->hasOne(Driver::class);
     }
 
     public function cart()

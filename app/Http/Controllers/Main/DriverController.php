@@ -377,4 +377,30 @@ class DriverController extends Controller
             ],400);
         }
     }
+
+    public function updateLocation(Request $request, $driverId)
+    {
+        $driver = Driver::where('id', $driverId)->first();
+
+        if (!$driver) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Driver not found',
+                'data' => null,
+            ],404);
+        }
+
+        $driver->lat = $request->lat;
+        $driver->long = $request->long;
+
+        if ($driver->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success update driver location',
+                'data' => $driver,
+            ],200);
+        }
+    }
 }

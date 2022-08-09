@@ -6,6 +6,7 @@ use App\Models\Driver;
 use App\Models\Food;
 use App\Models\OrderCart;
 use App\Models\OrderHistory;
+use App\Models\Restoran;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -79,6 +80,28 @@ class OrderCartController extends Controller
                 'data' => null
             ],400);
         }
+    }
+
+    public function myCart()
+    {
+        $user = Auth::id();
+        $orders = OrderCart::where('user_id', $user)->first();
+
+        if (!$orders) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'order not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get my order cart',
+            'data' => $orders
+        ],200);
     }
 
     public function getDetailOrder($orderId)
@@ -182,7 +205,7 @@ class OrderCartController extends Controller
             $orderHistory = OrderHistory::where([
                 'user_id' => $order->user_id,
                 'resto_id' => $order->resto_id,
-            ])->first();
+            ]);
 
             if ($orderHistory->delete()) {
                 return response()->json([
@@ -218,7 +241,9 @@ class OrderCartController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $order = OrderCart::find($orderId);
+        $order = OrderCart::where('id', $orderId)->first();
+
+        // dd($order);
 
         if (!$order) {
             return response()->json([
@@ -229,7 +254,7 @@ class OrderCartController extends Controller
             ],404);
         }
 
-        $driver = Driver::find($request->driver_id);
+        $driver = Driver::where('id', $request->driver_id)->first();
 
         if (!$driver) {
             return response()->json([
@@ -244,7 +269,7 @@ class OrderCartController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Driver no available',
+                'message' => 'Driver not available',
                 'data' => null
             ],400);
         }
@@ -253,6 +278,10 @@ class OrderCartController extends Controller
         $order->status_id = 3;
 
         if ($order->save()) {
+            $loc = Restoran::where('id', $driver->resto_id)->first();
+            $driver->lat = $loc->lat;
+            $driver->long = $loc->long;
+            $driver->save();
             return response()->json([
                 'success' => true,
                 'code' => 200,

@@ -18,6 +18,7 @@ use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\RestoranController;
 use App\Http\Controllers\Main\RestoranReviewController;
 use App\Http\Controllers\OrderCartController;
+use App\Models\OrderCart;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::prefix('v1')->group(function (){
 
     Route::prefix('driver')->group(function(){
         Route::post('login', [DriverController::class, 'loginDriver']);
+        Route::put('updateLocation/{driverId}', [DriverController::class, 'updateLocation']);
     });
 });
 
@@ -203,13 +205,15 @@ Route::middleware('jwt.verify')->group(function (){
             Route::prefix('carts')->group(function(){
                 Route::middleware('auth.role:1,2')->group(function (){
                     Route::post('createCart/{restoId}', [OrderCartController::class,'createCart']);
+                    Route::get('myCart', [OrderCartController::class,'myCart']);
                 });
-                Route::get('detailOrder/{orderId}', [OrderCartController::class,'getDetailOrder']);
+
                 Route::middleware('auth.role:1,3')->group(function (){
+                    Route::get('detailOrder/{orderId}', [OrderCartController::class,'getDetailOrder']);
                     Route::get('getAllOrder/{restoId}', [OrderCartController::class,'getAllOrderByResto']);
-                    Route::get('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
+                    Route::put('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
-                    Route::put('orderDelivered/{$orderId}', [OrderCartController::class,'orderDelivered']);
+                    Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
                 });
             });
         });
