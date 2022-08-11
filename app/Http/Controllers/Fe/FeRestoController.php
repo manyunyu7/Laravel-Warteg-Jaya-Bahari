@@ -46,6 +46,10 @@ class FeRestoController extends Controller
         return $datas;
     }
 
+    public function getBasedCertif(Request $request,$id){
+        return Restoran::where("certification_id","=",$id)->paginate();
+    }
+
     public function storeRestaurantCategory(Request $request,$id){
         $categoryName = $request->name;
 

@@ -55,6 +55,8 @@ Route::middleware('api')->group(function (){
                 Route::get('cert', [FeRestoController::class, 'getCertif']);
                 Route::get('food-type', [FeRestoController::class, 'getFoodType']);
                 Route::get('nearest', [FeRestoController::class, 'getNearestRestaurant']);
+
+                Route::get('certification/{id}', [FeRestoController::class, 'getBasedCertif']);
             });
         });
     });
