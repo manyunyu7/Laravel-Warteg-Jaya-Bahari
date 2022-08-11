@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class RolesSeeder extends Seeder
+class OrderStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,23 +14,27 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('user_roles')->insert([
+        DB::table('order_status')->insert([
             [
                 'id' => 1,
-                'roles' => 'Admin',
+                'name' => 'Waiting',
             ],
             [
                 'id' => 2,
-                'roles' => 'Customer',
+                'name' => 'On Cooking',
             ],
             [
                 'id' => 3,
-                'roles' => 'Restoran',
+                'name' => 'On The Way',
             ],
             [
                 'id' => 4,
-                'roles' => 'Driver'
-            ]
+                'name' => 'Completed',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Canceled',
+            ],
         ]);
     }
 }

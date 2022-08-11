@@ -7,7 +7,8 @@ use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
-use App\Models\UserFavorite;
+use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -65,11 +66,6 @@ class RestoranController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
     public function sortByFoodType(Request $request)
     {
         $restoByTypeFood = DB::table('restorans')->where('type_food_id', $request->type_food_id)->orderBy('name', 'asc')->get();
@@ -130,12 +126,6 @@ class RestoranController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -213,12 +203,6 @@ class RestoranController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
     public function show($restoId)
     {
         $restoran = Restoran::find($restoId);
@@ -262,12 +246,6 @@ class RestoranController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
     public function getTypeFood()
     {
         $food = TypeFood::all();
@@ -289,13 +267,6 @@ class RestoranController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function update(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
@@ -464,5 +435,54 @@ class RestoranController extends Controller
                 'data' => $arrPath
             ],200);
         }
+    }
+
+    public function getRestoByOwner()
+    {
+        $owner = Auth::id();
+        $restoran = Restoran::where('user_id', $owner)->get();
+
+        if (!$restoran) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restoran not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get restorans',
+            'data' => $restoran
+        ],200);
+    }
+
+    public function getRestoDetailByOwner($restoId)
+    {
+        $owner = Auth::id();
+        $restoran = Restoran::where(
+            [
+                'id' => $restoId,
+                'user_id' => $owner
+            ]
+        )->first();
+
+        if (!$restoran) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restoran not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get restorans',
+            'data' => $restoran
+        ],200);
     }
 }

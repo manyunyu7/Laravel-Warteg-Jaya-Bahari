@@ -19,12 +19,10 @@ class OrderHistoryController extends Controller
             [
                 'food_id' => 'required',
                 'quantity' => 'required|integer',
-                'notes' => 'required|string|min:3|max:255'
             ],
             [
                 'food_id.required' => 'food_id cannot be empty',
                 'quantity.required' => 'quantity cannot be empty',
-                'notes.required' => 'notes cannot be empty',
             ]
         );
 
@@ -155,12 +153,10 @@ class OrderHistoryController extends Controller
             [
                 'food_id' => 'required',
                 'quantity' => 'required|integer',
-                'notes' => 'required|string|min:3|max:255'
             ],
             [
                 'food_id.required' => 'food_id cannot be empty',
                 'quantity.required' => 'quantity cannot be empty',
-                'notes.required' => 'notes cannot be empty',
             ]
         );
 

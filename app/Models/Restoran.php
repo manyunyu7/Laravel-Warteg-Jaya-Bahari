@@ -44,6 +44,16 @@ class Restoran extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function drivers()
+    {
+        return $this->hasMany(Driver::class);
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(OrderCart::class);
+    }
+
     public function getImgFullPathAttribute(){
         return url("")."$this->image";
     }

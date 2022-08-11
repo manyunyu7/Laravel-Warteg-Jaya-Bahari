@@ -21,7 +21,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required|string|between:2,100',
-                'roles_id' => 'required|integer', Rule::in([1,2,3,4]),
+                'roles_id' => 'required|integer', Rule::in([1,2,3]),
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
                 'confirm_password' => 'required|string|min:6',
@@ -129,11 +129,22 @@ class AuthController extends Controller
 
     public function userProfile()
     {
+        $profile = auth()->user();
+
+        if (!$profile) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed get user profile',
+                'data' => null,
+            ],400);
+        }
+
         return response()->json([
             'success' => true,
             'code' => 200,
             'message' => 'Success get user profile',
-            'data' => auth()->user()
+            'data' => $profile
         ],200);
     }
 
@@ -142,6 +153,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(),[
             'name' => 'string|between:2,100',
+            'img' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
             'email' => 'string|email|max:100',
         ]);
 
@@ -155,7 +167,7 @@ class AuthController extends Controller
         $user->email = $request->email;
 
         if ($request->hasFile('img')) {
-            $path = public_path('uploads/img/users/').$request->img;
+            $path = public_path('storage').$request->img;
 
             if (file_exists($path)) {
                 try {
@@ -171,8 +183,8 @@ class AuthController extends Controller
 
             $file = $request->file('img');
             $ekstension = $file->getClientOriginalExtension();
-            $name = time().'_'.Auth::user()->name.'.'.$ekstension;
-            $request->img->move(public_path('uploads/img/users'), $name);
+            $name = Auth::user()->name.'_'.uniqid().'.'.$ekstension;
+            $request->img->move(public_path('storage'), $name);
 
             $user->photo = $name;
         }

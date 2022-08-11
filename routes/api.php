@@ -2,12 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\DriverController;
 use App\Http\Controllers\Main\FavoriteController;
 use App\Http\Controllers\Main\FoodCategoryController;
 use App\Http\Controllers\Main\FoodController;
 use App\Http\Controllers\Main\ForumCommentController;
 use App\Http\Controllers\Main\ForumController;
-use App\Http\Controllers\Main\KeywordController;
 use App\Http\Controllers\Main\MasjidController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Main\OperatingHourController;
@@ -17,6 +17,8 @@ use App\Http\Controllers\Main\ProductController;
 use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\RestoranController;
 use App\Http\Controllers\Main\RestoranReviewController;
+use App\Http\Controllers\OrderCartController;
+use App\Models\OrderCart;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,11 @@ Route::prefix('v1')->group(function (){
         Route::post('login', [AuthController::class, 'login']);
         Route::post('request-otp', [AuthController::class, 'requestOTP']);
         Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
+    });
+
+    Route::prefix('driver')->group(function(){
+        Route::post('login', [DriverController::class, 'loginDriver']);
+        Route::put('updateLocation/{driverId}', [DriverController::class, 'updateLocation']);
     });
 });
 
@@ -80,18 +87,11 @@ Route::prefix('v1')->group(function (){
             Route::post('uploadImage/{reviewId}', [MasjidReviewController::class, 'uploadImage']);
         });
 
-        Route::prefix('keyword')->group(function (){
-            Route::post('store', [KeywordController::class, 'store']);
-            Route::get('all', [KeywordController::class, 'index']);
-            Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
-            Route::put('update/{keywordId}', [KeywordController::class, 'update']);
-            Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
-        });
-
         Route::prefix('products')->group(function (){
             Route::post('store', [ProductController::class, 'store']);
             Route::get('all', [ProductController::class, 'index']);
             Route::get('detail/{productId}', [ProductController::class, 'show']);
+            Route::get('byCategory/{categoryId}', [ProductController::class, 'getByCategory']);
             Route::post('update/{productId}', [ProductController::class, 'update']);
             Route::delete('delete/{productId}', [ProductController::class, 'destroy']);
         });
@@ -123,6 +123,10 @@ Route::prefix('v1')->group(function (){
         });
 
         Route::prefix('restoran')->group(function(){
+            Route::middleware('auth.role:1,3')->group(function (){
+                Route::get('myResto', [RestoranController::class, 'getRestoByOwner']);
+                Route::get('myDetailResto/{restoran}', [RestoranController::class, 'getRestoDetailByOwner']);
+            });
             Route::post('store', [RestoranController::class, 'store']);
             Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
             Route::get('all', [RestoranController::class, 'index']);
@@ -170,13 +174,47 @@ Route::prefix('v1')->group(function (){
             });
         });
 
+        Route::prefix('driver')->group(function(){
+            Route::middleware('auth.role:1,3')->group(function (){
+                Route::post('register', [DriverController::class, 'registerDriver']);
+                Route::get('getByResto/{restoId}', [DriverController::class, 'getDriverByResto']);
+                Route::post('editDriver/{driverId}', [DriverController::class, 'editRestoDriver']);
+                Route::delete('deleteDriver/{driverId}', [DriverController::class, 'deleteDriver']);
+            });
+
+            Route::middleware('auth.role:1,4')->group(function(){
+                Route::get('driverProfile',[DriverController::class, 'driverProfile']);
+                Route::post('editMyProfile',[DriverController::class, 'updateDriverProfile']);
+            });
+        });
+
         Route::prefix('orders')->group(function(){
             Route::prefix('history')->group(function(){
-                Route::post('createHistory/{restoId}', [OrderHistoryController::class, 'store']);
-                Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
-                Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
-                Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
-                Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
+                Route::middleware('auth.role:1,2')->group(function (){
+                    Route::post('createHistory/{restoId}', [OrderHistoryController::class, 'store']);
+                    Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
+                });
+
+                Route::middleware('auth.role:1,3')->group(function (){
+                    Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
+                    Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
+                    Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
+                });
+            });
+
+            Route::prefix('carts')->group(function(){
+                Route::middleware('auth.role:1,2')->group(function (){
+                    Route::post('createCart/{restoId}', [OrderCartController::class,'createCart']);
+                    Route::get('myCart', [OrderCartController::class,'myCart']);
+                });
+
+                Route::middleware('auth.role:1,3')->group(function (){
+                    Route::get('detailOrder/{orderId}', [OrderCartController::class,'getDetailOrder']);
+                    Route::get('getAllOrder/{restoId}', [OrderCartController::class,'getAllOrderByResto']);
+                    Route::put('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
+                    Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
+                    Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
+                });
             });
         });
     });

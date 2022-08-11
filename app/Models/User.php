@@ -28,8 +28,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
 
     protected static function booted()
     {
-        static::deleted(function ($product) {
-            unlink(public_path('storage/'.$product->img));
+        static::deleted(function ($user) {
+            unlink(public_path('storage/'.$user->photo));
         });
     }
 
@@ -141,5 +141,15 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
     public function orderHistorys()
     {
         return $this->hasMany(OrderHistory::class);
+    }
+
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(OrderCart::class);
     }
 }
