@@ -57,6 +57,11 @@ Route::middleware('api')->group(function (){
                 Route::get('nearest', [FeRestoController::class, 'getNearestRestaurant']);
 
                 Route::get('certification/{id}', [FeRestoController::class, 'getBasedCertif']);
+                Route::get('{id}/reviews', [FeRestoController::class, 'getReviews']);
+
+                Route::prefix('reviewResto')->group(function (){
+                    Route::post('store/{masjidId}', [FeRestoController::class, 'store']);
+                });
             });
         });
     });

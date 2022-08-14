@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Certification;
 use App\Models\Food;
 use App\Models\FoodCategory;
-use App\Models\ProductCategory;
 use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class FeRestoController extends Controller
 {
@@ -48,6 +48,71 @@ class FeRestoController extends Controller
 
     public function getBasedCertif(Request $request,$id){
         return Restoran::where("certification_id","=",$id)->paginate();
+    }
+
+    public function getReviews(Request $request,$restoId)
+    {
+        $page = $request->page;
+        $perPage = $request->perPage;
+        $object = new \stdClass();
+        $masjidReviews = RestoranReview::where("restoran_id", '=', $restoId)->paginate($perPage,['*'],'page',$page);
+
+        $AllReviews = RestoranReview::where("restoran_id",'=',$restoId)->get();
+        $reviewCount = $this->getReviewCount($AllReviews);
+        $object->reviews = $masjidReviews;
+        $object->review_count = $reviewCount;
+        return $object;
+    }
+
+    public function getReviewCount($datas)
+    {
+        $object = new stdClass();
+
+        $ratings1 = 0;
+        $ratings2 = 0;
+        $ratings3 = 0;
+        $ratings4 = 0;
+        $ratings5 = 0;
+
+        $avg=0;
+
+        foreach ($datas as $data) {
+            if ($data->rating_id == 1) {
+                $ratings1 += 1;
+            }
+            if ($data->rating_id == 2) {
+                $ratings2 += 1;
+            }
+            if ($data->rating_id == 3) {
+                $ratings3 += 1;
+            }
+            if ($data->rating_id == 4) {
+                $ratings4 += 1;
+            }
+            if ($data->rating_id == 5) {
+                $ratings5 += 1;
+            }
+        }
+
+
+        $totalRatings = ((1.0*$ratings1)+(2.0*$ratings2)+(3.0*$ratings3)+(4.0*$ratings4)+(5.0*$ratings5));
+        $ratingCounts = $datas->count();
+        $avg=0;
+
+        if($totalRatings!=0){
+            $avg = $totalRatings/$ratingCounts;
+        }
+
+
+        $object->avg = round($avg);
+        $object->rating1 = $ratings1;
+        $object->rating2 = $ratings2;
+        $object->rating3 = $ratings3;
+        $object->rating4 = $ratings4;
+        $object->rating5 = $ratings5;
+
+
+        return $object;
     }
 
     public function storeRestaurantCategory(Request $request,$id){

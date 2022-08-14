@@ -21,7 +21,7 @@ class FeMasjidController extends Controller
         foreach ($masjidReviews as $item) {
             $masjidPhotos = MasjidReviewImage::where("masjid_review_id", '=', $item->id)->get();
             foreach ($masjidPhotos as $itemPhoto) {
-                array_push($arrayPhotoUrl, url('/') . "/storage/" . $itemPhoto->path);
+                array_push($arrayPhotoUrl, url('/') . "/" . $itemPhoto->path);
             }
         }
         return $arrayPhotoUrl;

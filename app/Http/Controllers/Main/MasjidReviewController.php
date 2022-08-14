@@ -19,9 +19,9 @@ class MasjidReviewController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'rating_id' => 'required|integer', Rule::in([1, 2, 3, 4]),
-                'comment' => 'required|string|min:3|max:1000',
-                'img.*' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
+                'rating_id' => 'required', Rule::in([1, 2, 3, 4]),
+                'comment' => 'required|string|min:0|max:1000',
+//                'img.*' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
             ],
             [
                 'rating_id' => 'rating_id cannot be empty',
@@ -59,16 +59,16 @@ class MasjidReviewController extends Controller
                         }
                     }
                 }
-    
+
                 $review = new MasjidReview();
-    
+
                 $review->masjid_id = $masjidId;
                 $review->user_id = Auth::id();
                 $review->rating_id = $request->rating_id;
                 $review->comment = $request->comment;
-    
+
                 if ($review->save()) {
-    
+
                     foreach($dataFile as $file)
                     {
                         $reviewImage = new MasjidReviewImage();
@@ -76,7 +76,7 @@ class MasjidReviewController extends Controller
                         $reviewImage->path = $file;
                         $reviewImage->save();
                     }
-    
+
                     return response()->json([
                         'success' => true,
                         'code' => 200,
@@ -93,12 +93,12 @@ class MasjidReviewController extends Controller
                 }
             }else{
                 $review = new MasjidReview();
-    
+
                 $review->masjid_id = $masjidId;
                 $review->user_id = Auth::id();
                 $review->rating_id = $request->rating_id;
                 $review->comment = $request->comment;
-    
+
                 if ($review->save()) {
                     return response()->json([
                         'success' => true,

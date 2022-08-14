@@ -44,9 +44,9 @@ class RestoranReviewController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'rating_id' => 'required|integer', Rule::in([1, 2, 3, 4]),
-                'comment' => 'required|string|min:3|max:1000',
-                'img.*' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
+                'rating_id' => 'required', Rule::in([1, 2, 3, 4]),
+                'comment' => 'required|string|min:0|max:1000',
+//                'img.*' => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
             ],
             [
                 'rating_id' => 'rating_id cannot be empty',
@@ -98,7 +98,7 @@ class RestoranReviewController extends Controller
                     'message' => 'success add review restoran',
                     'data' => $review
                 ],200);
-                
+
             }else{
                 return response()->json([
                     'success' => false,
@@ -153,7 +153,7 @@ class RestoranReviewController extends Controller
         $rating5 = RestoranReview::where('rating_id', 5)->get()->count();
         $totalReviews = $restoReviews->count();
         $avgReviews = ($rating1 + $rating2 + $rating3 + $rating4 + $rating5)/5.0;
-        
+
         if ($restoReviews == null) {
             return response()->json([
                 'success' => false,
