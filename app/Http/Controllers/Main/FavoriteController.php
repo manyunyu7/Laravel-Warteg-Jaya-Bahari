@@ -81,53 +81,50 @@ class FavoriteController extends Controller
         }
     }
 
-    public function getAllFavorite()
+    public function getRestoFavorites()
     {
-        $restorans = DB::table('favorite_restorans')->where('user_id', Auth::id())
-                    ->join('restorans', 'favorite_restorans.restorans_id', '=', 'restorans.id')
-                    ->select('favorite_restorans.user_id' ,'restorans.name')
-                    ->get();
-        
-        $masjids = DB::table('favorite_masjids')->where('user_id', Auth::id())
-                    ->join('masjids', 'favorite_masjids.masjid_id', '=', 'masjids.id')
-                    ->select('favorite_masjids.user_id','masjids.name')
-                    ->get();
-        
-        if ($restorans && $masjids == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'favorite data not found', 
-                'data' => null
-            ],404);
-        }
-        
-        if ($restorans == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'restorans favorite data not found', 
-                'data' => $masjids
-            ],404);
-        }
+        $user = Auth::id();
 
-        if ($masjids == null) {
+        $favorites = FavoriteRestoran::where('user_id', $user)->get();
+
+        if (!$favorites) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'masjids favorite data not found', 
-                'data' => $restorans
+                'message' => 'Favorite restoran not found', 
+                'data' => null
             ],404);
         }
 
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'success get data restorans', 
-            'data' => [
-                "Restorans"=> $restorans, 
-                "Masjid"=>$masjids
-            ]
+            'message' => 'Success get favorite restoran',
+            'data' => $favorites
+        ],200);
+    }
+
+    public function getMasjidFavorites()
+    {
+        
+        $user = Auth::id();
+
+        $favorites = FavoriteMasjid::where('user_id', $user)->get();
+
+        if (!$favorites) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Favorite masjid not found', 
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get favorite masjid',
+            'data' => $favorites
         ],200);
     }
 
