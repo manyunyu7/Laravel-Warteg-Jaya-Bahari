@@ -149,7 +149,8 @@ Route::middleware('jwt.verify')->group(function (){
         Route::prefix('favorites')->group(function(){
             Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
             Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
-            Route::get('/', [FavoriteController::class, 'getAllFavorite']);
+            Route::get('/getRestoran', [FavoriteController::class, 'getRestoFavorites']);
+            Route::get('/getMasjid', [FavoriteController::class, 'getMasjidFavorites']);
             Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
             Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
         });
