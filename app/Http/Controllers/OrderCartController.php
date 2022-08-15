@@ -35,11 +35,22 @@ class OrderCartController extends Controller
         }
 
         $dataOrder = array();
+        $qtyOrder = array();
+        $priceOrder = array();
         $user = Auth::id();
         $order = OrderHistory::where([
             'user_id' => $user,
             'resto_id' => $restoId
         ])->get();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Order not found',
+                'data' => null
+            ],404);
+        }
         
 
         foreach($order as $data)
@@ -54,7 +65,9 @@ class OrderCartController extends Controller
                 'quantity' => $data->quantity,
                 'notes' => $data->notes,
             ];
+            $priceOrder[] = $food->price * $data->quantity;
         }
+        $tot = array_sum($priceOrder);
 
         $cart = new OrderCart();
         $cart->user_id = $user;
@@ -70,7 +83,10 @@ class OrderCartController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success create order',
-                'data' => $cart
+                'data' => [
+                    'order' => $cart,
+                    'totalPrice' => $tot,
+                ]
             ],200);
         }else{
             return response()->json([
