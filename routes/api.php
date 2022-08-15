@@ -162,16 +162,22 @@ Route::middleware('jwt.verify')->group(function (){
         });
 
         Route::prefix('foods')->group(function(){
-            Route::post('store', [FoodController::class,'store']);
             Route::get('getFood/{restoId}/{categoryId}', [FoodController::class,'getFood']);
-            Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
             Route::prefix('category')->group(function(){
                 Route::get('allCategory', [FoodCategoryController::class, 'index']);
                 Route::get('byResto/{restoId}',[FoodCategoryController::class, 'getByRestoran']);
                 Route::get('detail/{categoryId}',[FoodCategoryController::class, 'getDetail']);
-                Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
-                Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
-                Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+            });
+
+            Route::middleware('auth.role:1,3')->group(function (){
+                Route::post('store', [FoodController::class,'store']);
+                Route::post('editFood/{foodId}', [FoodController::class,'editFood']);
+                Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
+                Route::prefix('category')->group(function(){
+                    Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
+                    Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
+                    Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+                });
             });
         });
 
