@@ -213,6 +213,7 @@ Route::middleware('jwt.verify')->group(function (){
                 Route::middleware('auth.role:1,2')->group(function (){
                     Route::post('createCart/{restoId}', [OrderCartController::class,'createCart']);
                     Route::get('myCart', [OrderCartController::class,'myCart']);
+                    Route::post('uploadSign/{orderId}', [OrderCartController::class,'uploadSign']);
                 });
 
                 Route::middleware('auth.role:1,3')->group(function (){
@@ -221,6 +222,7 @@ Route::middleware('jwt.verify')->group(function (){
                     Route::put('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
                     Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
+                    Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
                 });
             });
         });
