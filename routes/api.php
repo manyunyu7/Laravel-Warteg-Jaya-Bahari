@@ -18,7 +18,6 @@ use App\Http\Controllers\Main\ProductInformationController;
 use App\Http\Controllers\Main\RestoranController;
 use App\Http\Controllers\Main\RestoranReviewController;
 use App\Http\Controllers\OrderCartController;
-use App\Models\OrderCart;
 
 /*
 |--------------------------------------------------------------------------

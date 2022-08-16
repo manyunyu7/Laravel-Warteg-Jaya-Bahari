@@ -102,7 +102,7 @@ class FoodController extends Controller
     public function getFood($restoId, $categoryId)
     {
         $foods = Food::where('restoran_id', $restoId)->where('category_id', $categoryId)->get();
-        if (!$foods) {
+        if ($foods == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
@@ -144,7 +144,6 @@ class FoodController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        // dd($request->all());
         $name = "";
         $food = Food::where('id', $foodId)->first();
 
