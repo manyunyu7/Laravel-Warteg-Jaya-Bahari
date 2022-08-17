@@ -11,6 +11,7 @@ use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -26,6 +27,21 @@ class FeRestoController extends Controller
         return $obj;
     }
 
+    public function getAllCert(){
+        return Certification::all();
+    }
+
+    public function myResto(){
+        $obj = Restoran::where("user_id","=",Auth::id())->get();
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success store masjid',
+            'data' => $obj
+        ],200);
+    }
+
     public function getAllFoodOnResto($id){
         $obj = Food::where("restoran_id",'=',$id)->get();
         return $obj;
@@ -39,6 +55,86 @@ class FeRestoController extends Controller
 
     public function getFoodRestaurantByCategory($id){
         return Food::where("category_id",'=',$id)->get();
+    }
+    public function updateRestoCert(Request $request,$id){
+        $resto = Restoran::findOrFail($id);
+        $resto->certification_id=$request->certification_id;
+
+        if ($resto->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update data',
+                'data' => $resto
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed add review restoran',
+                'data' => null
+            ],400);
+        }
+    }
+    public function updateRestoType(Request $request,$id){
+        $resto = Restoran::findOrFail($id);
+        $resto->type_food_id=$request->type_food_id;
+
+        if ($resto->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update data',
+                'data' => $resto
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed add review restoran',
+                'data' => null
+            ],400);
+        }
+    }
+    public function updateAddress(Request $request,$id){
+        $resto = Restoran::findOrFail($id);
+        $resto->type_food_id=$request->type_food_id;
+
+        if ($resto->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update data',
+                'data' => $resto
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed add review restoran',
+                'data' => null
+            ],400);
+        }
+    }
+    public function updatePhone(Request $request,$id){
+        $resto = Restoran::findOrFail($id);
+        $resto->phone_number=$request->phone;
+
+        if ($resto->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success update data',
+                'data' => $resto
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed add review restoran',
+                'data' => null
+            ],400);
+        }
     }
 
     public function getFoodType(){

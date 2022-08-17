@@ -46,6 +46,8 @@ Route::middleware('api')->group(function (){
             });
 
             Route::prefix('restoran')->group(function(){
+                Route::get('me', [FeRestoController::class, 'myResto']);
+                Route::get('cert', [FeRestoController::class, 'getAllCert']);
                 Route::get('all-raw', [FeRestoController::class, 'all-raw']);
                 Route::get('{id}/detail', [FeRestoController::class, 'getDetailRestaurant']);
                 Route::get('{id}/food-category', [FeRestoController::class, 'getAllFoodCategoryOnResto']);
@@ -58,6 +60,13 @@ Route::middleware('api')->group(function (){
 
                 Route::get('certification/{id}', [FeRestoController::class, 'getBasedCertif']);
                 Route::get('{id}/reviews', [FeRestoController::class, 'getReviews']);
+
+                Route::prefix("{id}/update")->group(function (){
+                    Route::post('cert', [FeRestoController::class, 'updateRestoCert']);
+                    Route::post('resto-type', [FeRestoController::class, 'updateRestoType']);
+                    Route::post('address', [FeRestoController::class, 'updateAddress']);
+                    Route::post('phone', [FeRestoController::class, 'updatePhone']);
+                });
 
                 Route::prefix('reviewResto')->group(function (){
                     Route::post('store/{masjidId}', [FeRestoController::class, 'store']);

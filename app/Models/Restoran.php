@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Restoran extends Model
 {
     use HasFactory;
-    protected $appends = ["img_full_path"];
+    protected $appends = ["img_full_path","certification_name","food_type_name"];
     public function typeFood()
     {
         return $this->belongsTo(TypeFood::class);
@@ -56,5 +56,14 @@ class Restoran extends Model
 
     public function getImgFullPathAttribute(){
         return url("")."$this->image";
+    }
+
+    public function getCertificationNameAttribute(){
+        $object = Certification::where("id", '=', $this->certification_id)->first();
+        return $object->name;
+    }
+    public function getFoodTypeNameAttribute(){
+        $object = TypeFood::where("id", '=', $this->type_food_id)->first();
+        return $object->name;
     }
 }
