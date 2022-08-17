@@ -119,24 +119,6 @@ class ForumCommentController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $commentId)
     {
         $validator = Validator::make($request->all(),
@@ -194,14 +176,32 @@ class ForumCommentController extends Controller
         }
 
         try {
-            CommentLike::where('comment_id', $comment->id)->delete();
-
-            if ($comment->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'success delete comment',
-                ],200);
+            $commentLikes = CommentLike::where('comment_id', $comment->id)->get();
+            
+            if ($commentLikes != null) {
+                if ($commentLikes->delete()) {
+                    if ($comment->delete()) {
+                        return response()->json([
+                            'success' => true,
+                            'code' => 200,
+                            'message' => 'success delete comment',
+                        ],200);
+                    }
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'failed delete comment',
+                    ],400);
+                }
+            }else{
+                if ($comment->delete()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'success delete comment',
+                    ],200);
+                }
             }
         } catch (Exception $e) {
             return response()->json([
