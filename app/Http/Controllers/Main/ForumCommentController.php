@@ -8,6 +8,7 @@ use App\Models\ForumComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class ForumCommentController extends Controller
 {
@@ -182,7 +183,7 @@ class ForumCommentController extends Controller
      */
     public function destroy($commentId)
     {
-        $comment = ForumComment::find($commentId);
+        $comment = ForumComment::where('id', $commentId)->first();
 
         if ($comment == null) {
             return response()->json([
@@ -190,7 +191,11 @@ class ForumCommentController extends Controller
                 'code' => 404,
                 'message' => 'comment not found',
             ],404);
-        }else{
+        }
+
+        try {
+            CommentLike::where('comment_id', $comment->id)->delete();
+
             if ($comment->delete()) {
                 return response()->json([
                     'success' => true,
@@ -198,6 +203,12 @@ class ForumCommentController extends Controller
                     'message' => 'success delete comment',
                 ],200);
             }
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => $e->getMessage()
+            ],400);
         }
     }
 

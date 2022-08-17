@@ -35,7 +35,6 @@ class OrderCartController extends Controller
         }
 
         $dataOrder = array();
-        $qtyOrder = array();
         $priceOrder = array();
         $user = Auth::id();
         $order = OrderHistory::where([

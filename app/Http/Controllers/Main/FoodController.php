@@ -223,7 +223,7 @@ class FoodController extends Controller
     {
         $food = Food::find($foodId);
 
-        if (!$food) {
+        if ($food == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,

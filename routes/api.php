@@ -104,21 +104,25 @@ Route::middleware('jwt.verify')->group(function (){
         });
 
         Route::prefix('forums')->group(function (){
-            Route::post('store', [ForumController::class, 'store']);
-            Route::get('all', [ForumController::class, 'index']);
-            Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
-            Route::post('update/{forumId}', [ForumController::class, 'update']);
-            Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
-            Route::post('like/{forumId}', [ForumController::class, 'likeForum']);
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::post('store', [ForumController::class, 'store']);
+                Route::get('all', [ForumController::class, 'index']);
+                Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
+                Route::post('update/{forumId}', [ForumController::class, 'update']);
+                Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
+                Route::post('like/{forumId}', [ForumController::class, 'likeForum']);
+            });
         });
 
         Route::prefix('comments')->group(function (){
-            Route::post('store', [ForumCommentController::class, 'store']);
-            Route::get('all', [ForumCommentController::class, 'index']);
-            Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
-            Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
-            Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
-            Route::post('like/{commentId}', [ForumCommentController::class, 'likeComment']);
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::post('store', [ForumCommentController::class, 'store']);
+                Route::get('all', [ForumCommentController::class, 'index']);
+                Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
+                Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
+                Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
+                Route::post('like/{commentId}', [ForumCommentController::class, 'likeComment']);
+            });
         });
 
         Route::prefix('restoran')->group(function(){
