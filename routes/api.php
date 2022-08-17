@@ -147,7 +147,6 @@ Route::middleware('jwt.verify')->group(function (){
             });
 
             Route::middleware('auth.role:1,2')->group(function (){
-                Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
                 Route::get('all', [RestoranController::class, 'index']);
                 Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
                 Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
@@ -159,12 +158,14 @@ Route::middleware('jwt.verify')->group(function (){
         });
 
         Route::prefix('favorites')->group(function(){
-            Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
-            Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
-            Route::get('/getRestoran', [FavoriteController::class, 'getRestoFavorites']);
-            Route::get('/getMasjid', [FavoriteController::class, 'getMasjidFavorites']);
-            Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
-            Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
+                Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
+                Route::get('/getRestoran', [FavoriteController::class, 'getRestoFavorites']);
+                Route::get('/getMasjid', [FavoriteController::class, 'getMasjidFavorites']);
+                Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
+                Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
+            });
         });
 
         Route::prefix('reviewResto')->group(function(){
