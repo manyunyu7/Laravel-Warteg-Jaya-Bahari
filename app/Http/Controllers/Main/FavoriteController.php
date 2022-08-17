@@ -74,7 +74,7 @@ class FavoriteController extends Controller
             ],404);
         }
 
-        $checkFav = FavoriteRestoran::where([
+        $checkFav = FavoriteMasjid::where([
             "user_id" => $user,
             "masjid_id" => $masjidId
         ])->first();
