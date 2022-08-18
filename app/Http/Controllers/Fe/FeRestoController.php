@@ -116,6 +116,7 @@ class FeRestoController extends Controller
             ],400);
         }
     }
+
     public function updatePhone(Request $request,$id){
         $resto = Restoran::findOrFail($id);
         $resto->phone_number=$request->phone;

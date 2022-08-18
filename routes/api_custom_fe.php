@@ -8,6 +8,8 @@ use App\Http\Controllers\Main\PrayerTimeController;
 use App\Http\Controllers\Fe\FeProductController;
 use App\Http\Controllers\Fe\FeMasjidController;
 use App\Http\Controllers\Fe\FeRestoController;
+use App\Http\Controllers\Fe\FeForumController;
+
 
 
 Route::middleware('api')->group(function (){
@@ -39,6 +41,12 @@ Route::middleware('api')->group(function (){
                 Route::put('update/{keywordId}', [KeywordController::class, 'update']);
                 Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
             });
+
+            Route::prefix('forums')->group(function (){
+                Route::get('category', [FeForumController::class, 'getForumCategory']);
+                Route::get('all-paginate', [FeForumController::class, 'getForumPaginate']);
+            });
+    
 
             Route::prefix('products')->group(function (){
                 Route::get('category', [FeProductController::class, 'getProductCategory']);

@@ -152,4 +152,15 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
     {
         return $this->hasOne(OrderCart::class);
     }
+
+    protected $appends = ["img_full_path"];
+
+    public function getImgFullPathAttribute(){
+        if($this->img==null){
+            return "https://polteksahid.ac.id/wp-content/uploads/2021/12/placeholder.png";
+        }else{
+            return asset("")."storage/".$this->img;
+        }
+    }
+
 }

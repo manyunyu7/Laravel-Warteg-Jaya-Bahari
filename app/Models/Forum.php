@@ -37,4 +37,14 @@ class Forum extends Model
     {
         return $this->hasMany(ForumLike::class);
     }
+
+    protected $appends = ["img_full_path"];
+
+    public function getImgFullPathAttribute(){
+        if($this->img==null){
+            return "https://polteksahid.ac.id/wp-content/uploads/2021/12/placeholder.png";
+        }else{
+            return asset("").$this->img;
+        }
+    }
 }

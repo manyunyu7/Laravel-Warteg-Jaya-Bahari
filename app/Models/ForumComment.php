@@ -23,7 +23,7 @@ class ForumComment extends Model
 
     public function likes()
     {
-        return $this->hasMany(CommentLike::class);
+        return $this->hasMany(CommentLike::class,"comment_id");
     }
 
 }

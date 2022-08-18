@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Models\CommentLike;
 use App\Models\ForumComment;
+use App\Models\ForumLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -73,7 +74,7 @@ class ForumCommentController extends Controller
         $comment->user_id = Auth::id();
         $comment->forum_id = $request->forum_id;
         $comment->comment = $request->comment;
-        
+
         if ($comment->save()) {
             return response()->json([
                 'success' => true,
@@ -156,7 +157,7 @@ class ForumCommentController extends Controller
         $comment->user_id = Auth::id();
         $comment->forum_id = $request->forum_id;
         $comment->comment = $request->comment;
-        
+
         if ($comment->save()) {
             return response()->json([
                 'success' => true,
@@ -239,4 +240,25 @@ class ForumCommentController extends Controller
             ],400);
         }
     }
+
+    public function unlikeComment($commentId){
+        $data = CommentLike::where([
+            'user_id' => Auth::id(),
+            'comment_id' => $commentId
+        ]);
+        if ($data->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success unlike forum',
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed unlike forum',
+            ],400);
+        }
+    }
+
 }
