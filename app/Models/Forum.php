@@ -47,4 +47,9 @@ class Forum extends Model
             return asset("").$this->img;
         }
     }
+
+    protected $casts = [
+        'created_at'  => 'date:Y-m-d H:00',
+        'edited_at' => 'datetime:Y-m-d H:00',
+    ];
 }

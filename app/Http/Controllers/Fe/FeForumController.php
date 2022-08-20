@@ -11,7 +11,8 @@ use stdClass;
 class FeForumController extends Controller
 {
 
-    function getForumCategory(){
+    function getForumCategory()
+    {
         return $data = ForumCategory::all();
     }
 
@@ -19,7 +20,9 @@ class FeForumController extends Controller
     {
         $page = $request->page;
         $perPage = $request->perPage;
-        $forums = Forum::with(["user","category","comments","likes"])-> paginate($perPage,['*'],'page',$page);
+        $forums = Forum::with(["user", "category", "comments", "likes"])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'page', $page);
         return $forums;
     }
 

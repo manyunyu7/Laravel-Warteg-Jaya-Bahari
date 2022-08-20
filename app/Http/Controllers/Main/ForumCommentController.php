@@ -214,7 +214,12 @@ class ForumCommentController extends Controller
             ],404);
         }
 
-        if (CommentLike::where('user_id', Auth::user()->id)->exists() && CommentLike::where('comment_id', $commendId)->exists()) {
+        $data = CommentLike::where([
+            'user_id' => Auth::id(),
+            'comment_id' => $commendId
+        ]);
+
+        if ($data->exists()) {
             return response()->json([
                 'success' => false,
                 'code' => 400,

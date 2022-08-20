@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\CommentLike;
 use App\Models\Forum;
 use App\Models\ForumComment;
 use App\Models\ForumLike;
@@ -182,6 +183,7 @@ class ForumController extends Controller
      */
     public function update(Request $request, $forumId)
     {
+        return $request->all();
         $validator = Validator::make($request->all(),
             [
                 'category_id' => 'integer', Rule::in([1, 2, 3, 4, 5, 6]),
@@ -207,18 +209,29 @@ class ForumController extends Controller
         $forum->title = $request->title;
         $forum->body = $request->body;
 
+        $oldImage = public_path($forum->img);
+
+        if($request->is_deleting_image){
+            $forum->img=null;
+            if (file_exists($oldImage)) {
+                try {
+                    unlink($oldImage);
+                } catch (Exception $e) {
+                }
+            }
+        }
+
         if ($request->hasFile('img')) {
-            $oldImage = public_path($forum->img);
 
             if (file_exists($oldImage)) {
                 try {
                     unlink($oldImage);
                 } catch (Exception $e) {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => $e
-                    ], 400);
+//                    return response()->json([
+//                        'success' => false,
+//                        'code' => 400,
+//                        'message' => $e
+//                    ], 400);
                 }
             }
 
@@ -261,7 +274,6 @@ class ForumController extends Controller
             ], 400);
         }
 
-        return "doar";
     }
 
     /**
@@ -325,7 +337,12 @@ class ForumController extends Controller
             ], 404);
         }
 
-        if (ForumLike::where('user_id', Auth::user()->id)->exists() && ForumLike::where('forum_id', $forumId)->exists()) {
+        $data = ForumLike::where([
+            'user_id' => Auth::id(),
+            'forum_id' => $forumId
+        ]);
+
+        if ($data->exists()) {
             return response()->json([
                 'success' => false,
                 'code' => 400,

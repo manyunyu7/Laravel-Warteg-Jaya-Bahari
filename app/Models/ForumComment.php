@@ -26,4 +26,9 @@ class ForumComment extends Model
         return $this->hasMany(CommentLike::class,"comment_id");
     }
 
+    protected $casts = [
+        'created_at'  => 'date:Y-m-d H:00',
+        'edited_at' => 'datetime:Y-m-d H:00',
+    ];
+
 }
