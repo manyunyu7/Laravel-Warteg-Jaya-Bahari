@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Restoran;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -75,11 +76,11 @@ class FoodController extends Controller
         }
 
         $img = $request->file('image');
-        $path = 'uploads/img/foods/';
+        $path = 'storage/';
         $ekstension = $img->getClientOriginalExtension();
         $name = 'Food'.'_'.uniqid().'.'.$ekstension;
 
-        if ($request->image->move(public_path($path),$name)) {
+        if ($request->image->move(public_path('storage'),$name)) {
             $food->image = $path.$name;
 
 
@@ -111,7 +112,7 @@ class FoodController extends Controller
     public function getFood($restoId, $categoryId)
     {
         $foods = Food::where('restoran_id', $restoId)->where('category_id', $categoryId)->get();
-        if (!$foods) {
+        if ($foods == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
@@ -128,11 +129,111 @@ class FoodController extends Controller
         ],200);
     }
 
+    public function editFood(Request $request, $foodId)
+    {
+        $restoran_id = (int)$request->restoran_id;
+        $type_food_id = (int)$request->type_food_id;
+        $category_id = (int)$request->category_id;
+        $validator = Validator::make($request->all(),
+        [
+            'type_food_id'  =>  Rule::in([1, 2, 3, 4,5,6,7,8,9]),
+            'category_id'  => Rule::in([1, 2, 3, 4,5,6]),
+            'name' => 'string|min:4',
+            'description' => 'string|min:3|max:1000',
+            'image' => 'image:jpeg,png,jpg,gif,svg|max:2048',
+            'price' => 'integer',
+        ],
+        [
+            'name.string' => 'name must be a string',
+            'description.string' => 'description a string',
+            'img.image' => 'Image must be and image',
+            'price.integer' => 'price must be an integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $name = "";
+        $food = Food::where('id', $foodId)->first();
+
+        if (!$food) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Data not Found',
+                'data' => null,
+            ],404);
+        }
+
+        $food->restoran_id = $restoran_id;
+        $food->type_food_id = $type_food_id;
+        $food->category_id = $category_id;
+        $food->name = $request->name;
+        $food->description = $request->description;
+        $food->price = $request->price;
+        if ($request->has('quantity')) {
+            $quantity = (int) $request->quantity;
+            if(!is_int($quantity)){
+                return response()->json([
+                    'success' => false,
+                    'code' => 422,
+                    'message' => 'quantity must be a number',
+                ], 422);
+            }
+            $food->quantity = $quantity;
+            $food->is_visible = $food->quantity === "0"? false: true;
+        }else{
+            $food->is_visible = false;
+        }
+
+        if ($request->hasFile('image')) {
+            $path = public_path('storage/').$food->image;
+
+
+            if (file_exists($path)) {
+                try {
+                    unlink($path);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $e
+                    ],400);
+                }
+            }
+
+            $img = $request->file('image');
+            $ekstension = $img->getClientOriginalExtension();
+            $name = 'Food'.'_'.uniqid().'.'.$ekstension;
+            $request->image->move(public_path('storage'),$name);
+
+            $food->image = $name;
+        }
+
+
+        if ($food->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success edit food',
+                'data' => $food,
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed edit food',
+                'data' => null,
+            ],400);
+        }
+    }
+
     public function delete($foodId)
     {
         $food = Food::find($foodId);
 
-        if (!$food) {
+        if ($food == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
@@ -142,18 +243,6 @@ class FoodController extends Controller
         }
 
         if ($food->delete()) {
-            // $img = public_path($food->img);
-            // if (file_exists($img)) {
-            //     try {
-            //         unlink($img);
-            //     } catch (\Throwable $th) {
-            //         return response()->json([
-            //             'success' => false,
-            //             'code' => 400,
-            //             'message' => $th->getMessage(),
-            //         ],400);
-            //     }
-            // }
             return response()->json([
                 'success' => true,
                 'code' => 200,

@@ -27,6 +27,19 @@ class FavoriteController extends Controller
             ],404);
         }
 
+        $checkFav = FavoriteRestoran::where([
+            "user_id" => $user,
+            "restorans_id" => $restoId
+        ])->first();
+
+        if ($checkFav) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'You already like this restoran'
+            ],400);
+        }
+
         $favorite->user_id = $user;
         $favorite->restorans_id = $resto_id->id;
 
@@ -59,6 +72,19 @@ class FavoriteController extends Controller
                 'code' => 404,
                 'message' => 'masjid not found'
             ],404);
+        }
+
+        $checkFav = FavoriteMasjid::where([
+            "user_id" => $user,
+            "masjid_id" => $masjidId
+        ])->first();
+
+        if ($checkFav) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'You already like this masjid'
+            ],400);
         }
 
         $favorite->user_id = $user;

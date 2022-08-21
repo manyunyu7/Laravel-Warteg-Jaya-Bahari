@@ -15,11 +15,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ForumController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $forums = Forum::all();
@@ -41,22 +37,6 @@ class ForumController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -80,15 +60,14 @@ class ForumController extends Controller
         $forum = new Forum();
         if ($request->hasFile('img')) {
             $img = $request->file('img');
-            $path = 'uploads/img/forums/';
             $ekstension = $img->getClientOriginalExtension();
             $name = 'Forum' . '_' . Auth::user()->name . "_" . uniqid() . '.' . $ekstension;
-            if ($request->img->move(public_path($path), $name)) {
+            if ($request->img->move(public_path('storage/'), $name)) {
                 $forum->user_id = Auth::id();
                 $forum->category_id = $request->category_id;
                 $forum->title = $request->title;
                 $forum->body = $request->body;
-                $forum->img = $path . $name;
+                $forum->img = $name;
 
                 if ($forum->save()) {
                     return response()->json([
@@ -136,12 +115,7 @@ class ForumController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($forumId)
     {
         $forum = Forum::with(["user", "category", "comments", "likes"])->find($forumId);
@@ -163,24 +137,6 @@ class ForumController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $forumId)
     {
         $validator = Validator::make($request->all(),
@@ -208,83 +164,78 @@ class ForumController extends Controller
         $forum->title = $request->title;
         $forum->body = $request->body;
 
-        $oldImage = public_path($forum->img);
+        if ($request->hasFile('img')) {
+            $oldImage = public_path($forum->img);
 
-        if($request->is_deleting_image==true){
-            $forum->img=null;
-            if (file_exists($oldImage)) {
-                try {
-                    unlink($oldImage);
-                } catch (Exception $e) {
+            if ($request->is_deleting_image == true) {
+                $forum->img = null;
+                if (file_exists($oldImage)) {
+                    try {
+                        unlink($oldImage);
+                    } catch (Exception $e) {
+                    }
                 }
             }
-        }
 
-        if ($request->hasFile('img')) {
+            if ($request->hasFile('img')) {
 
-            if (file_exists($oldImage)) {
-                try {
-                    unlink($oldImage);
-                } catch (Exception $e) {
+                if (file_exists($oldImage)) {
+                    try {
+                        unlink($oldImage);
+                    } catch (Exception $e) {
 //                    return response()->json([
 //                        'success' => false,
 //                        'code' => 400,
 //                        'message' => $e
 //                    ], 400);
+                    }
+                }
+
+                $img = $request->file('img');
+                $ekstension = $img->getClientOriginalExtension();
+                $name = 'Forum' . '_' . Auth::user()->name . "_" . uniqid() . '.' . $ekstension;
+                if ($request->img->move(public_path('storage/'), $name)) {
+                    $forum->img = $name;
+
+                    if ($forum->save()) {
+                        return response()->json([
+                            'success' => true,
+                            'code' => 200,
+                            'message' => 'Success update forum',
+                            'data' => $forum,
+                        ], 200);
+                    } else {
+                        return response()->json([
+                            'success' => false,
+                            'code' => 400,
+                            'message' => 'Failed update forum',
+                            'data' => null,
+                        ], 400);
+                    }
                 }
             }
 
-            $img = $request->file('img');
-            $path = 'uploads/img/forums/';
-            $ekstension = $img->getClientOriginalExtension();
-            $name = 'Forum' . '_' . Auth::user()->name . "_" . uniqid() . '.' . $ekstension;
-            if ($request->img->move(public_path($path), $name)) {
-                $forum->img = $path . $name;
-
-                if ($forum->save()) {
-                    return response()->json([
-                        'success' => true,
-                        'code' => 200,
-                        'message' => 'Success update forum',
-                        'data' => $forum,
-                    ], 200);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => 'Failed update forum',
-                        'data' => null,
-                    ], 400);
-                }
+            if ($forum->save()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'Success upadate forum',
+                    'data' => $forum,
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'Failed update forum',
+                    'data' => null,
+                ], 400);
             }
-        } else if ($forum->save()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'Success upadate forum',
-                'data' => $forum,
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'Failed update forum',
-                'data' => null,
-            ], 400);
         }
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($forumId)
     {
         $forum = Forum::find($forumId);
-        $comment = ForumComment::where("forum_id", '=', 12)->destroy();
 
         if ($forum == null) {
             return response()->json([
@@ -292,15 +243,58 @@ class ForumController extends Controller
                 'code' => 404,
                 'message' => 'forum not found',
             ], 404);
+        }
+
+        $comments = ForumComment::where('forum_id', $forumId);
+        if ($comments != null) {
+            try {
+                $delComment = $comments->get();
+                foreach ($delComment as $data) {
+                    CommentLike::where('comment_id', $data->id)->delete();
+                }
+            } catch (Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        }
+        $likes = ForumLike::where('forum_id', $forumId);
+
+
+        if ($comments != null && $likes != null) {
+            if ($comments->delete() && $likes->delete()) {
+                if ($forum->delete()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'forum successfully deleted',
+                    ], 200);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'failed to delete comments and likes',
+                ], 400);
+            }
         } else {
             if ($forum->delete()) {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
-                    'message' => 'success delete forum',
+                    'message' => 'forum successfully deleted',
                 ], 200);
             }
         }
+
+        return response()->json([
+            'success' => false,
+            'code' => 400,
+            'message' => 'failed to delete forums',
+        ], 400);
+
     }
 
     public function likeForum($forumId)

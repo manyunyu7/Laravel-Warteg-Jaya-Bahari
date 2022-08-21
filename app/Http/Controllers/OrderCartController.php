@@ -35,11 +35,21 @@ class OrderCartController extends Controller
         }
 
         $dataOrder = array();
+        $priceOrder = array();
         $user = Auth::id();
         $order = OrderHistory::where([
             'user_id' => $user,
             'resto_id' => $restoId
         ])->get();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Order not found',
+                'data' => null
+            ],404);
+        }
         
 
         foreach($order as $data)
@@ -54,24 +64,37 @@ class OrderCartController extends Controller
                 'quantity' => $data->quantity,
                 'notes' => $data->notes,
             ];
+            $priceOrder[] = $food->price * $data->quantity;
         }
+        $tot = array_sum($priceOrder);
 
         $cart = new OrderCart();
         $cart->user_id = $user;
         $cart->resto_id = $restoId;
         $cart->orders =$dataOrder;
         $cart->address = $request->address;
+        $cart->total_price = $tot;
         $cart->lat = $request->lat;
         $cart->long = $request->long;
         $cart->status_id = 1;
 
-        if ($cart->save()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success create order',
-                'data' => $cart
-            ],200);
+        $history = OrderHistory::where([
+            'user_id' => $user,
+            'resto_id' => $restoId
+        ]);
+
+        if ($history->delete()) {
+            if ($cart->save()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'success create order',
+                    'data' => [
+                        'order' => $cart,
+                        'totalPrice' => $tot,
+                    ]
+                ],200);
+            }
         }else{
             return response()->json([
                 'success' => false,
@@ -201,20 +224,12 @@ class OrderCartController extends Controller
                 $food->quantity = $minQty;
                 $food->save();
             }
-
-            $orderHistory = OrderHistory::where([
-                'user_id' => $order->user_id,
-                'resto_id' => $order->resto_id,
-            ]);
-
-            if ($orderHistory->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'Success approved order',
-                    'data' => $order
-                ],200);
-            }
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success approved order',
+                'data' => $order
+            ],200);
         }else{
             return response()->json([
                 'success' => false,
@@ -243,7 +258,6 @@ class OrderCartController extends Controller
 
         $order = OrderCart::where('id', $orderId)->first();
 
-        // dd($order);
 
         if (!$order) {
             return response()->json([
@@ -299,6 +313,123 @@ class OrderCartController extends Controller
                 'data' => null
             ],400);
         }
+    }
 
+    public function uploadSign(Request $request,$orderId)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'sign' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
+        ],
+        [
+            'sign.required' => 'Sign cannot be empty',
+            'sign.image' => 'Sign must be and image',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $order = OrderCart::where('id', $orderId)->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Order not found',
+                'data' => null,
+            ],404);
+        }
+
+        if ($order->status_id !== 3) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Order not yet processed',
+                'data' => null,
+            ],400);
+        }
+
+        if ($request->hasFile('sign')) {
+            $img = $request->file('sign');
+            $ekstension = $img->getClientOriginalExtension();
+            $name = Auth::user()->name.'_'.'Sign_'.uniqid().'.'.$ekstension;
+
+            if ($request->sign->move(public_path('storage/'),$name)) {
+                $order->user_sign = $name;
+
+                if ($order->save()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'Success update order',
+                        'data' => $order,
+                    ],200);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'Failed update order',
+                        'data' => null,
+                    ],400);
+                }
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'Failed upload sign',
+                    'data' => null,
+                ],400);
+            }
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'File is null',
+                'data' => null,
+            ],404);
+        }
+    }
+
+    public function completedOrder($orderId)
+    {
+        $order = OrderCart::where('id', $orderId)->first();
+
+        if ($order == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Order not found',
+                'data' => null,
+            ],404);
+        }
+
+        if($order->user_sign == null)
+        {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'User sign not uploaded yet',
+                'data' => null,
+            ],400);
+        }
+
+        $order->status_id = 4;
+
+        if ($order->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success completed order',
+                'data' => $order,
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed completed order',
+                'data' => null,
+            ],400);
+        }
     }
 }

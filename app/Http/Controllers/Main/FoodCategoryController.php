@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\Food;
 use App\Models\FoodCategory;
 use App\Models\Restoran;
 use Illuminate\Http\Request;
@@ -184,9 +185,19 @@ class FoodCategoryController extends Controller
 
     public function destroy($categoryId)
     {
+        $foods = Food::where('category_id',$categoryId)->get();
+
+        if ($foods != null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'cannot delete category',
+            ],404);
+        }
+        
         $category = FoodCategory::find($categoryId);
 
-        if (!$category) {
+        if ($category == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,

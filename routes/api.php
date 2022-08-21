@@ -105,52 +105,68 @@ Route::prefix('v1')->group(function (){
         });
 
         Route::prefix('forums')->group(function (){
-            Route::post('store', [ForumController::class, 'store']);
-            Route::get('all', [ForumController::class, 'index']);
-            Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
-            Route::post('update/{forumId}', [ForumController::class, 'update']);
-            Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::post('store', [ForumController::class, 'store']);
+                Route::get('all', [ForumController::class, 'index']);
+                Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
+                Route::post('update/{forumId}', [ForumController::class, 'update']);
+                Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
+                Route::post('like/{forumId}', [ForumController::class, 'likeForum']);
+            });
         });
 
         Route::prefix('comments')->group(function (){
-            Route::post('store', [ForumCommentController::class, 'store']);
-            Route::get('all', [ForumCommentController::class, 'index']);
-            Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
-            Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
-            Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::post('store', [ForumCommentController::class, 'store']);
+                Route::get('all', [ForumCommentController::class, 'index']);
+                Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
+                Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
+                Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
+                Route::post('like/{commentId}', [ForumCommentController::class, 'likeComment']);
+            });
         });
 
         Route::prefix('restoran')->group(function(){
             Route::middleware('auth.role:1,3')->group(function (){
                 Route::get('myResto', [RestoranController::class, 'getRestoByOwner']);
+                Route::post('store', [RestoranController::class, 'store']);
                 Route::get('myDetailResto/{restoran}', [RestoranController::class, 'getRestoDetailByOwner']);
+                Route::post('editImage/{restoId}', [RestoranController::class, 'editImage']);
+                Route::put('editCertification/{restoId}', [RestoranController::class, 'editCertification']);
+                Route::put('editType/{restoId}', [RestoranController::class, 'editType']);
+                Route::put('editAddress/{restoId}', [RestoranController::class, 'editAddress']);
+                Route::put('editPhoneNumber/{restoId}', [RestoranController::class, 'editPhoneNumber']);
+                Route::put('editVisibility/{restoId}', [RestoranController::class, 'editVisibility']);
+                Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
+                Route::prefix('operatingHour')->group(function(){
+                    Route::post('create/{restoId}', [OperatingHourController::class, 'store']);
+                    Route::get('getByResto/{restoId}', [OperatingHourController::class, 'getByResto']);
+                    Route::get('getDetail/{hourId}', [OperatingHourController::class, 'getDetail']);
+                    Route::put('edit/{restoId}/{hourId}', [OperatingHourController::class, 'editOperatingHour']);
+                    Route::delete('delete/{restoId}/{hourId}', [OperatingHourController::class, 'deleteOperatingHour']);
+                });
             });
-            Route::post('store', [RestoranController::class, 'store']);
-            Route::post('addFavorite/{resoId}', [RestoranController::class, 'addFavorite']);
-            Route::get('all', [RestoranController::class, 'index']);
-            Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
-            Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
-            Route::get('all/byCertification', [RestoranController::class, 'sortByCertification']);
-            Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
+
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::get('all', [RestoranController::class, 'index']);
+                Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
+                Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
+                Route::get('all/byCertification', [RestoranController::class, 'sortByCertification']);
+                Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
+            });
+
             Route::get('photos/{restoId}', [RestoranController::class, 'getRestoPhotos']);
-            Route::post('update/{restoId}', [RestoranController::class, 'update']);
-            Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
-            Route::prefix('operatingHour')->group(function(){
-                Route::post('create/{restoId}', [OperatingHourController::class, 'store']);
-                Route::get('getByResto/{restoId}', [OperatingHourController::class, 'getByResto']);
-                Route::get('getDetail/{hourId}', [OperatingHourController::class, 'getDetail']);
-                Route::put('edit/{restoId}/{hourId}', [OperatingHourController::class, 'editOperatingHour']);
-                Route::delete('delete/{restoId}/{hourId}', [OperatingHourController::class, 'deleteOperatingHour']);
-            });
         });
 
         Route::prefix('favorites')->group(function(){
-            Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
-            Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
-            Route::get('/getRestoran', [FavoriteController::class, 'getRestoFavorites']);
-            Route::get('/getMasjid', [FavoriteController::class, 'getMasjidFavorites']);
-            Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
-            Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
+            Route::middleware('auth.role:1,2')->group(function (){
+                Route::post('addResto/{restoId}', [FavoriteController::class, 'addResto']);
+                Route::post('addMasjid/{masjid}', [FavoriteController::class, 'addMasjid']);
+                Route::get('/getRestoran', [FavoriteController::class, 'getRestoFavorites']);
+                Route::get('/getMasjid', [FavoriteController::class, 'getMasjidFavorites']);
+                Route::delete('/deleteResto/{favId}', [FavoriteController::class, 'deleteResto']);
+                Route::delete('/deleteMasjid/{masjid}', [FavoriteController::class, 'deleteMasjid']);
+            });
         });
 
         Route::prefix('reviewResto')->group(function(){
@@ -160,16 +176,22 @@ Route::prefix('v1')->group(function (){
         });
 
         Route::prefix('foods')->group(function(){
-            Route::post('store', [FoodController::class,'store']);
             Route::get('getFood/{restoId}/{categoryId}', [FoodController::class,'getFood']);
-            Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
             Route::prefix('category')->group(function(){
                 Route::get('allCategory', [FoodCategoryController::class, 'index']);
                 Route::get('byResto/{restoId}',[FoodCategoryController::class, 'getByRestoran']);
                 Route::get('detail/{categoryId}',[FoodCategoryController::class, 'getDetail']);
-                Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
-                Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
-                Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+            });
+
+            Route::middleware('auth.role:1,3')->group(function (){
+                Route::post('store', [FoodController::class,'store']);
+                Route::post('editFood/{foodId}', [FoodController::class,'editFood']);
+                Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
+                Route::prefix('category')->group(function(){
+                    Route::post('createCategory/{restoId}',[FoodCategoryController::class, 'store']);
+                    Route::put('editCategory/{categoryId}',[FoodCategoryController::class, 'update']);
+                    Route::delete('deleteCategory/{categoryId}',[FoodCategoryController::class, 'destroy']);
+                });
             });
         });
 
@@ -205,6 +227,7 @@ Route::prefix('v1')->group(function (){
                 Route::middleware('auth.role:1,2')->group(function (){
                     Route::post('createCart/{restoId}', [OrderCartController::class,'createCart']);
                     Route::get('myCart', [OrderCartController::class,'myCart']);
+                    Route::post('uploadSign/{orderId}', [OrderCartController::class,'uploadSign']);
                 });
 
                 Route::middleware('auth.role:1,3')->group(function (){
@@ -213,6 +236,7 @@ Route::prefix('v1')->group(function (){
                     Route::put('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
                     Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
+                    Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
                 });
             });
         });
