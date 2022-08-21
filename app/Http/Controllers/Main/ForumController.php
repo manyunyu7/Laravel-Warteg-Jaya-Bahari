@@ -303,27 +303,6 @@ class ForumController extends Controller
         }
     }
 
-    public function unlikeForum($forumId)
-    {
-        $data = ForumLike::where([
-            'user_id' => Auth::id(),
-            'forum_id' => $forumId
-        ]);
-        if ($data->delete()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success unlike forum',
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'failed unlike forum',
-            ], 400);
-        }
-    }
-
     public function likeForum($forumId)
     {
         $forum = Forum::find($forumId);

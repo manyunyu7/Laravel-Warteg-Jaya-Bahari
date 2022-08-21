@@ -246,24 +246,5 @@ class ForumCommentController extends Controller
         }
     }
 
-    public function unlikeComment($commentId){
-        $data = CommentLike::where([
-            'user_id' => Auth::id(),
-            'comment_id' => $commentId
-        ]);
-        if ($data->delete()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success unlike forum',
-            ],200);
-        }else{
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'failed unlike forum',
-            ],400);
-        }
-    }
 
 }
