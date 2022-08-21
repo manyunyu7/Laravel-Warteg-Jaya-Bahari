@@ -183,7 +183,6 @@ class ForumController extends Controller
      */
     public function update(Request $request, $forumId)
     {
-        return $request->all();
         $validator = Validator::make($request->all(),
             [
                 'category_id' => 'integer', Rule::in([1, 2, 3, 4, 5, 6]),
@@ -211,7 +210,7 @@ class ForumController extends Controller
 
         $oldImage = public_path($forum->img);
 
-        if($request->is_deleting_image){
+        if($request->is_deleting_image==true){
             $forum->img=null;
             if (file_exists($oldImage)) {
                 try {
