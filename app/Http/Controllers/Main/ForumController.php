@@ -62,12 +62,23 @@ class ForumController extends Controller
             $img = $request->file('img');
             $ekstension = $img->getClientOriginalExtension();
             $name = 'Forum' . '_' . Auth::user()->name . "_" . uniqid() . '.' . $ekstension;
-            if ($request->img->move(public_path('storage/'), $name)) {
+
+
+//            $file = $request->file('img');
+//            $path = 'uploads/img/masjids/';
+//            $ekstension = $file->getClientOriginalExtension();
+//            $name = time() . '_'. '.' . $ekstension;
+//            $request->img->move(public_path($path), $name);
+
+
+            $path_string = "storage/forum";
+            $path = public_path($path_string);
+            if ($request->img->move($path, $name)) {
                 $forum->user_id = Auth::id();
                 $forum->category_id = $request->category_id;
                 $forum->title = $request->title;
                 $forum->body = $request->body;
-                $forum->img = $name;
+                $forum->img = $path_string . "/" . $name;
 
                 if ($forum->save()) {
                     return response()->json([
@@ -235,7 +246,7 @@ class ForumController extends Controller
 
     public function destroy($forumId)
     {
-        $forum = Forum::find($forumId);
+        $forum = Forum::findOrFail($forumId);
 
         if ($forum == null) {
             return response()->json([
@@ -245,55 +256,23 @@ class ForumController extends Controller
             ], 404);
         }
 
-        $comments = ForumComment::where('forum_id', $forumId);
-        if ($comments != null) {
-            try {
-                $delComment = $comments->get();
-                foreach ($delComment as $data) {
-                    CommentLike::where('comment_id', $data->id)->delete();
-                }
-            } catch (Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => $e->getMessage()
-                ], 400);
-            }
-        }
-        $likes = ForumLike::where('forum_id', $forumId);
+        $forum->comments()->delete();
+        $forum->likes()->delete();
 
-
-        if ($comments != null && $likes != null) {
-            if ($comments->delete() && $likes->delete()) {
-                if ($forum->delete()) {
-                    return response()->json([
-                        'success' => true,
-                        'code' => 200,
-                        'message' => 'forum successfully deleted',
-                    ], 200);
-                }
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => 'failed to delete comments and likes',
-                ], 400);
-            }
+        if ($forum->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'forum successfully deleted',
+            ], 200);
         } else {
-            if ($forum->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'forum successfully deleted',
-                ], 200);
-            }
-        }
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed to delete forums',
+            ], 400);
 
-        return response()->json([
-            'success' => false,
-            'code' => 400,
-            'message' => 'failed to delete forums',
-        ], 400);
+        }
 
     }
 
