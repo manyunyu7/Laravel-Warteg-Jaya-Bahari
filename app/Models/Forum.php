@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Exception;
 
 class Forum extends Model
 {
@@ -14,7 +15,11 @@ class Forum extends Model
     protected static function booted()
     {
         static::deleted(function ($forum) {
-            unlink(public_path('storage/'.$forum->img));
+            try {
+
+            }catch (Exception $ex){
+                unlink(public_path('storage/'.$forum->img));
+            }
         });
     }
 
@@ -44,6 +49,9 @@ class Forum extends Model
         if($this->img==null){
             return "https://polteksahid.ac.id/wp-content/uploads/2021/12/placeholder.png";
         }else{
+            if (str_contains($this->img,"storage")){
+                return asset($this->img);
+            }
             return asset("").$this->img;
         }
     }
