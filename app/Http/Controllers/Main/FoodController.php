@@ -76,7 +76,7 @@ class FoodController extends Controller
         }
 
         $img = $request->file('image');
-        $path = 'storage/';
+        $path = 'storage/food';
         $ekstension = $img->getClientOriginalExtension();
         $name = 'Food'.'_'.uniqid().'.'.$ekstension;
 
