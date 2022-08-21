@@ -367,10 +367,4 @@ class ForumController extends Controller
             ], 400);
         }
     }
-
-    public function getComment($forumId)
-    {
-        $data = ForumComment::with(["user", "likes"])->where("forum_id", '=', $forumId)->get();
-        return $data;
-    }
 }

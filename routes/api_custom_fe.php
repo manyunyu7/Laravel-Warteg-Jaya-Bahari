@@ -45,8 +45,16 @@ Route::middleware('api')->group(function (){
             Route::prefix('forums')->group(function (){
                 Route::get('category', [FeForumController::class, 'getForumCategory']);
                 Route::get('all-paginate', [FeForumController::class, 'getForumPaginate']);
+                Route::post('like/{forumId}', [FeForumController::class, 'likeForum']);
+                Route::post('unlike/{forumId}', [FeForumController::class, 'unlikeForum']);
+                Route::get('comment/{forumId}', [FeForumController::class, 'getComment']);
             });
-    
+
+
+            Route::prefix('comments')->group(function (){
+                Route::post('like/{commentId}', [FeForumController::class, 'likeComment']);
+                Route::post('unlike/{commentId}', [FeForumController::class, 'unlikeComment']);
+            });
 
             Route::prefix('products')->group(function (){
                 Route::get('category', [FeProductController::class, 'getProductCategory']);

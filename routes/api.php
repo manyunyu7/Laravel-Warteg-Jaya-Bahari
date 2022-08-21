@@ -110,9 +110,6 @@ Route::prefix('v1')->group(function (){
             Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
             Route::post('update/{forumId}', [ForumController::class, 'update']);
             Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
-            Route::post('like/{forumId}', [ForumController::class, 'likeForum']);
-            Route::post('unlike/{forumId}', [ForumController::class, 'unlikeForum']);
-            Route::get('comment/{forumId}', [ForumController::class, 'getComment']);
         });
 
         Route::prefix('comments')->group(function (){
@@ -121,8 +118,6 @@ Route::prefix('v1')->group(function (){
             Route::get('detailComment/{commentId}', [ForumCommentController::class, 'show']);
             Route::put('update/{commentId}', [ForumCommentController::class, 'update']);
             Route::delete('delete/{commentId}', [ForumCommentController::class, 'destroy']);
-            Route::post('like/{commentId}', [ForumCommentController::class, 'likeComment']);
-            Route::post('unlike/{commentId}', [ForumCommentController::class, 'unlikeComment']);
         });
 
         Route::prefix('restoran')->group(function(){
