@@ -219,6 +219,27 @@ class ForumController extends Controller
         }
     }
 
+    public function getByCategory($categoyId)
+    {
+        $forums = Forum::where('category_id', $categoyId)->get();
+
+        if ($forums == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'forum not found',
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Succesfully get forum by category',
+            'data' => $forums,
+        ],200);
+
+    }
+
     public function destroy($forumId)
     {
         $forum = Forum::find($forumId);

@@ -108,6 +108,7 @@ Route::middleware('jwt.verify')->group(function (){
                 Route::post('store', [ForumController::class, 'store']);
                 Route::get('all', [ForumController::class, 'index']);
                 Route::get('detailForum/{forumId}', [ForumController::class, 'show']);
+                Route::get('byCategory/{categoryId}', [ForumController::class,'getByCategory']);
                 Route::post('update/{forumId}', [ForumController::class, 'update']);
                 Route::delete('delete/{forumId}', [ForumController::class, 'destroy']);
                 Route::post('like/{forumId}', [ForumController::class, 'likeForum']);
