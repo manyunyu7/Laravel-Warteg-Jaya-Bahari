@@ -344,4 +344,34 @@ class ForumController extends Controller
             ],400);
         }
     }
+
+    public function unlikeForum($forumId)
+    {
+        $like = ForumLike::where([
+            'user_id' => Auth::id(),
+            'forum_id' => $forumId,
+        ]);
+
+        if ($like->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'like not found',
+            ],404);
+        }
+
+        if ($like->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success unlike forum',
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed unlike forum',
+            ],400);
+        }
+    }
 }

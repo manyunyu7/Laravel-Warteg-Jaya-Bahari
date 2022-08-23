@@ -12,48 +12,27 @@ use Exception;
 
 class ForumCommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($forumId)
     {
-        $comments = ForumComment::all();
+        $comments = ForumComment::where('forum_id', $forumId)->get();
 
-        if ($comments->count() > 0) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'success get all comment data',
-                'data' => $comments
-            ],200);
-        }else{
+        if ($comments == null) {
             return response()->json([
                 'success' => false,
-                'code' => 400,
-                'message' => 'failed get all comment data',
+                'code' => 404,
+                'message' => 'Comments not found',
                 'data' => null
-            ],400);
+            ],404);
         }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get all forum comments',
+            'data' => $comments
+        ],200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -92,12 +71,6 @@ class ForumCommentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($commentId)
     {
         $comment = ForumComment::find($commentId);
@@ -157,12 +130,6 @@ class ForumCommentController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($commentId)
     {
         $comment = ForumComment::where('id', $commentId)->first();
@@ -247,6 +214,36 @@ class ForumCommentController extends Controller
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed like forum',
+            ],400);
+        }
+    }
+
+    public function unlikeComment($commentId)
+    {
+        $like = CommentLike::where([
+            'user_id' => Auth::id(),
+            'comment_id' => $commentId,
+        ]);
+
+        if ($like->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'like not found',
+            ],404);
+        }
+
+        if ($like->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success unlike comment',
+            ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed unlike comment',
             ],400);
         }
     }
