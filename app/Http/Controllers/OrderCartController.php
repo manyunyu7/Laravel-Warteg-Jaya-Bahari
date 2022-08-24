@@ -193,7 +193,7 @@ class OrderCartController extends Controller
         ],200);
     }
 
-    public function rejectOrder($orderId)
+    public function rejectOrder(Request $request,$orderId)
     {
         $order = OrderCart::find($orderId);
         if (!$order) {
@@ -206,6 +206,7 @@ class OrderCartController extends Controller
         }
 
         $order->status_id = 5;
+        $order->reject_reason = $request->reject_reason;
 
         if ($order->save()) {
             return response()->json([

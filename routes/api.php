@@ -234,7 +234,7 @@ Route::prefix('v1')->group(function (){
                 Route::middleware('auth.role:1,3')->group(function (){
                     Route::get('detailOrder/{orderId}', [OrderCartController::class,'getDetailOrder']);
                     Route::get('getAllOrder/{restoId}', [OrderCartController::class,'getAllOrderByResto']);
-                    Route::put('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
+                    Route::post('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
                     Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
                     Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
