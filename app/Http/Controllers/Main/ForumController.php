@@ -175,72 +175,67 @@ class ForumController extends Controller
         $forum->title = $request->title;
         $forum->body = $request->body;
 
+        if ($request->is_deleting_image) {
+            $forum->img = null;
+        }
+
         if ($request->hasFile('img')) {
             $oldImage = public_path($forum->img);
 
-            if ($request->is_deleting_image == true) {
-                $forum->img = null;
-                if (file_exists($oldImage)) {
-                    try {
-                        unlink($oldImage);
-                    } catch (Exception $e) {
-                    }
-                }
-            }
-
-            if ($request->hasFile('img')) {
-
-                if (file_exists($oldImage)) {
-                    try {
-                        unlink($oldImage);
-                    } catch (Exception $e) {
+            if (file_exists($oldImage)) {
+                try {
+                    unlink($oldImage);
+                } catch (Exception $e) {
 //                    return response()->json([
 //                        'success' => false,
 //                        'code' => 400,
 //                        'message' => $e
 //                    ], 400);
-                    }
-                }
-
-                $img = $request->file('img');
-                $ekstension = $img->getClientOriginalExtension();
-                $name = 'Forum' . '_' . Auth::user()->name . "_" . uniqid() . '.' . $ekstension;
-                if ($request->img->move(public_path('storage/'), $name)) {
-                    $forum->img = $name;
-
-                    if ($forum->save()) {
-                        return response()->json([
-                            'success' => true,
-                            'code' => 200,
-                            'message' => 'Success update forum',
-                            'data' => $forum,
-                        ], 200);
-                    } else {
-                        return response()->json([
-                            'success' => false,
-                            'code' => 400,
-                            'message' => 'Failed update forum',
-                            'data' => null,
-                        ], 400);
-                    }
                 }
             }
 
-            if ($forum->save()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'Success upadate forum',
-                    'data' => $forum,
-                ], 200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => 'Failed update forum',
-                    'data' => null,
-                ], 400);
+            $img = $request->file('img');
+            $ekstension = $img->getClientOriginalExtension();
+            $name = 'Forum' . '_' . Auth::user()->name . "_" . uniqid() . '.' . $ekstension;
+
+
+            $path_string = "storage/forum";
+            $path = public_path($path_string);
+            if ($request->img->move($path, $name)) {
+                $forum->img = $path_string . "/" . $name;
+
+                if ($forum->save()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'Success update forum',
+                        'data' => $forum,
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => 'Failed update forum',
+                        'data' => null,
+                    ], 400);
+                }
             }
+        }
+
+        if ($forum->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success upadate forum',
+                'data' => $forum,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed update forum',
+                'data' => null,
+            ], 400);
         }
     }
 
@@ -256,8 +251,14 @@ class ForumController extends Controller
             ], 404);
         }
 
-        $forum->comments()->delete();
-        $forum->likes()->delete();
+
+        foreach($forum->comments as $child){
+            $child->delete();
+        }
+
+        foreach($forum->likes as $child){
+            $child->delete();
+        }
 
         if ($forum->delete()) {
             return response()->json([
@@ -271,7 +272,6 @@ class ForumController extends Controller
                 'code' => 400,
                 'message' => 'failed to delete forums',
             ], 400);
-
         }
 
     }

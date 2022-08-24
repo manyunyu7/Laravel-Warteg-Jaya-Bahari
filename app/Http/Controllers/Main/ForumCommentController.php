@@ -158,59 +158,28 @@ class ForumCommentController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($commentId)
     {
         $comment = ForumComment::where('id', $commentId)->first();
 
-        if ($comment == null) {
-            return response()->json([
-                'success' => false,
-                'code' => 404,
-                'message' => 'comment not found',
-            ],404);
+        foreach($comment->likes as $child){
+            $child->delete();
         }
 
-        try {
-            $commentLikes = CommentLike::where('comment_id', $comment->id)->get();
-            
-            if ($commentLikes != null) {
-                if ($commentLikes->delete()) {
-                    if ($comment->delete()) {
-                        return response()->json([
-                            'success' => true,
-                            'code' => 200,
-                            'message' => 'success delete comment',
-                        ],200);
-                    }
-                }else{
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => 'failed delete comment',
-                    ],400);
-                }
-            }else{
-                if ($comment->delete()) {
-                    return response()->json([
-                        'success' => true,
-                        'code' => 200,
-                        'message' => 'success delete comment',
-                    ],200);
-                }
-            }
-        } catch (Exception $e) {
+        if ($comment->delete()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'forum successfully deleted',
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => $e->getMessage()
-            ],400);
+                'message' => 'failed to delete forums',
+            ], 400);
         }
+
     }
 
     public function likeComment($commendId)

@@ -50,7 +50,7 @@ class OrderCartController extends Controller
                 'data' => null
             ],404);
         }
-        
+
 
         foreach($order as $data)
         {
@@ -108,7 +108,31 @@ class OrderCartController extends Controller
     public function myCart()
     {
         $user = Auth::id();
-        $orders = OrderCart::where('user_id', $user)->first();
+        $orders = OrderCart::with(
+            ["restoran","order_status"]
+        )->where('user_id', $user)->first();
+
+        if (!$orders) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'order not found',
+                'data' => null
+            ],404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Success get my order cart',
+            'data' => $orders
+        ],200);
+    }
+
+    public function myCarts()
+    {
+        $user = Auth::id();
+        $orders = OrderCart::where('user_id', $user)->get();
 
         if (!$orders) {
             return response()->json([
@@ -215,7 +239,7 @@ class OrderCartController extends Controller
             {
                 $foodName = $key['food'];
                 $qty = $key['quantity'];
-    
+
                 $food = Food::where([
                     'name' => $foodName,
                     'restoran_id' => $order->resto_id,

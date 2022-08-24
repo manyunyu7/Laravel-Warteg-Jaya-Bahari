@@ -224,9 +224,10 @@ Route::prefix('v1')->group(function (){
             });
 
             Route::prefix('carts')->group(function(){
-                Route::middleware('auth.role:1,2')->group(function (){
+                Route::middleware('auth.role:1,2,3,4,5')->group(function (){
                     Route::post('createCart/{restoId}', [OrderCartController::class,'createCart']);
-                    Route::get('myCart', [OrderCartController::class,'myCart']);
+                    Route::get('myCart', [OrderCartController::class,'orderByResto']);
+                    Route::get('myCarts', [OrderCartController::class,'myCarts']);
                     Route::post('uploadSign/{orderId}', [OrderCartController::class,'uploadSign']);
                 });
 
