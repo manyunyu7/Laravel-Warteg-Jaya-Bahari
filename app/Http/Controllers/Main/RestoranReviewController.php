@@ -133,12 +133,6 @@ class RestoranReviewController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($restoId, Request $request)
     {
         $page = $request->page;
@@ -202,7 +196,6 @@ class RestoranReviewController extends Controller
     public function destroy($reviewId)
     {
         $review = RestoranReview::find($reviewId);
-        $image = RestoranReviewImage::where('restoran_review_id', $reviewId)->pluck('path')->all();
         if ($review == null) {
             return response()->json([
                 'success' => false,
@@ -210,23 +203,6 @@ class RestoranReviewController extends Controller
                 'message' => "restoran review not found"
             ],404);
         }else{
-            // if ($image != null) {
-            //     foreach ($image as $img) {
-            //         $path = $img;
-            //         if (file_exists($path)) {
-            //             try {
-            //                 unlink($path);
-            //                 RestoranReviewImage::where('path', $img)->delete();
-            //             } catch (\Throwable $th) {
-            //                 return response()->json([
-            //                     'success' => false,
-            //                     'code' => 400,
-            //                     'message' => $th->getMessage(),
-            //                 ],400);
-            //             }
-            //         }
-            //     }
-            // }
 
             if ($review->delete()) {
                 return response()->json([

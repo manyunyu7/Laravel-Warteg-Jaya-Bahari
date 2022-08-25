@@ -50,7 +50,7 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'password do not match', 
                 'data' => null
-            ]);
+            ],400);
         }
 
         $data = User::create([
@@ -67,14 +67,14 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'Failed registered user', 
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'Success registered user', 
                 'data' => $data
-            ]);
+            ],200);
         }
     }
 

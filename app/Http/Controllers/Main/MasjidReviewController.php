@@ -228,24 +228,6 @@ class MasjidReviewController extends Controller
                 'message' => "masjid review not found"
             ],404);
         }else{
-            // if ($image != null) {
-            //     foreach ($image as $img) {
-            //         $path = $img;
-            //         if (file_exists($path)) {
-            //             try {
-            //                 unlink($path);
-            //                 MasjidReviewImage::where('path', $img)->delete();
-            //             } catch (\Throwable $th) {
-            //                 return response()->json([
-            //                     'success' => false,
-            //                     'code' => 400,
-            //                     'message' => $th->getMessage(),
-            //                 ],400);
-            //             }
-            //         }
-            //     }
-            // }
-
             if ($review->delete()) {
                 return response()->json([
                     'success' => true,
