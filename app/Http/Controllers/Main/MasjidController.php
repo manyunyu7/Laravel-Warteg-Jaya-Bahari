@@ -49,10 +49,9 @@ class MasjidController extends Controller
 
         if ($request->hasFile('img')) {
             $file = $request->file('img');
-            $path = 'uploads/img/masjids/';
             $ekstension = $file->getClientOriginalExtension();
             $name = time() . '_' . $request->name . '.' . $ekstension;
-            $request->img->move(public_path($path), $name);
+            $request->img->move(public_path('storage'), $name);
 
             $masjid = Masjid::create([
                 'name' => $request->name,
@@ -247,7 +246,7 @@ class MasjidController extends Controller
         $masjid->address = $request->address;
 
         if ($request->hasFile('img')) {
-            $path = public_path('uploads/img/masjid/') . $masjid->img;
+            $path = public_path('storage') . $masjid->img;
 
             if (file_exists($path)) {
                 try {
@@ -264,7 +263,7 @@ class MasjidController extends Controller
             $file = $request->file('img');
             $ekstension = $file->getClientOriginalExtension();
             $name = time() . '_' . $request->name . '.' . $ekstension;
-            $request->img->move(public_path('uploads/img/masjids'), $name);
+            $request->img->move(public_path('storage'), $name);
 
             $masjid->img = $name;
         }
