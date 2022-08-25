@@ -169,8 +169,23 @@ class OrderCartController extends Controller
         ],200);
     }
 
-    public function rejectOrder($orderId)
+    public function rejectOrder(Request $request,$orderId)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'notes' => 'required|string|min:10|max:100',
+            ],
+            [
+                'notes.string' => 'notes must be a string',
+                'notes.required' => 'notes cannot be empty',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
         $order = OrderCart::find($orderId);
         if (!$order) {
             return response()->json([
@@ -180,7 +195,8 @@ class OrderCartController extends Controller
                 'data' => null
             ],404);
         }
-
+        
+        $order->notes = $request->notes;
         $order->status_id = 5;
 
         if ($order->save()) {
