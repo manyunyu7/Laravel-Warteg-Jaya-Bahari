@@ -190,9 +190,9 @@ class FoodCategoryController extends Controller
         if ($foods != null) {
             return response()->json([
                 'success' => false,
-                'code' => 404,
+                'code' => 400,
                 'message' => 'cannot delete category',
-            ],404);
+            ],400);
         }
         
         $category = FoodCategory::find($categoryId);

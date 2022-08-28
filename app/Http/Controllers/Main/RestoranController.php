@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderStatu;
 use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
@@ -659,5 +660,35 @@ class RestoranController extends Controller
             'message' => 'Success get restorans',
             'data' => $restoran
         ],200);
+    }
+
+    public function getAllOrderStatus()
+    {
+        $status = OrderStatu::all();
+
+        if ($status == null) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Order status not found',
+                'data' => null
+            ],404);
+        }
+
+        if (!$status) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed get order status data',
+                'data' => null
+            ],400);
+        }else{
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success get order status data',
+                'data' => $status
+            ],200);
+        }
     }
 }

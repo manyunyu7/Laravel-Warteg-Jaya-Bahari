@@ -218,10 +218,14 @@ Route::middleware('jwt.verify')->group(function (){
                     Route::get('myOrder', [OrderHistoryController::class, 'myOrder']);
                 });
 
-                Route::middleware('auth.role:1,3')->group(function (){
-                    Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
+                Route::middleware('auth.role:1,2,3')->group(function (){
                     Route::put('editOrder/{restoId}/{orderId}', [OrderHistoryController::class, 'editOrder']);
                     Route::delete('deleteOrder/{orderId}', [OrderHistoryController::class, 'deleteOrder']);
+                });
+
+                Route::middleware('auth.role:1,3')->group(function (){
+                    Route::get('getOrder/{orderId}', [OrderHistoryController::class, 'getOrderById']);
+    
                 });
             });
 
@@ -239,6 +243,7 @@ Route::middleware('jwt.verify')->group(function (){
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
                     Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
                     Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
+                    Route::get('status', [RestoranController::class, 'getAllOrderStatus']);
                 });
             });
         });

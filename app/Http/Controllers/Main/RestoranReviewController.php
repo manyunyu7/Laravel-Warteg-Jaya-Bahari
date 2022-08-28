@@ -69,10 +69,9 @@ class RestoranReviewController extends Controller
             if ($image != null) {
                 foreach ($image as $img)
                 {
-                    $path = 'uploads/img/resto_reviews/';
                     $name = Auth::user()->name.'_'.uniqid().'.'.$img->getClientOriginalExtension();
-                    if ($img->move($path,$name)) {
-                        $files[] = $path.$name;
+                    if ($img->move(public_path('storage'), $name)) {
+                        $files[] = $name;
                     }
                 }
             }
