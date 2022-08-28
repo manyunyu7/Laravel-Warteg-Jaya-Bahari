@@ -11,6 +11,8 @@ class OrderCart extends Model
 
     protected $casts = [
         'orders' => 'array',
+        'created_at'  => 'date:H:00 Y-m-d ',
+        'edited_at' => 'datetime:Y-m-d H:00',
     ];
 
     protected $appends = ["status_desc","resto_obj","user_obj"];

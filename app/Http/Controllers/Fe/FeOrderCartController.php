@@ -16,11 +16,21 @@ use Illuminate\Support\Facades\Validator;
 class FeOrderCartController extends Controller
 {
 
-    public function orderByResto(Request $request,$id){
+    public function orderByResto(Request $request, $id)
+    {
         $perPage = $request->perPage;
         $page = $request->page;
-        $data = OrderCart::where("resto_id", '=', $id)->paginate($perPage,['*'],'page',$page);
-        return $data;
+        if ($request->status != null) {
+
+            $data = OrderCart::where([
+                ['resto_id', '=', $id],
+                ['status_id', '=', $request->status],
+            ])->paginate($perPage, ['*'], 'page', $page);
+            return $data;
+        } else {
+            $data = OrderCart::where("resto_id", '=', $id)->paginate($perPage, ['*'], 'page', $page);
+            return $data;
+        }
     }
 
     public function createCart(Request $request, $restoId)
@@ -71,13 +81,13 @@ class FeOrderCartController extends Controller
                     'totalPrice' => $tot,
                 ]
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed checkout',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 

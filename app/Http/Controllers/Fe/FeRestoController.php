@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Certification;
 use App\Models\Food;
 use App\Models\FoodCategory;
+use App\Models\OrderStatu;
 use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
@@ -20,6 +21,11 @@ class FeRestoController extends Controller
 
     public function getAllRaw(){
         return Restoran::all();
+    }
+
+    public function getAllOrderStatus(){
+        $obj = OrderStatu::all();
+        return $obj;
     }
 
     public function getAllFoodCategoryOnResto($id){

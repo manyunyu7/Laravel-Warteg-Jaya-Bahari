@@ -92,6 +92,7 @@ Route::middleware('api')->group(function () {
 
             Route::prefix('orders')->group(function () {
                 Route::prefix('carts')->group(function () {
+                    Route::get('status', [FeRestoController::class, 'getAllOrderStatus']);
 
                     Route::middleware('auth.role:1,2,3,4,5')->group(function () {
                         Route::post('createCart/{restoId}', [FeOrderCartController::class, 'createCart']);

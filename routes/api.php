@@ -147,13 +147,13 @@ Route::prefix('v1')->group(function (){
                 });
             });
 
-            Route::middleware('auth.role:1,2')->group(function (){
+//            Route::middleware('auth.role:1,2')->group(function (){
                 Route::get('all', [RestoranController::class, 'index']);
                 Route::get('allTypeFood', [RestoranController::class, 'getTypeFood']);
                 Route::get('all/byFoodType', [RestoranController::class, 'sortByFoodType']);
                 Route::get('all/byCertification', [RestoranController::class, 'sortByCertification']);
                 Route::get('detailResto/{restoId}', [RestoranController::class, 'show']);
-            });
+//            });
 
             Route::get('photos/{restoId}', [RestoranController::class, 'getRestoPhotos']);
         });
@@ -235,7 +235,7 @@ Route::prefix('v1')->group(function (){
                     Route::get('detailOrder/{orderId}', [OrderCartController::class,'getDetailOrder']);
                     Route::get('getAllOrder/{restoId}', [OrderCartController::class,'getAllOrderByResto']);
                     Route::post('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
-                    Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
+                    Route::post('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
                     Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
                     Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
                 });
