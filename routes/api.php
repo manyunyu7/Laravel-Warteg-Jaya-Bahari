@@ -127,7 +127,7 @@ Route::prefix('v1')->group(function (){
         });
 
         Route::prefix('restoran')->group(function(){
-            Route::middleware('auth.role:1,3')->group(function (){
+//            Route::middleware('auth.role:1,3')->group(function (){
                 Route::get('myResto', [RestoranController::class, 'getRestoByOwner']);
                 Route::post('store', [RestoranController::class, 'store']);
                 Route::get('myDetailResto/{restoran}', [RestoranController::class, 'getRestoDetailByOwner']);
@@ -239,7 +239,7 @@ Route::prefix('v1')->group(function (){
                     Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
                     Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
 //                });
-            });
+//            });
         });
     });
 //});
