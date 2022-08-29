@@ -212,9 +212,16 @@ class OrderCartController extends Controller
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'Success approved order',
+                'message' => 'Success reject order',
                 'data' => $order
             ],200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'reject order failed',
+                'data' => $order
+            ],500);
         }
 
     }
