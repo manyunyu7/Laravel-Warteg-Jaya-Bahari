@@ -13,7 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail, FilamentUser, HasAvatar
 {
-    use  HasApiTokens,HasFactory, Notifiable;
+    use  HasApiTokens, HasFactory, Notifiable;
 
     public function getFilamentAvatarUrl(): ?string
     {
@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
     protected static function booted()
     {
         static::deleted(function ($user) {
-            unlink(public_path('storage/'.$user->photo));
+            unlink(public_path('storage/' . $user->photo));
         });
     }
 
@@ -71,15 +71,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
      *
      * @return mixed
      */
-    public function getJWTIdentifier(){
+    public function getJWTIdentifier()
+    {
         return $this->getKey();
     }
+
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
      * @return array
      */
-    public function getJWTCustomClaims(){
+    public function getJWTCustomClaims()
+    {
         return [];
     }
 
@@ -153,13 +156,31 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
         return $this->hasOne(OrderCart::class);
     }
 
-    protected $appends = ["img_full_path"];
+    protected $appends = ["img_full_path", "is_available"];
 
-    public function getImgFullPathAttribute(){
-        if($this->img==null){
-            return "https://polteksahid.ac.id/wp-content/uploads/2021/12/placeholder.png";
-        }else{
-            return asset("")."storage/".$this->img;
+    public function getImgFullPathAttribute()
+    {
+        if ($this->img == null) {
+            return "https://i.pinimg.com/564x/ff/70/6d/ff706d3ad8b6d0ce5232f875b31e8915.jpg";
+        } else {
+            return asset("") . "storage/" . $this->img;
+        }
+    }
+
+    public function getIsAvailableAttribute()
+    {
+        if ($this->roles_id != 4) {
+            return false;
+        } else {
+            $orders = OrderCart::where([
+                ['driver_id', '=', $this->id],
+                ['status_id', '=', 3],
+            ])->count();
+            if ($orders == 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

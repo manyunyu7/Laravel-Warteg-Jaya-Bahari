@@ -18,4 +18,6 @@ class Driver extends Model
     {
         return $this->belongsTo(Restoran::class);
     }
+
+
 }

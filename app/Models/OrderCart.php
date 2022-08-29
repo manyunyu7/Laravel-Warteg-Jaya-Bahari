@@ -11,9 +11,11 @@ class OrderCart extends Model
 
     protected $casts = [
         'orders' => 'array',
+        'created_at'  => 'date:H:00 Y-m-d ',
+        'edited_at' => 'datetime:Y-m-d H:00',
     ];
 
-    protected $appends = ["status_desc","resto_obj","user_obj"];
+    protected $appends = ["status_desc","resto_obj","user_obj","driver_obj"];
 
     public function user()
     {
@@ -41,6 +43,10 @@ class OrderCart extends Model
     }
 
     public function getUserObjAttribute(){
+        $status = User::find($this->user_id);
+        return $status;
+    }
+    public function getDriverObjAttribute(){
         $status = User::find($this->user_id);
         return $status;
     }

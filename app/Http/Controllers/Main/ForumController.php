@@ -50,7 +50,7 @@ class ForumController extends Controller
                 'category_id.required' => 'category_id cannot be empty',
                 'title.required' => 'title cannot be empty',
                 'body.required' => 'body cannot be empty',
-                'img.image' => 'Image must be and image',
+//                'img.image' => 'Image must be and image',
             ]);
 
         if ($validator->fails()) {
