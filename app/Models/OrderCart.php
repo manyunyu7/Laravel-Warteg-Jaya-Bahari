@@ -47,7 +47,7 @@ class OrderCart extends Model
         return $status;
     }
     public function getDriverObjAttribute(){
-        $status = User::find($this->user_id);
+        $status = Driver::find($this->user_id);
         return $status;
     }
 

@@ -274,6 +274,7 @@ class OrderCartController extends Controller
 
     public function orderDelivered(Request $request,$orderId)
     {
+        $driverId = Driver::findOrFail($request->driver_id)->id;
         $validator = Validator::make(
             $request->all(),
             [
@@ -300,7 +301,7 @@ class OrderCartController extends Controller
             ],404);
         }
 
-        $driver = Driver::where('id', $request->driver_id)->first();
+        $driver = Driver::findOrFail($driverId);
 
         if (!$driver) {
             return response()->json([
@@ -320,7 +321,7 @@ class OrderCartController extends Controller
             ],400);
         }
 
-        $order->driver_id = $request->driver_id;
+        $order->driver_id = $driverId;
         $order->status_id = 3;
 
         if ($order->save()) {

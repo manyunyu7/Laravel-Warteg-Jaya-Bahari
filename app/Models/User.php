@@ -156,7 +156,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
         return $this->hasOne(OrderCart::class);
     }
 
-    protected $appends = ["img_full_path", "is_available"];
+    protected $appends = ["img_full_path", "is_driver_available"];
 
     public function getImgFullPathAttribute()
     {
@@ -167,13 +167,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
         }
     }
 
-    public function getIsAvailableAttribute()
+    public function getIsDriverAvailableAttribute()
     {
         if ($this->roles_id != 4) {
             return false;
         } else {
+            $driver = Driver::where("user_id",'=',$this->id)->first();
             $orders = OrderCart::where([
-                ['driver_id', '=', $this->id],
+                ['driver_id', '=', $driver->id],
                 ['status_id', '=', 3],
             ])->count();
             if ($orders == 0) {
