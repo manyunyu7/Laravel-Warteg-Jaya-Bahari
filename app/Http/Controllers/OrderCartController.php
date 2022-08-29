@@ -274,7 +274,7 @@ class OrderCartController extends Controller
 
     public function orderDelivered(Request $request,$orderId)
     {
-        $driverId = Driver::findOrFail($request->driver_id)->id;
+        $driverId = Driver::where("user_id","=",$request->driver_id)->first()->id;
         $validator = Validator::make(
             $request->all(),
             [
