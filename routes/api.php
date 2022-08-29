@@ -236,7 +236,7 @@ Route::prefix('v1')->group(function (){
                     Route::get('getAllOrder/{restoId}', [OrderCartController::class,'getAllOrderByResto']);
                     Route::post('rejectOrder/{orderId}', [OrderCartController::class,'rejectOrder']);
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
-                    Route::put('orderDelivered/{orderId}', [OrderCartController::class, 'orderDelivered']);
+                    Route::put('approvedDeliv/{orderId}', [OrderCartController::class,'orderDelivered']);
                     Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
                 });
             });
