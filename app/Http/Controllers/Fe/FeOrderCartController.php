@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Fe;
 
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\Food;
 use App\Models\OrderCart;
 use App\Models\OrderHistory;
@@ -15,6 +16,14 @@ use Illuminate\Support\Facades\Validator;
 
 class FeOrderCartController extends Controller
 {
+    public function getDriverOrder(Request $request)
+    {
+        $driverId = Driver::where("user_id",'=',Auth::id())->first()->id;
+        $page = $request->page;
+        $perPage = $request->perPage;
+        $objs = OrderCart::where("driver_id", '=', $driverId)->paginate($perPage,['*'],'page',$page);
+        return $objs;
+    }
 
     public function orderByResto(Request $request, $id)
     {

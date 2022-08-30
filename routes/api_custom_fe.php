@@ -59,6 +59,10 @@ Route::middleware('api')->group(function () {
                 Route::get('get-by-category/{id}', [FeProductController::class, 'getByCategory']);
             });
 
+            Route::prefix('driver')->group(function () {
+                Route::get('{id}/myOrders', [FeOrderCartController::class, 'getDriverOrder']);
+            });
+
             Route::prefix('restoran')->group(function () {
                 Route::get('me', [FeRestoController::class, 'myResto']);
                 Route::get('cert', [FeRestoController::class, 'getAllCert']);
