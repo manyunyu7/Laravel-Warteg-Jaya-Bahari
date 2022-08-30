@@ -60,7 +60,7 @@ Route::middleware('api')->group(function () {
             });
 
             Route::prefix('driver')->group(function () {
-                Route::get('{id}/myOrders', [FeOrderCartController::class, 'getDriverOrder']);
+                Route::get('myOrders', [FeOrderCartController::class, 'getDriverOrder']);
             });
 
             Route::prefix('restoran')->group(function () {
