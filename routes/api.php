@@ -238,6 +238,7 @@ Route::prefix('v1')->group(function (){
                     Route::put('approvedOrder/{orderId}', [OrderCartController::class,'approvedOrder']);
                     Route::put('approvedDeliv/{orderId}', [OrderCartController::class,'orderDelivered']);
                     Route::put('completedOrder/{orderId}', [OrderCartController::class, 'completedOrder']);
+                    Route::post('finishOrder/{orderId}', [OrderCartController::class, 'finishOrder']);
                 //});
             });
         });

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderCartController extends Controller
 {
-    public function createCart(Request $request,$restoId)
+    public function createCart(Request $request, $restoId)
     {
         $validator = Validator::make(
             $request->all(),
@@ -48,12 +48,11 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
 
-        foreach($order as $data)
-        {
+        foreach ($order as $data) {
             $customer = User::where('id', $data->user_id)->first();
             $food = Food::where('id', $data->food_id)->first();
             $dataOrder[] = [
@@ -71,7 +70,7 @@ class OrderCartController extends Controller
         $cart = new OrderCart();
         $cart->user_id = $user;
         $cart->resto_id = $restoId;
-        $cart->orders =$dataOrder;
+        $cart->orders = $dataOrder;
         $cart->address = $request->address;
         $cart->total_price = $tot;
         $cart->lat = $request->lat;
@@ -93,15 +92,15 @@ class OrderCartController extends Controller
                         'order' => $cart,
                         'totalPrice' => $tot,
                     ]
-                ],200);
+                ], 200);
             }
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed create order',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
@@ -109,7 +108,7 @@ class OrderCartController extends Controller
     {
         $user = Auth::id();
         $orders = OrderCart::with(
-            ["restoran","order_status"]
+            ["restoran", "order_status"]
         )->where('user_id', $user)->first();
 
         if (!$orders) {
@@ -118,7 +117,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -126,7 +125,7 @@ class OrderCartController extends Controller
             'code' => 200,
             'message' => 'Success get my order cart',
             'data' => $orders
-        ],200);
+        ], 200);
     }
 
     public function myCarts()
@@ -140,7 +139,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -148,7 +147,7 @@ class OrderCartController extends Controller
             'code' => 200,
             'message' => 'Success get my order cart',
             'data' => $orders
-        ],200);
+        ], 200);
     }
 
     public function getDetailOrder($orderId)
@@ -161,7 +160,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -169,7 +168,7 @@ class OrderCartController extends Controller
             'code' => 200,
             'message' => 'success get order detail',
             'data' => $order
-        ],200);
+        ], 200);
     }
 
     public function getAllOrderByResto($retoId)
@@ -182,7 +181,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -190,10 +189,10 @@ class OrderCartController extends Controller
             'code' => 200,
             'message' => 'success get order detail',
             'data' => $orders
-        ],200);
+        ], 200);
     }
 
-    public function rejectOrder(Request $request,$orderId)
+    public function rejectOrder(Request $request, $orderId)
     {
         $order = OrderCart::find($orderId);
         if (!$order) {
@@ -202,7 +201,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $order->status_id = 5;
@@ -214,14 +213,14 @@ class OrderCartController extends Controller
                 'code' => 200,
                 'message' => 'Success reject order',
                 'data' => $order
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 404,
                 'message' => 'reject order failed',
                 'data' => $order
-            ],500);
+            ], 500);
         }
 
     }
@@ -229,7 +228,7 @@ class OrderCartController extends Controller
     public function approvedOrder($orderId)
     {
         $order = OrderCart::find($orderId);
-        $dataOrder = (object) $order->orders;
+        $dataOrder = (object)$order->orders;
 
         if (!$order) {
             return response()->json([
@@ -237,14 +236,13 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $order->status_id = 2;
 
         if ($order->save()) {
-            foreach($dataOrder as $key)
-            {
+            foreach ($dataOrder as $key) {
                 $foodName = $key['food'];
                 $qty = $key['quantity'];
 
@@ -252,7 +250,7 @@ class OrderCartController extends Controller
                     'name' => $foodName,
                     'restoran_id' => $order->resto_id,
                 ])->first();
-                $minQty = $food->quantity-$qty;
+                $minQty = $food->quantity - $qty;
                 $food->quantity = $minQty;
                 $food->save();
             }
@@ -261,20 +259,20 @@ class OrderCartController extends Controller
                 'code' => 200,
                 'message' => 'Success approved order',
                 'data' => $order
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed approved order',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
-    public function orderDelivered(Request $request,$orderId)
+    public function orderDelivered(Request $request, $orderId)
     {
-        $driverId = Driver::where("user_id","=",$request->driver_id)->first()->id;
+        $driverId = Driver::where("user_id", "=", $request->driver_id)->first()->id;
         $validator = Validator::make(
             $request->all(),
             [
@@ -298,7 +296,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $driver = Driver::findOrFail($driverId);
@@ -309,7 +307,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Driver not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         if ($driver->is_available == 0) {
@@ -318,7 +316,7 @@ class OrderCartController extends Controller
                 'code' => 400,
                 'message' => 'Driver not available',
                 'data' => null
-            ],400);
+            ], 400);
         }
 
         $order->driver_id = $driverId;
@@ -337,27 +335,27 @@ class OrderCartController extends Controller
                     'order' => $order,
                     'driver' => $driver->user->name
                 ]
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed delivered order',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
-    public function uploadSign(Request $request,$orderId)
+    public function uploadSign(Request $request, $orderId)
     {
         $validator = Validator::make($request->all(),
-        [
-            'sign' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
-        ],
-        [
-            'sign.required' => 'Sign cannot be empty',
-            'sign.image' => 'Sign must be and image',
-        ]);
+            [
+                'sign' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
+            ],
+            [
+                'sign.required' => 'Sign cannot be empty',
+                'sign.image' => 'Sign must be and image',
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -371,7 +369,7 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null,
-            ],404);
+            ], 404);
         }
 
         if ($order->status_id !== 3) {
@@ -380,15 +378,16 @@ class OrderCartController extends Controller
                 'code' => 400,
                 'message' => 'Order not yet processed',
                 'data' => null,
-            ],400);
+            ], 400);
         }
 
         if ($request->hasFile('sign')) {
             $img = $request->file('sign');
             $ekstension = $img->getClientOriginalExtension();
-            $name = Auth::user()->name.'_'.'Sign_'.uniqid().'.'.$ekstension;
-
-            if ($request->sign->move(public_path('storage/'),$name)) {
+            $path_string = "storage/order_signature";
+            $path = public_path($path_string);
+            $name = Auth::user()->name . '_' . 'Sign_' . uniqid() . '.' . $ekstension;
+            if ($request->sign->move($path, $name)) {
                 $order->user_sign = $name;
 
                 if ($order->save()) {
@@ -397,30 +396,30 @@ class OrderCartController extends Controller
                         'code' => 200,
                         'message' => 'Success update order',
                         'data' => $order,
-                    ],200);
-                }else{
+                    ], 200);
+                } else {
                     return response()->json([
                         'success' => false,
                         'code' => 400,
                         'message' => 'Failed update order',
                         'data' => null,
-                    ],400);
+                    ], 400);
                 }
-            }else{
+            } else {
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'Failed upload sign',
                     'data' => null,
-                ],400);
+                ], 400);
             }
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 404,
                 'message' => 'File is null',
                 'data' => null,
-            ],404);
+            ], 404);
         }
     }
 
@@ -434,17 +433,16 @@ class OrderCartController extends Controller
                 'code' => 404,
                 'message' => 'Order not found',
                 'data' => null,
-            ],404);
+            ], 404);
         }
 
-        if($order->user_sign == null)
-        {
+        if ($order->user_sign == null) {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'User sign not uploaded yet',
                 'data' => null,
-            ],400);
+            ], 400);
         }
 
         $order->status_id = 4;
@@ -455,14 +453,51 @@ class OrderCartController extends Controller
                 'code' => 200,
                 'message' => 'Success completed order',
                 'data' => $order,
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed completed order',
                 'data' => null,
-            ],400);
+            ], 400);
         }
     }
+
+
+    public function finishOrder(Request $request, $orderId)
+    {
+        $order = OrderCart::findOrFail($orderId);
+        $order->recipient_name = $request->recipient_name;
+
+        if ($request->hasFile('sign')) {
+            $img = $request->file('sign');
+            $ekstension = $img->getClientOriginalExtension();
+
+            $path_string = "storage/order_signature";
+            $path = public_path($path_string);
+            $name = Auth::user()->name . '_' . 'Sign_' . uniqid() . '.' . $ekstension;
+            if ($request->sign->move($path, $name)) {
+                $order->user_sign = $name;
+            }
+        }
+
+        $order->status_id = 4;
+        if ($order->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Success completed order',
+                'data' => $order,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'Failed completed order',
+                'data' => null,
+            ], 400);
+        }
+    }
+
 }
