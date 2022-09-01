@@ -76,12 +76,16 @@ class FoodController extends Controller
         }
 
         $img = $request->file('image');
-        $path = 'storage/food';
         $ekstension = $img->getClientOriginalExtension();
-        $name = 'Food'.'_'.uniqid().'.'.$ekstension;
+        if ($ekstension==null){
+            $ekstension="jpg";
+        }
 
-        if ($request->image->move(public_path('storage'),$name)) {
-            $food->image = $path.$name;
+        $name = 'Food' . '_' . time() . "_" . uniqid() . '.' . $ekstension;
+        $path_string = "storage/food";
+        $path = public_path($path_string);
+        if ($request->image->move($path, $name)) {
+            $food->image = $path_string . "/" . $name;
 
 
             if ($food->save()) {
