@@ -163,7 +163,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
         if ($this->photo == null) {
             return "https://i.pinimg.com/564x/ff/70/6d/ff706d3ad8b6d0ce5232f875b31e8915.jpg";
         } else {
-            return asset("") . "storage/" . $this->img;
+            return asset("") . "storage/" . $this->photo;
         }
     }
 
