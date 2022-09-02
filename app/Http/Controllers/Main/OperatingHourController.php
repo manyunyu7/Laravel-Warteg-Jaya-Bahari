@@ -175,6 +175,10 @@ class OperatingHourController extends Controller
         $cekOperatingHour->restorans_id = $restoId;
         $cekOperatingHour->day = $request->day;
         $cekOperatingHour->hour = $request->hour;
+        $cekOperatingHour->day_code = $request->day_code;
+        $cekOperatingHour->hour_start = $request->hour_start;
+        $cekOperatingHour->hour_end = $request->hour_end;
+
 
         if ($cekOperatingHour->save()) {
             return response()->json([
