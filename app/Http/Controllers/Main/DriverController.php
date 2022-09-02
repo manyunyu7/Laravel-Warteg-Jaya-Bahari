@@ -16,7 +16,7 @@ class DriverController extends Controller
 {
     public function registerDriver(Request $request)
     {
-        $validator = Validator::make($request->all(), 
+        $validator = Validator::make($request->all(),
             [
                 'name' => 'required|string|between:2,100',
                 'email' => 'required|string|email|max:100|unique:users',
@@ -42,7 +42,7 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Restoran not found', 
+                'message' => 'Restoran not found',
                 'data' => null
             ],404);
         }
@@ -54,11 +54,11 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Failed registered driver', 
+                'message' => 'Failed registered driver',
                 'data' => null
             ],400);
         }
-        
+
         // create user with roles driver
         $user = new User();
         $user->name = $request->name;
@@ -80,7 +80,7 @@ class DriverController extends Controller
                 return response()->json([
                     'success' => true,
                     'code' => 200,
-                    'message' => 'Success registered driver', 
+                    'message' => 'Success registered driver',
                     'data' => $user
                 ],200);
             }
@@ -89,10 +89,10 @@ class DriverController extends Controller
         return response()->json([
             'success' => false,
             'code' => 400,
-            'message' => 'Failed registered driver', 
+            'message' => 'Failed registered driver',
             'data' => null
         ],400);
-        
+
     }
 
     public function loginDriver(Request $request)
@@ -110,7 +110,7 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'phone or password incorrect', 
+                'message' => 'phone or password incorrect',
                 'data' => null
             ], 404);
         }
@@ -138,7 +138,7 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Restoran not found', 
+                'message' => 'Restoran not found',
                 'data' => null,
             ],404);
         }
@@ -148,12 +148,12 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Driver not found', 
+                'message' => 'Driver not found',
                 'data' => null,
             ],404);
         }
 
-        foreach ($drivers as $driver) 
+        foreach ($drivers as $driver)
         {
             $users = User::where('id', $driver->user_id)->first();
             $dataDriver[] = [
@@ -183,10 +183,10 @@ class DriverController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $driver = Driver::find($driverId);
+        $driver = User::find($driverId);
 
         if ($driver) {
-            $user = User::find($driver->user_id);
+            $user = User::find($driverId); //langsung pake userId aja yak...
 
             if (!$user) {
                 return response()->json([
@@ -259,7 +259,7 @@ class DriverController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Failed get user profile', 
+                'message' => 'Failed get user profile',
                 'data' => null,
             ],400);
         }
@@ -267,7 +267,7 @@ class DriverController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'Success get user profile', 
+            'message' => 'Success get user profile',
             'data' => $profile
         ],200);
     }
