@@ -134,21 +134,21 @@ class OperatingHourController extends Controller
 
     public function editOperatingHour(Request $request, $restoId, $hourId)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'day' => 'required|string|min:6|max:255',
-                'hour' => 'required|string|min:6|max:255'
-            ],
-            [
-                'day.required' => 'day cannot be empty',
-                'hour.required' => 'hour cannot be empty'
-            ]
-        );
+//        $validator = Validator::make(
+//            $request->all(),
+//            [
+//                'day' => 'required|string|min:6|max:255',
+//                'hour' => 'required|string|min:6|max:255'
+//            ],
+//            [
+//                'day.required' => 'day cannot be empty',
+//                'hour.required' => 'hour cannot be empty'
+//            ]
+//        );
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+//        if ($validator->fails()) {
+//            return response()->json($validator->errors()->toJson(), 400);
+//        }
 
         $checkResto = Restoran::find($restoId);
 
