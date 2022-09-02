@@ -25,7 +25,7 @@ class RestoranController extends Controller
      */
     public function index(Request $request)
     {
-        $isPaginate = $request->isPaginate == 'true'?true:false;
+        $isPaginate = $request->isPaginate == 'true' ? true : false;
 
         if (!$isPaginate) {
             $restorans = Restoran::all();
@@ -35,16 +35,16 @@ class RestoranController extends Controller
                     'code' => 400,
                     'message' => 'Failed get restorans data',
                     'data' => null
-                ],400);
-            }else{
+                ], 400);
+            } else {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success get restorans data',
                     'data' => $restorans
-                ],200);
+                ], 200);
             }
-        }else{
+        } else {
             $paginate = DB::table('restorans')->orderBy('name', 'asc')->paginate(4);
 
             if (!$paginate) {
@@ -53,14 +53,14 @@ class RestoranController extends Controller
                     'code' => 400,
                     'message' => 'failed paginate restorans data',
                     'data' => null
-                ],400);
-            }else{
+                ], 400);
+            } else {
                 return response()->json([
                     'success' => true,
                     'code' => 200,
                     'message' => 'success paginate restorans data',
                     'data' => $paginate
-                ],200);
+                ], 200);
             }
         }
 
@@ -76,7 +76,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         if (!$restoByTypeFood) {
@@ -85,14 +85,14 @@ class RestoranController extends Controller
                 'code' => 400,
                 'message' => 'failed get restorans data by type of food',
                 'data' => null
-            ],400);
-        }else{
+            ], 400);
+        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get restorans data by type of food',
                 'data' => $restoByTypeFood
-            ],200);
+            ], 200);
         }
     }
 
@@ -106,7 +106,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         if (!$restoByCertifciation) {
@@ -115,45 +115,45 @@ class RestoranController extends Controller
                 'code' => 400,
                 'message' => 'failed get restorans data by certification',
                 'data' => null
-            ],400);
-        }else{
+            ], 400);
+        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get restorans data by certification',
                 'data' => $restoByCertifciation
-            ],200);
+            ], 200);
         }
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
-        [
-            "name" => 'required|string|min:6|max:255',
-            "type_food_id" => "required|string", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
-            "certification_id" => "required|string", Rule::in([1,2,3,4]),
-            "description" => "required|string|min:10|max:600 ",
-            "address" => "required|string|min:10|max:600 ",
-            "phone_number" => "required|string|min:11",
-            "lat" => 'required|between:-90,90',
-            "long" => 'required|between:-180,180',
-            "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048|required',
-            "is_visible" => 'required|boolean'
-        ],
-        [
-            "name.required" => "name cannot be empty",
-            "type_food_id. required" => "type food cannot be empty",
-            "certification_id.required" => "certification cannot be empty",
-            "description.required" => "description cannot be empty",
-            "address.required" => "address cannot be empty",
-            "phone_number.required" => "phone_number cannot be empty",
-            "lat.required" => "latitude cannot be empty",
-            "long.required" => "longitude cannot be empty",
-            "image.required" => 'image cannot be empty',
-            "image.image" => "Image must be an image",
-            "is_visible.required" => "is_visible cannot be empty",
-        ]);
+            [
+                "name" => 'required|string|min:6|max:255',
+                "type_food_id" => "required|string", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+                "certification_id" => "required|string", Rule::in([1, 2, 3, 4]),
+                "description" => "required|string|min:10|max:600 ",
+                "address" => "required|string|min:10|max:600 ",
+                "phone_number" => "required|string|min:11",
+                "lat" => 'required|between:-90,90',
+                "long" => 'required|between:-180,180',
+                "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048|required',
+                "is_visible" => 'required|boolean'
+            ],
+            [
+                "name.required" => "name cannot be empty",
+                "type_food_id. required" => "type food cannot be empty",
+                "certification_id.required" => "certification cannot be empty",
+                "description.required" => "description cannot be empty",
+                "address.required" => "address cannot be empty",
+                "phone_number.required" => "phone_number cannot be empty",
+                "lat.required" => "latitude cannot be empty",
+                "long.required" => "longitude cannot be empty",
+                "image.required" => 'image cannot be empty',
+                "image.image" => "Image must be an image",
+                "is_visible.required" => "is_visible cannot be empty",
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -174,12 +174,14 @@ class RestoranController extends Controller
         $file = $request->file('image');
         $ekstension = $file->getClientOriginalExtension();
 
-        $name = 'restoran'.'_'.time().'_'.$restoran->name.'.'.$ekstension;
-        $request->image->move(public_path('storage'),$name);
 
-        $restoran->image = $name;
-        $restoran->is_visible = $status  === "0" ? false : true;
+        $path_string = "storage/restoran";
+        $path = public_path($path_string);
+        $name = 'restoran' . '_' . time() . '_' . $restoran->name . '.' . $ekstension;
+        $request->image->move($path, $name);
 
+        $restoran->image = $path_string . "/" . $name;
+        $restoran->is_visible = $status === "0" ? false : true;
 
 
         if ($restoran->save()) {
@@ -188,14 +190,14 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success add restoran',
                 'data' => $restoran
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add restoran',
                 'data' => null
-            ],400);
+            ], 400);
         }
 
     }
@@ -208,17 +210,17 @@ class RestoranController extends Controller
 
         $totReview = RestoranReview::where('restoran_id', $restoId)->count();
         $rating1 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 1)->get()->count();
-        $rating2= RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
+        $rating2 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
         $rating3 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 3)->get()->count();
         $rating4 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 4)->get()->count();
         $rating5 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 5)->get()->count();
-        $sum = ($rating1+$rating2+$rating3+$rating4+$rating5)/5;
-        $totalRatings = ((1.0*$rating1)+(2.0*$rating2)+(3.0*$rating3)+(4.0*$rating4)+(5.0*$rating5));
+        $sum = ($rating1 + $rating2 + $rating3 + $rating4 + $rating5) / 5;
+        $totalRatings = ((1.0 * $rating1) + (2.0 * $rating2) + (3.0 * $rating3) + (4.0 * $rating4) + (5.0 * $rating5));
 
         $ratingCounts = $totReview;
-        $avg=0;
-        if($totalRatings!=0){
-            $avg = $totalRatings/$ratingCounts;
+        $avg = 0;
+        if ($totalRatings != 0) {
+            $avg = $totalRatings / $ratingCounts;
         }
 
         if ($restoran == null) {
@@ -227,8 +229,8 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
-        }else{
+            ], 404);
+        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
@@ -239,7 +241,7 @@ class RestoranController extends Controller
                     'totalRating' => $sum,
                     'rating' => $avg,
                 ]
-            ],200);
+            ], 200);
         }
     }
 
@@ -247,32 +249,32 @@ class RestoranController extends Controller
     {
         $food = TypeFood::all();
 
-        if($food == null){
+        if ($food == null) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
                 'message' => 'food type not found',
                 'data' => null
-            ],404);
-        }else{
+            ], 404);
+        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get type food data',
                 'data' => $food
-            ],200);
+            ], 200);
         }
     }
 
     public function editImage(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
-        [
-            "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
-        ],
-        [
-            "image.image" => "Image must be an image",
-        ]);
+            [
+                "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
+            ],
+            [
+                "image.image" => "Image must be an image",
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -286,28 +288,32 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         if ($request->hasFile('image')) {
-            $path = public_path('storage').$restoran->image;
 
             if (file_exists($path)) {
-                try{
+                try {
                     unlink($path);
-                } catch(Exception $e){
+                } catch (Exception $e) {
                     return response()->json([
                         'success' => false,
                         'code' => 400,
                         'message' => $e->getMessage(),
-                    ],400);
+                    ], 400);
                 }
             }
-            $file = $request->file('image');
-            $ekstension = $file->getClientOriginalExtension();
-            $name = time().'_'.$restoran->name.'.'.$ekstension;
-            $request->image->move(public_path('storage/'),$name);
-            $restoran->image = $name;
+
+            $img = $request->file('image');
+            $path_string = "storage/restoran";
+            $path = public_path($path_string);
+            $ekstension = $img->getClientOriginalExtension();
+            $name = 'restoran' . '_' . time() . '_' . $restoran->name . '.' . $ekstension;
+            $request->image->move($path, $name);
+
+            $restoran->image = $path_string . "/" . $name;
+
 
             if ($restoran->save()) {
                 return response()->json([
@@ -315,22 +321,22 @@ class RestoranController extends Controller
                     'code' => 200,
                     'message' => 'success update restoran data',
                     'data' => $restoran
-                ],200);
-            }else{
+                ], 200);
+            } else {
                 return response()->json([
                     'success' => false,
                     'code' => 400,
                     'message' => 'failed update restoran data',
                     'data' => null
-                ],400);
+                ], 400);
             }
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'No file to upload',
                 'data' => null
-            ],400);
+            ], 400);
         }
 
     }
@@ -338,9 +344,9 @@ class RestoranController extends Controller
     public function editCertification(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
-        [
-            "certification_id" => "required", Rule::in([1,2,3,4]),
-        ]);
+            [
+                "certification_id" => "required", Rule::in([1, 2, 3, 4]),
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -353,7 +359,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $restoran->certification_id = $request->certification_id;
@@ -366,23 +372,23 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran data',
                 'data' => $restoran
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update restoran data',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
     public function editType(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
-        [
-            "type_food_id" => "required", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
-        ]);
+            [
+                "type_food_id" => "required", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -396,7 +402,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $restoran->type_food_id = $request->type_food_id;
@@ -408,31 +414,31 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran data',
                 'data' => $restoran
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update restoran data',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
     public function editAddress(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
-        [
-            "lat" => 'required|between:-90,90',
-            "long" => 'required|between:-180,180',
-            "address" => "required|string|min:10|max:600 ",
-        ],
-        [
-            "lat.required" => "latitude cannot be empty",
-            "long.required" => "longitude cannot be empty",
-            "address.required" => "address cannot be empty",
-            "address.string" => "address must be a string",
-        ]);
+            [
+                "lat" => 'required|between:-90,90',
+                "long" => 'required|between:-180,180',
+                "address" => "required|string|min:10|max:600 ",
+            ],
+            [
+                "lat.required" => "latitude cannot be empty",
+                "long.required" => "longitude cannot be empty",
+                "address.required" => "address cannot be empty",
+                "address.string" => "address must be a string",
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -446,7 +452,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $restoran->address = $request->address;
@@ -459,27 +465,27 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran data',
                 'data' => $restoran
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update restoran data',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
     public function editPhoneNumber(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
-        [
-            "phone_number" => "required|string|min:11",
-        ],
-        [
-            "phone_number.required" => "phone_number cannot be empty",
-            "phone_number.string" => "phone_number must be a string",
-        ]);
+            [
+                "phone_number" => "required|string|min:11",
+            ],
+            [
+                "phone_number.required" => "phone_number cannot be empty",
+                "phone_number.string" => "phone_number must be a string",
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -493,7 +499,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $restoran->phone_number = $request->phone_number;
@@ -504,26 +510,26 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran data',
                 'data' => $restoran
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update restoran data',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
     public function editVisibility(Request $request, $restoId)
     {
         $validator = Validator::make($request->all(),
-        [
-            "is_visible" => 'required|boolean'
-        ],
-        [
-            "is_visible.required" => "is_visible cannot be empty",
-        ]);
+            [
+                "is_visible" => 'required|boolean'
+            ],
+            [
+                "is_visible.required" => "is_visible cannot be empty",
+            ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -537,7 +543,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $restoran->is_visible = $request->is_visible === "1" ? true : false;
@@ -548,14 +554,14 @@ class RestoranController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran data',
                 'data' => $restoran
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed update restoran data',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
@@ -568,7 +574,7 @@ class RestoranController extends Controller
                 'success' => false,
                 'code' => 404,
                 'message' => 'restoran not found'
-            ],404);
+            ], 404);
         }
 
         if ($restoran->delete()) {
@@ -576,13 +582,13 @@ class RestoranController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'success delete restoran'
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed delete restoran',
-            ],400);
+            ], 400);
         }
     }
 
@@ -597,17 +603,15 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'restoran review not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $arrPath = array();
-        array_push($arrPath, url('/').'/'. $resto->iamge);
-        foreach($restoReview as $item)
-        {
+        array_push($arrPath, url('/') . '/' . $resto->iamge);
+        foreach ($restoReview as $item) {
             $restoPhotos = RestoranReviewImage::where('restoran_review_id', $item->id)->get();
-            foreach($restoPhotos as $img)
-            {
-                array_push($arrPath, url('/').'/'. $img->path);
+            foreach ($restoPhotos as $img) {
+                array_push($arrPath, url('/') . '/' . $img->path);
             }
         }
 
@@ -617,14 +621,14 @@ class RestoranController extends Controller
                 'code' => 400,
                 'message' => 'failed get restoran photos',
                 'data' => null
-            ],400);
-        }else{
+            ], 400);
+        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'success get restoran photos',
                 'data' => $arrPath
-            ],200);
+            ], 200);
         }
     }
 
@@ -639,7 +643,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'Restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -647,7 +651,7 @@ class RestoranController extends Controller
             'code' => 200,
             'message' => 'Success get restorans',
             'data' => $restoran
-        ],200);
+        ], 200);
     }
 
     public function getRestoDetailByOwner($restoId)
@@ -666,7 +670,7 @@ class RestoranController extends Controller
                 'code' => 404,
                 'message' => 'Restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -674,6 +678,6 @@ class RestoranController extends Controller
             'code' => 200,
             'message' => 'Success get restorans',
             'data' => $restoran
-        ],200);
+        ], 200);
     }
 }
