@@ -21,8 +21,8 @@ class FoodController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'restoran_id' => 'required|',
-                'type_food_id' => 'required', Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
-                'category_id' => 'required', Rule::in([1, 2, 3, 4, 5, 6]),
+//                'type_food_id' => 'required', Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+//                'category_id' => 'required', Rule::in([1, 2, 3, 4, 5, 6]),
                 'name' => 'required|string|min:4',
                 'description' => 'required|string|min:3|max:1000',
                 'image' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
@@ -140,8 +140,8 @@ class FoodController extends Controller
         $category_id = (int)$request->category_id;
         $validator = Validator::make($request->all(),
             [
-                'type_food_id' => Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
-                'category_id' => Rule::in([1, 2, 3, 4, 5, 6]),
+//                'type_food_id' => Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+//                'category_id' => Rule::in([1, 2, 3, 4, 5, 6]),
                 'name' => 'string|min:4',
                 'description' => 'string|min:3|max:1000',
                 'image' => 'image:jpeg,png,jpg,gif,svg|max:2048',
