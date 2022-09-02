@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use mysql_xdevapi\Exception;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail, FilamentUser, HasAvatar
@@ -28,9 +29,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
 
     protected static function booted()
     {
-        static::deleted(function ($user) {
-            unlink(public_path('storage/' . $user->photo));
-        });
+        try {
+            static::deleted(function ($user) {
+                unlink(public_path('storage/' . $user->photo));
+            });
+        }catch (Exception $exception){
+
+        }
+
     }
 
     /**
