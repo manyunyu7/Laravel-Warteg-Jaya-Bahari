@@ -142,7 +142,7 @@ Route::prefix('v1')->group(function (){
                     Route::post('create/{restoId}', [OperatingHourController::class, 'store']);
                     Route::get('getByResto/{restoId}', [OperatingHourController::class, 'getByResto']);
                     Route::get('getDetail/{hourId}', [OperatingHourController::class, 'getDetail']);
-                    Route::put('edit/{restoId}/{hourId}', [OperatingHourController::class, 'editOperatingHour']);
+                    Route::post('edit/{restoId}/{hourId}', [OperatingHourController::class, 'editOperatingHour']);
                     Route::delete('delete/{restoId}/{hourId}', [OperatingHourController::class, 'deleteOperatingHour']);
                 });
             #});
