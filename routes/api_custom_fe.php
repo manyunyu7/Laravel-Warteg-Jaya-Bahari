@@ -17,6 +17,7 @@ Route::middleware('api')->group(function () {
         Route::prefix("fe")->group(function () {
             Route::prefix('users')->group(function () {
                 Route::get('{id}/profile', [FeAuthController::class, 'getUserProfile']);
+                Route::post('{id}/reset-password', [FeAuthController::class, 'resetUserPassword']);
             });
 
 

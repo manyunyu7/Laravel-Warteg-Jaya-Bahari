@@ -16,6 +16,26 @@ use stdClass;
 class FeAuthController extends Controller
 {
 
+    function resetUserPassword(Request $request, $id)
+    {
+        $newPassword = $request->new_password;
+        $user = User::findOrFail($id);
+        $user->password = bcrypt($newPassword);
+        if ($user->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed',
+            ], 400);
+        }
+    }
+
     function getUserProfile($id)
     {
         return User::findOrFail($id);
