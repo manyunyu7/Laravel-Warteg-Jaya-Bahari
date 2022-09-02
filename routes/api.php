@@ -134,7 +134,7 @@ Route::prefix('v1')->group(function (){
                 Route::post('editImage/{restoId}', [RestoranController::class, 'editImage']);
                 Route::put('editCertification/{restoId}', [RestoranController::class, 'editCertification']);
                 Route::put('editType/{restoId}', [RestoranController::class, 'editType']);
-                Route::put('editAddress/{restoId}', [RestoranController::class, 'editAddress']);
+                Route::post('editAddress/{restoId}', [RestoranController::class, 'editAddress']);
                 Route::put('editPhoneNumber/{restoId}', [RestoranController::class, 'editPhoneNumber']);
                 Route::put('editVisibility/{restoId}', [RestoranController::class, 'editVisibility']);
                 Route::delete('delete/{restoId}', [RestoranController::class, 'destroy']);
