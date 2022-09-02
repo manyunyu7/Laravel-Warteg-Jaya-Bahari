@@ -8,6 +8,7 @@ use App\Http\Controllers\Fe\FeMasjidController;
 use App\Http\Controllers\Fe\FeRestoController;
 use App\Http\Controllers\Fe\FeForumController;
 use App\Http\Controllers\Fe\FeOrderCartController;
+use App\Http\Controllers\Fe\FeAuthController;
 
 
 Route::middleware('api')->group(function () {
@@ -15,9 +16,7 @@ Route::middleware('api')->group(function () {
 
         Route::prefix("fe")->group(function () {
             Route::prefix('users')->group(function () {
-                Route::prefix('me')->group(function () {
-                    Route::get('profile', [AuthController::class, 'userProfile']);
-                });
+                Route::get('{id}/profile', [FeAuthController::class, 'getUserProfile']);
             });
 
 
