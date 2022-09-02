@@ -31,14 +31,8 @@ class Food extends Model
     }
 
     public function getCategoryNameAttribute(){
-        $obj = FoodCategory::all();
-        $retVal = "";
-        foreach ($obj as $key) {
-            if($key->id==$this->type_food_id){
-                $retVal = $key->name;
-            }
-        }
-        return $retVal;
+        $obj = FoodCategory::findOrFail($this->category_id);
+        return $obj->name;
     }
 
     public function getTypeFoodNameAttribute(){
