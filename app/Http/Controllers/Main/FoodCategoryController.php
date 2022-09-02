@@ -33,13 +33,13 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Restoran not found', 
+                'message' => 'Restoran not found',
                 'data' => null
             ],404);
         }
 
         $category = new FoodCategory();
-        
+
         $category->resto_id = $restoId;
         $category->name = $request->name;
 
@@ -68,14 +68,14 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'Failed get food category data', 
+                'message' => 'Failed get food category data',
                 'data' => null
             ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'success get food category data', 
+                'message' => 'success get food category data',
                 'data' => $categorys
             ],200);
         }
@@ -88,7 +88,7 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Restoran not found', 
+                'message' => 'Restoran not found',
                 'data' => null
             ],404);
         }
@@ -98,7 +98,7 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Category not found', 
+                'message' => 'Category not found',
                 'data' => null
             ],404);
         }
@@ -106,10 +106,10 @@ class FoodCategoryController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'success get category data', 
+            'message' => 'success get category data',
             'data' => $category
         ],200);
-        
+
     }
 
     public function getDetail($categoryId)
@@ -120,7 +120,7 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Category not found', 
+                'message' => 'Category not found',
                 'data' => null
             ],404);
         }
@@ -128,7 +128,7 @@ class FoodCategoryController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'success get category data', 
+            'message' => 'success get category data',
             'data' => $category
         ],200);
     }
@@ -157,7 +157,7 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Category not found', 
+                'message' => 'Category not found',
                 'data' => null
             ],404);
         }
@@ -169,14 +169,14 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'message' => 'success update food category data', 
+                'message' => 'success update food category data',
                 'data' => $category
             ],200);
         }else{
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed update food category data', 
+                'message' => 'failed update food category data',
                 'data' => null
             ],400);
         }
@@ -185,16 +185,15 @@ class FoodCategoryController extends Controller
 
     public function destroy($categoryId)
     {
-        $foods = Food::where('category_id',$categoryId)->get();
-
-        if ($foods != null) {
+        $foods = Food::where('category_id',$categoryId)->count();
+        if ($foods != 0) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
                 'message' => 'cannot delete category',
             ],404);
         }
-        
+
         $category = FoodCategory::find($categoryId);
 
         if ($category == null) {
@@ -215,7 +214,7 @@ class FoodCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed delete food category', 
+                'message' => 'failed delete food category',
             ],400);
         }
     }
