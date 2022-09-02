@@ -38,8 +38,7 @@ class OperatingHourController extends Controller
                     'success' => false,
                     'code' => 400,
                     'message' => 'Day Already Exist',
-                    'data' => null
-                    , 400]);
+                    'data' => null], 400);
             }
         }
 
