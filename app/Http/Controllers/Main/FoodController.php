@@ -266,4 +266,8 @@ class FoodController extends Controller
             ], 400);
         }
     }
+
+    function getFoodDetail($id){
+        return Food::findOrFail($id);
+    }
 }

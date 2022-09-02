@@ -185,6 +185,7 @@ Route::prefix('v1')->group(function (){
 
             #Route::middleware('auth.role:1,3')->group(function (){
                 Route::post('store', [FoodController::class,'store']);
+                Route::get('{id}/detail', [FoodController::class,'getFoodDetail']);
                 Route::post('editFood/{foodId}', [FoodController::class,'editFood']);
                 Route::delete('deleteFood/{foodId}', [FoodController::class,'delete']);
                 Route::prefix('category')->group(function(){
