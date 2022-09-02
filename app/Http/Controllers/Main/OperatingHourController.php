@@ -13,25 +13,25 @@ class OperatingHourController extends Controller
 {
     public function store(Request $request, $restoId)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'day' => 'required|string|min:6|max:255',
-                'hour' => 'required|string|min:6|max:255'
-            ],
-            [
-                'day.required' => 'day cannot be empty',
-                'hour.required' => 'hour cannot be empty'
-            ]
-        );
+//        $validator = Validator::make(
+//            $request->all(),
+//            [
+//                'day' => 'required|string|min:6|max:255',
+//                'hour' => 'required|string|min:6|max:255'
+//            ],
+//            [
+//                'day.required' => 'day cannot be empty',
+//                'hour.required' => 'hour cannot be empty'
+//            ]
+//        );
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+//        if ($validator->fails()) {
+//            return response()->json($validator->errors()->toJson(), 400);
+//        }
 
         $checkResto = Restoran::find($restoId);
         $checkHour = RestoranOperatingHour::where('restorans_id', $restoId)->get()->count();
-        
+
         if ($checkResto == null) {
             return response()->json([
                 'success' => false,
@@ -55,6 +55,10 @@ class OperatingHourController extends Controller
         $operatingHour->restorans_id = $restoId;
         $operatingHour->day = $request->day;
         $operatingHour->hour = $request->hour;
+        $operatingHour->day_code = $request->day_code;
+        $operatingHour->hour_start = $request->hour_start;
+        $operatingHour->hour_end = $request->hour_end;
+
 
         if ($operatingHour->save()) {
             return response()->json([
@@ -201,14 +205,14 @@ class OperatingHourController extends Controller
             ],400);
         }
 
-        if ($restoran->user_id != $userId) {
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'Access Denied',
-                'data' => null
-            ],400);
-        }
+//        if ($restoran->user_id != $userId) {
+//            return response()->json([
+//                'success' => false,
+//                'code' => 400,
+//                'message' => 'Access Denied',
+//                'data' => null
+//            ],400);
+//        }
 
         if ($cekOperatingHour->delete()) {
             return response()->json([
