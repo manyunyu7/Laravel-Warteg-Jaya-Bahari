@@ -334,7 +334,7 @@ class DriverController extends Controller
 
     public function deleteDriver($driverId)
     {
-        $driver = Driver::find($driverId);
+        $driver = Driver::where("user_id",'=',$driverId)->first();
 
         if (!$driver) {
             return response()->json([
