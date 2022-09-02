@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\MasjidReviewImage;
 use App\Models\Restoran;
 use App\Models\RestoranOperatingHour;
 use Illuminate\Support\Facades\Validator;
@@ -29,6 +30,20 @@ class OperatingHourController extends Controller
 //            return response()->json($validator->errors()->toJson(), 400);
 //        }
 
+        $obj = RestoranOperatingHour::where("restorans_id", $restoId)->get();
+
+        foreach ($obj as $item) {
+            if ($item->day_code == $request->day_code) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 400,
+                    'message' => 'Day Already Exist',
+                    'data' => null
+                    , 400]);
+            }
+        }
+
+
         $checkResto = Restoran::find($restoId);
         $checkHour = RestoranOperatingHour::where('restorans_id', $restoId)->get()->count();
 
@@ -38,17 +53,16 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
-        if($checkHour == 7)
-        {
+        if ($checkHour == 7) {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'operating hour cannot be more than 7 data',
                 'data' => null
-            ],400);
+            ], 400);
         }
 
         $operatingHour = new RestoranOperatingHour();
@@ -66,14 +80,14 @@ class OperatingHourController extends Controller
                 'code' => 200,
                 'message' => 'success store restoran operating hour data',
                 'data' => $operatingHour
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed store restoran operating hour data',
                 'data' => null
-            ,400]);
+                , 400]);
         }
     }
 
@@ -87,7 +101,7 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'operating hour not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -95,7 +109,7 @@ class OperatingHourController extends Controller
             'code' => 200,
             'message' => 'success get operating hour',
             'data' => $operatingHour
-        ],200);
+        ], 200);
     }
 
     public function getDetail($hourId)
@@ -108,7 +122,7 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'operating hour not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -116,7 +130,7 @@ class OperatingHourController extends Controller
             'code' => 200,
             'message' => 'success get operating hour',
             'data' => $operatingHour
-        ],200);
+        ], 200);
     }
 
     public function editOperatingHour(Request $request, $restoId, $hourId)
@@ -145,7 +159,7 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'restoran not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $cekOperatingHour = RestoranOperatingHour::find($hourId);
@@ -156,7 +170,7 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'operating hour not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         $cekOperatingHour->restorans_id = $restoId;
@@ -169,14 +183,14 @@ class OperatingHourController extends Controller
                 'code' => 200,
                 'message' => 'success update restoran operating hour data',
                 'data' => $cekOperatingHour
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed update restoran operating hour data',
                 'data' => null
-            ,400]);
+                , 400]);
         }
 
     }
@@ -193,7 +207,7 @@ class OperatingHourController extends Controller
                 'code' => 404,
                 'message' => 'operating hour not found',
                 'data' => null
-            ],404);
+            ], 404);
         }
 
         if ($cekOperatingHour->restorans_id != $restoId) {
@@ -202,7 +216,7 @@ class OperatingHourController extends Controller
                 'code' => 400,
                 'message' => 'Not operating hour restoran',
                 'data' => null
-            ],400);
+            ], 400);
         }
 
 //        if ($restoran->user_id != $userId) {
@@ -219,13 +233,13 @@ class OperatingHourController extends Controller
                 'success' => true,
                 'code' => 200,
                 'message' => 'Sucessfully deleted operating hour',
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'Failed deleted operating hour',
-            ],400);
+            ], 400);
         }
     }
 }
