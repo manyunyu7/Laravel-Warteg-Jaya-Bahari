@@ -94,6 +94,11 @@ Route::middleware('api')->group(function () {
                 });
             });
 
+            Route::prefix('foods')->group(function(){
+                Route::get('{id}/update-availability', [FeOrderCartController::class,'changeFoodAvailability']);
+            });
+
+
             Route::prefix('orders')->group(function () {
                 Route::prefix('carts')->group(function () {
                     Route::get('status', [FeRestoController::class, 'getAllOrderStatus']);

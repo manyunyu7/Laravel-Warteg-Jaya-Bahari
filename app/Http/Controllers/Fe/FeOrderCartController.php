@@ -16,6 +16,27 @@ use Illuminate\Support\Facades\Validator;
 
 class FeOrderCartController extends Controller
 {
+
+    public function changeFoodAvailability(Request $request, $id){
+        $food = Food::findOrFail($id);
+        $food->is_visible = $request->is_visible;
+        if ($food->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'success checkout',
+                'data' => $food
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'failed checkout',
+                'data' => null
+            ], 400);
+        }
+
+    }
     public function getDriverOrder(Request $request)
     {
         $driverId = Driver::where("user_id",'=',Auth::id())->first()->id;
