@@ -57,7 +57,7 @@ class OrderCart extends Model
         if ($this->user_sign == null) {
             return "";
         } else {
-            return asset("") . "storage/order_signature" . $this->user_sign;
+            return asset("") . "storage/order_signature/" . $this->user_sign;
         }
     }
 
