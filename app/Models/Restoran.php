@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class Restoran extends Model
 {
     use HasFactory;
-    protected $appends = ["server_time","img_full_path","certification_name","food_type_name","is_resto_schedule_open","list_operating_hours"];
+
+    protected $appends = ["server_time", "img_full_path", "certification_name", "food_type_name", "is_resto_schedule_open", "list_operating_hours"];
+
     public function typeFood()
     {
         return $this->belongsTo(TypeFood::class);
@@ -55,36 +57,52 @@ class Restoran extends Model
         return $this->hasMany(OrderCart::class);
     }
 
-    public function getImgFullPathAttribute(){
-        return url("")."$this->image";
+    public function getImgFullPathAttribute()
+    {
+        if (str_contains($this->image, "/uploads"))
+            return url("") . "$this->image";
+        if (str_contains($this->image, "storage")){
+            return asset("") . "/" . $this->photo;
+        }else{
+            return asset("") . "/storage/restoran/" . $this->photo;
+        }
+
+
     }
 
-    public function getCertificationNameAttribute(){
+    public function getCertificationNameAttribute()
+    {
         $object = Certification::where("id", '=', $this->certification_id)->first();
         return $object->name;
     }
-    public function getFoodTypeNameAttribute(){
+
+    public function getFoodTypeNameAttribute()
+    {
         $object = TypeFood::where("id", '=', $this->type_food_id)->first();
         return $object->name;
     }
 
-    public function getListOperatingHoursAttribute(){
-        return RestoranOperatingHour::where("restorans_id",$this->id)->get();
+    public function getListOperatingHoursAttribute()
+    {
+        return RestoranOperatingHour::where("restorans_id", $this->id)->get();
     }
-    public function getServerTimeAttribute(){
+
+    public function getServerTimeAttribute()
+    {
         return Carbon::now()->format('H:i:s');
     }
 
-    public function getIsRestoScheduleOpenAttribute(){
+    public function getIsRestoScheduleOpenAttribute()
+    {
         $now = Carbon::now();
         $start = "";
         $end = "";
 
-        $ops =  $this->getListOperatingHoursAttribute();
+        $ops = $this->getListOperatingHoursAttribute();
         $currentDay = Carbon::now()->dayOfWeek;
 
-        foreach ($ops as $item){
-            if ($item->day_code == $currentDay){
+        foreach ($ops as $item) {
+            if ($item->day_code == $currentDay) {
                 $start = Carbon::createFromTimeString($item->hour_start);
                 $end = Carbon::createFromTimeString($item->hour_end);
             }
@@ -92,7 +110,7 @@ class Restoran extends Model
 
         if ($now->between($start, $end)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
