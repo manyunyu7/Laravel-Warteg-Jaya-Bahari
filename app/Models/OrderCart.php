@@ -15,7 +15,7 @@ class OrderCart extends Model
         'edited_at' => 'datetime:Y-m-d H:00',
     ];
 
-    protected $appends = ["status_desc","resto_obj","user_obj","driver_obj"];
+    protected $appends = ["status_desc","resto_obj","user_obj","driver_obj","img_signature_full_path"];
 
     public function user()
     {
@@ -49,6 +49,16 @@ class OrderCart extends Model
     public function getDriverObjAttribute(){
         $status = Driver::find($this->user_id);
         return $status;
+    }
+
+
+    public function getImgSignatureFullPathAttribute()
+    {
+        if ($this->photo == null) {
+            return "";
+        } else {
+            return asset("") . "storage/order_signature" . $this->photo;
+        }
     }
 
 
