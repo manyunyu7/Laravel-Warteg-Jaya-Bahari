@@ -54,10 +54,10 @@ class OrderCart extends Model
 
     public function getImgSignatureFullPathAttribute()
     {
-        if ($this->photo == null) {
+        if ($this->user_sign == null) {
             return "";
         } else {
-            return asset("") . "storage/order_signature" . $this->photo;
+            return asset("") . "storage/order_signature" . $this->user_sign;
         }
     }
 
