@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\OrderCart;
 use App\Models\Restoran;
 use App\Models\User;
 use Carbon\Carbon;
@@ -361,21 +362,38 @@ class DriverController extends Controller
             ],404);
         }
 
-        if ($driver->delete() && $user->delete()) {
-            return response()->json([
-                'success' => true,
-                'code' => 200,
-                'message' => 'Success delete driver',
-                'data' => null,
-            ],200);
+        $cart = OrderCart::where('driver_id', $driverId)->first();
+        
+        if ($cart) {
+            $cart->driver_id = null;
+            if ($cart->save()) {
+                if ($driver->delete() && $user->delete()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'Success delete driver',
+                        'data' => null,
+                    ],200);
+                }
+            }
         }else{
-            return response()->json([
-                'success' => false,
-                'code' => 400,
-                'message' => 'Failed delete driver data',
-                'data' => null,
-            ],400);
+            if ($driver->delete() && $user->delete()) {
+                return response()->json([
+                    'success' => true,
+                    'code' => 200,
+                    'message' => 'Success delete driver',
+                    'data' => null,
+                ],200);
+            }
         }
+
+        return response()->json([
+            'success' => false,
+            'code' => 400,
+            'message' => 'Failed delete driver data',
+            'data' => null,
+        ],400);
+
     }
 
     public function updateLocation(Request $request, $driverId)
