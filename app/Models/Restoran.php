@@ -62,9 +62,9 @@ class Restoran extends Model
         if (str_contains($this->image, "/uploads"))
             return url("") . "$this->image";
         if (str_contains($this->image, "storage")){
-            return asset("") . "/" . $this->photo;
+            return asset("") . "/" . $this->image;
         }else{
-            return asset("") . "/storage/restoran/" . $this->photo;
+            return asset("") . "/storage/restoran/" . $this->image;
         }
 
 
