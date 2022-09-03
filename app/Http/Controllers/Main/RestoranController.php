@@ -130,11 +130,11 @@ class RestoranController extends Controller
     {
         $validator = Validator::make($request->all(),
             [
-                "name" => 'required|string|min:6|max:255',
+//                "name" => 'required|string|min:6|max:255',
                 "type_food_id" => "required|string", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
                 "certification_id" => "required|string", Rule::in([1, 2, 3, 4]),
-                "description" => "required|string|min:10|max:600 ",
-                "address" => "required|string|min:10|max:600 ",
+//                "description" => "required|string|min:10|max:600 ",
+//                "address" => "required|string|min:10|max:600 ",
                 "phone_number" => "required|string|min:11",
                 "lat" => 'required|between:-90,90',
                 "long" => 'required|between:-180,180',
