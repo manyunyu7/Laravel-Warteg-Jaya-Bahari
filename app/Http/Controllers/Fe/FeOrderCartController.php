@@ -41,14 +41,14 @@ class FeOrderCartController extends Controller
     {
         $driverId = Driver::where("user_id",'=',Auth::id())->first()->id;
         $page = $request->page;
-        $perPage = $request->perPage;
+        $perPage = 99;
         $objs = OrderCart::where("driver_id", '=', $driverId)->paginate($perPage,['*'],'page',$page);
         return $objs;
     }
 
     public function orderByResto(Request $request, $id)
     {
-        $perPage = $request->perPage;
+        $perPage = 99;
         $page = $request->page;
         if ($request->status != null) {
 
