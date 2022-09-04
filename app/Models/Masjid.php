@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
 
 class Masjid extends Model
@@ -43,7 +44,7 @@ class Masjid extends Model
     }
 
     //start #mobreq
-    protected $appends =  ['category_name', 'allphotos', 'review_avg','review_count','img_full_path'];
+    protected $appends =  ['category_name', 'allphotos', 'review_avg','review_count','img_full_path','is_favorited'];
 
     public function getAllphotosAttribute()
     {
@@ -82,6 +83,23 @@ class Masjid extends Model
 
     public function getImgFullPathAttribute(){
         return asset("")."storage/".$this->img;
+    }
+
+    public function getIsFavoritedAttribute(){
+       if (Auth::check()){
+           $obj = FavoriteMasjid::where([
+               ['user_id', '=', Auth::id()],
+               ['masjid_id', '=', $this->id],
+           ])->count();
+
+           if ($obj!=0){
+               return true;
+           }else{
+               return false;
+           }
+       }else{
+          return false;
+       }
     }
 
     public function getReviewAvgAttribute()

@@ -5,12 +5,16 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Restoran extends Model
 {
     use HasFactory;
 
-    protected $appends = ["server_time", "img_full_path", "certification_name", "food_type_name", "is_resto_schedule_open", "list_operating_hours"];
+    protected $appends = ["server_time", "img_full_path",
+        "certification_name", "food_type_name",
+        "is_resto_schedule_open", "list_operating_hours",
+        "is_favorited"];
 
     public function typeFood()
     {
@@ -66,8 +70,23 @@ class Restoran extends Model
         }else{
             return asset("") . "/storage/restoran/" . $this->image;
         }
+    }
 
+    public function getIsFavoritedAttribute(){
+        if (Auth::check()){
+            $obj = FavoriteRestoran::where([
+                ['user_id', '=', Auth::id()],
+                ['restorans_id', '=', $this->id],
+            ])->count();
 
+            if ($obj!=0){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
     public function getCertificationNameAttribute()
