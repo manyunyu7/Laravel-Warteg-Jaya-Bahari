@@ -195,6 +195,7 @@ class RestoranReviewController extends Controller
     public function destroy($reviewId)
     {
         $review = RestoranReview::find($reviewId);
+        $reviewImage = RestoranReviewImage::where('restoran_review_id', $reviewId);
         if ($review == null) {
             return response()->json([
                 'success' => false,
@@ -202,19 +203,31 @@ class RestoranReviewController extends Controller
                 'message' => "restoran review not found"
             ],404);
         }else{
-
-            if ($review->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'success delete review restoran',
-                ],200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => 'failed delete review restoran',
-                ],400);
+            if ($reviewImage->exists()) {
+                try {
+                    $reviewImage->delete();
+                    if ($review->delete()) {
+                        return response()->json([
+                            'success' => true,
+                            'code' => 200,
+                            'message' => 'success delete review restoran',
+                        ],200);
+                    }
+                } catch (\Throwable $th) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $th->getMessage(),
+                    ],400);
+                }
+            }else{
+                if ($review->delete()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'success delete review restoran',
+                    ],200);
+                }
             }
         }
     }

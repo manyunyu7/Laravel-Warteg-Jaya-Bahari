@@ -586,7 +586,7 @@ class RestoranController extends Controller
         }
 
         $arrPath = array();
-        array_push($arrPath, url('/').'/'. $resto->iamge);
+        array_push($arrPath, url('/').'/'. $resto->image);
         foreach($restoReview as $item)
         {
             $restoPhotos = RestoranReviewImage::where('restoran_review_id', $item->id)->get();

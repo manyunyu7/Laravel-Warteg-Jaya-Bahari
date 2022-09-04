@@ -149,11 +149,13 @@ class ProductInformationController extends Controller
             'allergy' => 'string|min:3|max:100',
             'environment' => 'string|min:3|max:100',
             'ingredient' => 'string|min:3|max:100',
+            "summary" => 'string|min:3|max:100',
         ],
         [
             'allergy.string' => 'allergy must be a string',
             'environment.string' => 'environment must be a string',
             'ingredient.string' => 'ingredients must be a string',
+            'summary.string' => 'summaries must be a string',
         ]);
 
         if ($validator->fails()) {
@@ -174,6 +176,7 @@ class ProductInformationController extends Controller
         $information->allergy = $request->allergy;
         $information->environment = $request->environment;
         $information->ingredient = $request->ingredient;
+        $information->summary = $request->summary;
 
         if ($information->save()) {
             return response()->json([

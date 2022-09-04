@@ -63,7 +63,7 @@ class MasjidController extends Controller
                 'address' => $request->address,
                 'lat' => $request->lat,
                 'long' => $request->long,
-                'img' => $path.$name
+                'img' => $name
             ]);
 
             if (!$masjid) {

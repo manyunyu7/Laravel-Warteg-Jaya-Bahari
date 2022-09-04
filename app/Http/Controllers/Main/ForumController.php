@@ -253,13 +253,10 @@ class ForumController extends Controller
         }
 
         $comments = ForumComment::where('forum_id', $forumId);
-        if ($comments != null) {
+        if ($comments->exists()) {
             try {
-                $delComment = $comments->get();
-                foreach($delComment as $data)
-                {
-                    CommentLike::where('comment_id', $data->id)->delete();
-                }
+                $commentId = $comments->get()->id;
+                CommentLike::where('comment_id',$commentId )->delete();
             } catch (Exception $e) {
                 return response()->json([
                     'success' => false,
@@ -269,9 +266,10 @@ class ForumController extends Controller
             }
         }
         $likes = ForumLike::where('forum_id', $forumId);
-        
+        $checkComment = $comments->exists();
+        $checkLike = $likes->exists();
 
-        if ($comments!= null && $likes!= null) {   
+        if ($checkComment && $checkLike) {  
             if ($comments->delete() && $likes->delete()) {
                 if ($forum->delete()) {
                     return response()->json([
@@ -286,7 +284,7 @@ class ForumController extends Controller
                     'code' => 400,
                     'message' => 'failed to delete comments and likes',
                 ],400);
-            }
+            } 
         }else{
             if ($forum->delete()) {
                 return response()->json([

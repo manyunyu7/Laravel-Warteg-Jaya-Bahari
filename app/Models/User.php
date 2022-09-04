@@ -28,7 +28,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
     protected static function booted()
     {
         static::deleted(function ($user) {
-            unlink(public_path('storage/'.$user->photo));
+            if ($user->photo) {
+                unlink(public_path('storage/').$user->photo); 
+            }
         });
     }
 

@@ -220,7 +220,7 @@ class MasjidReviewController extends Controller
     public function destroy($reviewId)
     {
         $review = MasjidReview::find($reviewId);
-        $image = MasjidReviewImage::where('restoran_review_id', $reviewId)->pluck('path')->all();
+        $image = MasjidReviewImage::where('masjid_review_id', $reviewId);
         if ($review == null) {
             return response()->json([
                 'success' => false,
@@ -228,13 +228,15 @@ class MasjidReviewController extends Controller
                 'message' => "masjid review not found"
             ],404);
         }else{
-            if ($review->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'success delete review masjid',
-                ],200);
-            } else {
+            if ($image->delete()) {
+                if ($review->delete()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'success delete review masjid',
+                    ],200);
+                }
+            }else {
                 return response()->json([
                     'success' => false,
                     'code' => 400,

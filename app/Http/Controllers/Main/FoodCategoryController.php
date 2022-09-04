@@ -185,9 +185,9 @@ class FoodCategoryController extends Controller
 
     public function destroy($categoryId)
     {
-        $foods = Food::where('category_id',$categoryId)->get();
+        $foods = Food::where('category_id',$categoryId);
 
-        if ($foods != null) {
+        if ($foods->exists()) {
             return response()->json([
                 'success' => false,
                 'code' => 400,

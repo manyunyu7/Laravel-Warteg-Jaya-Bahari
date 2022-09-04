@@ -132,7 +132,7 @@ class ForumCommentController extends Controller
 
     public function destroy($commentId)
     {
-        $comment = ForumComment::where('id', $commentId)->first();
+        $comment = ForumComment::find($commentId);
 
         if ($comment == null) {
             return response()->json([
@@ -143,9 +143,8 @@ class ForumCommentController extends Controller
         }
 
         try {
-            $commentLikes = CommentLike::where('comment_id', $comment->id)->get();
-            
-            if ($commentLikes != null) {
+            $commentLikes = CommentLike::where('comment_id', $comment->id);
+            if ($commentLikes->exists()) {
                 if ($commentLikes->delete()) {
                     if ($comment->delete()) {
                         return response()->json([
