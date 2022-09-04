@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['id','certification_id','category_id', 'name','code', 'img',];
-    protected $appends = ["img_full_path"];
+    protected $appends = ["img_full_path","product_information","certification_name","category_name"];
 
     protected static function booted()
     {
@@ -20,7 +20,25 @@ class Product extends Model
     }
 
     public function getImgFullPathAttribute(){
-        return asset("")."storage/".$this->img;
+        if (str_contains($this->img, "/uploads"))
+            return url("") . "$this->image";
+        if (str_contains($this->img, "storage")){
+            return asset("") . "/" . $this->img;
+        }else{
+            return asset("") . "storage/" . $this->img;
+        }
+    }
+
+    public function getProductInformationAttribute(){
+        return ProductInformation::where("product_id","=",$this->id)->first();
+    }
+
+    public function getCertificationNameAttribute(){
+        return Certification::findOrFail($this->certification_id)->name;
+    }
+
+    public function getCategoryNameAttribute(){
+      return ProductCategory::findOrFail($this->category_id)->name;
     }
 
     public function certification()
