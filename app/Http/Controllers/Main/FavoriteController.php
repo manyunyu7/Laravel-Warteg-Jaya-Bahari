@@ -54,7 +54,7 @@ class FavoriteController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed add favorite restoran', 
+                'message' => 'failed add favorite restoran',
                 'data' => null
             ],400);
         }
@@ -101,7 +101,7 @@ class FavoriteController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 400,
-                'message' => 'failed add favorite masjid', 
+                'message' => 'failed add favorite masjid',
                 'data' => null
             ],400);
         }
@@ -117,7 +117,7 @@ class FavoriteController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Favorite restoran not found', 
+                'message' => 'Favorite restoran not found',
                 'data' => null
             ],404);
         }
@@ -132,7 +132,7 @@ class FavoriteController extends Controller
 
     public function getMasjidFavorites()
     {
-        
+
         $user = Auth::id();
 
         $favorites = FavoriteMasjid::where('user_id', $user)->get();
@@ -141,7 +141,7 @@ class FavoriteController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'Favorite masjid not found', 
+                'message' => 'Favorite masjid not found',
                 'data' => null
             ],404);
         }
@@ -156,7 +156,10 @@ class FavoriteController extends Controller
 
     public function deleteResto($favId)
     {
-        $resto = FavoriteRestoran::find($favId);
+        $resto =   $checkFav = FavoriteRestoran::where([
+            "user_id" => Auth::id(),
+            "restorans_id" => $favId
+        ])->first();
 
         if ($resto == null) {
             return response()->json([
@@ -183,7 +186,10 @@ class FavoriteController extends Controller
 
     public function deleteMasjid($favId)
     {
-        $masjid = FavoriteMasjid::find($favId);
+        $masjid =  FavoriteMasjid::where([
+            "user_id" => Auth::id(),
+            "masjid_id" => $favId
+        ])->first();
 
         if ($masjid == null) {
             return response()->json([
