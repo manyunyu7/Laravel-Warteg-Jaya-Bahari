@@ -10,12 +10,17 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['id','certification_id','category_id', 'name','code', 'img',];
+    protected $appends = ["img_full_path"];
 
     protected static function booted()
     {
         static::deleted(function ($product) {
             unlink(public_path('storage/'.$product->img));
         });
+    }
+
+    public function getImgFullPathAttribute(){
+        return asset("")."storage/".$this->img;
     }
 
     public function certification()

@@ -16,7 +16,7 @@ class FeProductController extends Controller
     }
 
     public function getByCategory($id){
-        $datas = Product::where("category_id","=",$id)->get();
+        $datas = Product::where("category_id","=",$id)->paginate();
         return $datas;
     }
 

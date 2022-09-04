@@ -11,8 +11,14 @@ class ProductCategory extends Model
 
     public $timestamps = false;
 
+    protected $appends = ["image"];
+
     public function products()
     {
         $this->hasMany(Product::class);
+    }
+
+    public function getImageAttribute(){
+        return "http://feylabs.my.id/fm/skripsweet/cdn/product_category/$this->name.png";
     }
 }
