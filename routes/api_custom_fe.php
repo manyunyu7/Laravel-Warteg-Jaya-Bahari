@@ -57,6 +57,7 @@ Route::middleware('api')->group(function () {
             Route::prefix('products')->group(function () {
                 Route::get('category', [FeProductController::class, 'getProductCategory']);
                 Route::get('category/{id}', [FeProductController::class, 'getByCategory']);
+                Route::get('search', [FeProductController::class, 'search']);
             });
 
             Route::prefix('driver')->group(function () {

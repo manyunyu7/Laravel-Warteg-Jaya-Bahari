@@ -17,6 +17,18 @@ class FeProductController extends Controller
         return $productCategories;
     }
 
+    public function search(Request $request)
+    {
+        $name = $request->name;
+        $category = $request->category;
+
+        $obj =  Product::where([
+            ['name', 'LIKE', '%'.$name.'%'],
+            ['category_id', 'LIKE', $category],
+        ])->get();
+        return $obj;
+    }
+
     public function getByCategory(Request $request,$id){
         $perPage = $request->perPage;
         $page = $request->page;
