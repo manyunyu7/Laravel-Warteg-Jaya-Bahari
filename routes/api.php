@@ -65,7 +65,7 @@ Route::prefix('v1')->group(function (){
             Route::prefix('me')->group(function () {
                 Route::get('profile', [AuthController::class, 'userProfile']);
                 Route::post('editProfile', [AuthController::class, 'editProfile']);
-                Route::put('updateUserPassword', [AuthController::class, 'updateUserPassword']);
+                Route::post('updateUserPassword', [AuthController::class, 'updateUserPassword']);
                 Route::post('uploadPhoto', [AuthController::class, 'uploadProfilePicture']);
             });
         });

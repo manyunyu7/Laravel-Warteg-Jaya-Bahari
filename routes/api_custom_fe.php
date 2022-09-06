@@ -79,6 +79,7 @@ Route::middleware('api')->group(function () {
 
                 Route::get('certification/{id}', [FeRestoController::class, 'getBasedCertif']);
                 Route::get('{id}/reviews', [FeRestoController::class, 'getReviews']);
+                Route::get('{id}/photos', [FeRestoController::class, 'getRestoPhotos']);
 
                 Route::get('{id}/getAllOrders', [FeOrderCartController::class, 'orderByResto']);
 

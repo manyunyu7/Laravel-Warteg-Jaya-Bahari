@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserOTP;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -165,6 +166,7 @@ class AuthController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
 
         if ($request->hasFile('img')) {
             $path = public_path('storage').$request->img;
@@ -208,6 +210,15 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        if (!Hash::check($request->old_password, Auth::user()->password)) {
+            return response()->json([
+                'success' => false,
+                'code' => 400,
+                'message' => 'old password is wrong',
+                'data' => null
+            ],400);
         }
 
         $new_password = $request->new_password;
