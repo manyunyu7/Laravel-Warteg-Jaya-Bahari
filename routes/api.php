@@ -36,7 +36,7 @@ Route::fallback(function () {
         'success' => false,
         'code' => 404,
         'message' => 'Route Not Found',
-    ]);
+    ],404);
 });
 
 

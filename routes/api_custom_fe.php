@@ -65,6 +65,7 @@ Route::middleware('api')->group(function () {
             });
 
             Route::prefix('restoran')->group(function () {
+                Route::get('search', [FeRestoController::class, 'search']);
                 Route::get('me', [FeRestoController::class, 'myResto']);
                 Route::get('cert', [FeRestoController::class, 'getAllCert']);
                 Route::get('all-raw', [FeRestoController::class, 'all-raw']);

@@ -7,6 +7,7 @@ use App\Models\Certification;
 use App\Models\Food;
 use App\Models\FoodCategory;
 use App\Models\OrderStatu;
+use App\Models\Product;
 use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
@@ -18,6 +19,35 @@ use stdClass;
 
 class FeRestoController extends Controller
 {
+
+
+    public function search(Request $request)
+    {
+        $perPage = $request->perPage;
+        $page = $request->page;
+
+        $name = $request->name;
+        $category = $request->category;
+        $type_food_id = $request->type_food_id;
+        $cert = $request->certification_id;
+
+        $obj =  Restoran::where([
+            ['name', 'LIKE', '%'.$name.'%'],
+            ['type_food_id', 'LIKE', $type_food_id],
+            ['certification_id', 'LIKE', $cert],
+        ])->paginate($perPage, ['*'], 'page', $page);
+
+
+        return $obj;
+    }
+
+    public function getByCategory(Request $request,$id){
+        $perPage = $request->perPage;
+        $page = $request->page;
+        $datas = Product::where("category_id","=",$id)->paginate($perPage, ['*'], 'page', $page);
+        return $datas;
+    }
+
 
     public function getAllRaw(){
         return Restoran::all();
