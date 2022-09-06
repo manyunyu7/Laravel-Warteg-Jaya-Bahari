@@ -27,14 +27,13 @@ class FeRestoController extends Controller
         $page = $request->page;
 
         $name = $request->name;
-        $category = $request->category;
         $type_food_id = $request->type_food_id;
         $cert = $request->certification_id;
 
         $obj =  Restoran::where([
             ['name', 'LIKE', '%'.$name.'%'],
-            ['type_food_id', 'LIKE', $type_food_id],
-            ['certification_id', 'LIKE', $cert],
+            ['type_food_id', 'LIKE', '%'.$type_food_id.'%'],
+            ['certification_id', 'LIKE', '%'.$cert.'%'],
         ])->paginate($perPage, ['*'], 'page', $page);
 
 
