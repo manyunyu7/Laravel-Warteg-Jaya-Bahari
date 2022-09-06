@@ -21,10 +21,12 @@ class FeProductController extends Controller
     {
         $name = $request->name;
         $category = $request->category;
+        $code = $request->code;
 
         $obj =  Product::where([
             ['name', 'LIKE', '%'.$name.'%'],
             ['category_id', 'LIKE', $category],
+            ['code', 'LIKE', $category],
         ])->get();
         return $obj;
     }

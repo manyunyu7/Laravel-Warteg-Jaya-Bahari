@@ -315,7 +315,7 @@ class FeRestoController extends Controller
         }
 
         $arrPath = array();
-        array_push($arrPath, url(''). $resto->image);
+        array_push($arrPath, $resto->img_full_path);
         foreach($restoReview as $item)
         {
             $restoPhotos = RestoranReviewImage::where('restoran_review_id', $item->id)->get();
