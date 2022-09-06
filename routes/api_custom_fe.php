@@ -22,8 +22,10 @@ Route::middleware('api')->group(function () {
 
 
             Route::prefix('masjids')->group(function () {
+                Route::get('search', [FeMasjidController::class, 'search']);
                 Route::get('{id}/photos', [FeMasjidController::class, 'getMasjidPhoto']);
                 Route::get('{id}/reviews', [FeMasjidController::class, 'getMasjidReviews']);
+                Route::get('type', [FeMasjidController::class, 'getMasjidType']);
             });
 
             Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);

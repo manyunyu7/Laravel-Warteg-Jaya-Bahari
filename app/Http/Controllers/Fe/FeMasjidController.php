@@ -6,11 +6,38 @@ use App\Http\Controllers\Controller;
 use App\Models\Masjid;
 use App\Models\MasjidReview;
 use App\Models\MasjidReviewImage;
+use App\Models\MasjidType;
+use App\Models\Restoran;
 use Illuminate\Http\Request;
 use stdClass;
 
 class FeMasjidController extends Controller
 {
+
+    public function search(Request $request)
+    {
+        $perPage = $request->perPage;
+        $page = $request->page;
+
+        $name = $request->name;
+        $type_id = $request->type_id;
+        $cert = $request->certification_id;
+
+        if ($request->sortBy == "distance") {
+            $perPage = 9999;
+        }
+
+        $obj = Masjid::where([
+            ['name', 'LIKE', '%' . $name . '%'],
+            ['type_id', 'LIKE', '%' . $type_id . '%'],
+        ])->paginate($perPage, ['*'], 'page', $page);
+        return $obj;
+    }
+
+    public function getMasjidType()
+    {
+        return MasjidType::all();
+    }
 
     public function getMasjidPhoto($id)
     {
@@ -27,14 +54,14 @@ class FeMasjidController extends Controller
         return $arrayPhotoUrl;
     }
 
-    public function getMasjidReviews(Request $request,$masjidId)
+    public function getMasjidReviews(Request $request, $masjidId)
     {
         $page = $request->page;
         $perPage = $request->perPage;
         $object = new stdClass();
-        $masjidReviews = MasjidReview::where("masjid_id", '=', $masjidId)->paginate($perPage,['*'],'page',$page);
+        $masjidReviews = MasjidReview::where("masjid_id", '=', $masjidId)->paginate($perPage, ['*'], 'page', $page);
 
-        $AllReviews = MasjidReview::where("masjid_id",'=',$masjidId)->get();
+        $AllReviews = MasjidReview::where("masjid_id", '=', $masjidId)->get();
         $reviewCount = $this->getReviewCount($AllReviews);
         $object->reviews = $masjidReviews;
         $object->review_count = $reviewCount;
@@ -51,7 +78,7 @@ class FeMasjidController extends Controller
         $ratings4 = 0;
         $ratings5 = 0;
 
-        $avg=0;
+        $avg = 0;
 
         foreach ($datas as $data) {
             if ($data->rating_id == 1) {
@@ -72,12 +99,12 @@ class FeMasjidController extends Controller
         }
 
 
-        $totalRatings = ((1.0*$ratings1)+(2.0*$ratings2)+(3.0*$ratings3)+(4.0*$ratings4)+(5.0*$ratings5));
+        $totalRatings = ((1.0 * $ratings1) + (2.0 * $ratings2) + (3.0 * $ratings3) + (4.0 * $ratings4) + (5.0 * $ratings5));
         $ratingCounts = $datas->count();
-        $avg=0;
+        $avg = 0;
 
-        if($totalRatings!=0){
-        $avg = $totalRatings/$ratingCounts;
+        if ($totalRatings != 0) {
+            $avg = $totalRatings / $ratingCounts;
         }
 
 
