@@ -30,11 +30,16 @@ class FeRestoController extends Controller
         $type_food_id = $request->type_food_id;
         $cert = $request->certification_id;
 
+        if ($request->sortBy=="distance"){
+            $perPage = 9999;
+        }
+
         $obj =  Restoran::where([
             ['name', 'LIKE', '%'.$name.'%'],
             ['type_food_id', 'LIKE', '%'.$type_food_id.'%'],
             ['certification_id', 'LIKE', '%'.$cert.'%'],
-        ])->paginate($perPage, ['*'], 'page', $page);
+        ])->sortByDesc("id")->paginate($perPage, ['*'], 'page', $page);
+
 
 
         return $obj;
