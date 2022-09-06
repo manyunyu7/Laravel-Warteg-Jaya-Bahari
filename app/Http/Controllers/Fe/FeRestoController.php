@@ -38,7 +38,7 @@ class FeRestoController extends Controller
             ['name', 'LIKE', '%'.$name.'%'],
             ['type_food_id', 'LIKE', '%'.$type_food_id.'%'],
             ['certification_id', 'LIKE', '%'.$cert.'%'],
-        ])->sortByDesc("id")->paginate($perPage, ['*'], 'page', $page);
+        ])->paginate($perPage, ['*'], 'page', $page);
 
 
 
