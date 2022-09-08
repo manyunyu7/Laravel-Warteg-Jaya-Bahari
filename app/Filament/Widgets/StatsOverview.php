@@ -25,7 +25,7 @@ class StatsOverview extends BaseWidget
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => $uri." is not a valid URL", 
+                'message' => $uri." is not a valid URL",
                 'data' => null
             ]);
         }else{
@@ -37,6 +37,7 @@ class StatsOverview extends BaseWidget
     {
         $now = Carbon::now();
         $date = Carbon::parse($now)->format('d F y');
+        return [];
         return [
             Card::make("Asia/Seoul Fajr", $this->getPrayerTime()->timings->Fajr)
                 ->description($date)
