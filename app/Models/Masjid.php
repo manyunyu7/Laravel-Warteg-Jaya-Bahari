@@ -159,6 +159,10 @@ class Masjid extends Model
         $start = Carbon::createFromTimeString($this->operating_start);
         $end = Carbon::createFromTimeString($this->operating_end);
 
+        if($this->operating_start=="00:00" && $this->operating_end=="00:00"){
+            return true;
+        }
+
 
         if ($now->between($start, $end)) {
             return true;
