@@ -160,9 +160,13 @@ class Restoran extends Model
 
     public function getIsClaimedAttribute()
     {
-        if ($this->user()->roles_id != 1) {
-            return true;
-        } else return false;
+        $user = User::find($this->user_id);
+        if ($user != null) {
+            if ($user->roles_id != 1) {
+                return true;
+            } else return false;
+        }
+        return false;
     }
 
 
