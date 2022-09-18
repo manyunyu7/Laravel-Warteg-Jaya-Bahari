@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +45,7 @@ class Masjid extends Model
     }
 
     //start #mobreq
-    protected $appends =  ['category_name', 'allphotos', 'review_avg','review_count','img_full_path','is_favorited'];
+    protected $appends =  ['category_name', 'allphotos', 'review_avg','review_count','img_full_path','is_favorited','is_schedule_open'];
 
     public function getAllphotosAttribute()
     {
@@ -146,6 +147,26 @@ class Masjid extends Model
         $object->rating4 = $ratings4;
         $object->rating5 = $ratings5;
         return round($avg);
+    }
+
+    public function getIsScheduleOpenAttribute()
+    {
+        $now = Carbon::now();
+        $start = "";
+        $end = "";
+
+        $ops = $this->getListOperatingHoursAttribute();
+
+
+        $start = Carbon::createFromTimeString($this->operating_start);
+        $end = Carbon::createFromTimeString($this->operating_end);
+
+
+        if ($now->between($start, $end)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //end #mobreq
