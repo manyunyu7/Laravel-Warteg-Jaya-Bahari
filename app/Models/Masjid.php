@@ -155,8 +155,6 @@ class Masjid extends Model
         $start = "";
         $end = "";
 
-        $ops = $this->getListOperatingHoursAttribute();
-
 
         $start = Carbon::createFromTimeString($this->operating_start);
         $end = Carbon::createFromTimeString($this->operating_end);
