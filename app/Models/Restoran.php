@@ -12,9 +12,9 @@ class Restoran extends Model
     use HasFactory;
 
     protected $appends = ["server_time", "img_full_path",
-        "certification_name", "food_type_name","review_avg",
+        "certification_name", "food_type_name", "review_avg",
         "is_resto_schedule_open", "list_operating_hours",
-        "is_favorited"];
+        "is_favorited", "is_claimed"];
 
     public function typeFood()
     {
@@ -65,26 +65,27 @@ class Restoran extends Model
     {
         if (str_contains($this->image, "/uploads"))
             return url("") . "$this->image";
-        if (str_contains($this->image, "storage")){
+        if (str_contains($this->image, "storage")) {
             return asset("") . "/" . $this->image;
-        }else{
+        } else {
             return asset("") . "/storage/restoran/" . $this->image;
         }
     }
 
-    public function getIsFavoritedAttribute(){
-        if (Auth::check()){
+    public function getIsFavoritedAttribute()
+    {
+        if (Auth::check()) {
             $obj = FavoriteRestoran::where([
                 ['user_id', '=', Auth::id()],
                 ['restorans_id', '=', $this->id],
             ])->count();
 
-            if ($obj!=0){
+            if ($obj != 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -139,13 +140,13 @@ class Restoran extends Model
                 $ratings5 += 1;
             }
         }
-        $totalRatings = ((1.0*$ratings1)+(2.0*$ratings2)+(3.0*$ratings3)+(4.0*$ratings4)+(5.0*$ratings5));
+        $totalRatings = ((1.0 * $ratings1) + (2.0 * $ratings2) + (3.0 * $ratings3) + (4.0 * $ratings4) + (5.0 * $ratings5));
 
         $ratingCounts = $masjidReviews->count();
-        $avg=0;
+        $avg = 0;
 
-        if($totalRatings!=0){
-            $avg = $totalRatings/$ratingCounts;
+        if ($totalRatings != 0) {
+            $avg = $totalRatings / $ratingCounts;
         }
 
         $object->avg = round($avg);
@@ -155,6 +156,13 @@ class Restoran extends Model
         $object->rating4 = $ratings4;
         $object->rating5 = $ratings5;
         return round($avg);
+    }
+
+    public function getIsClaimedAttribute()
+    {
+        if ($this->user()->role !=1){
+            return true;
+        }else return false;
     }
 
 
