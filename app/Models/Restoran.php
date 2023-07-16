@@ -11,10 +11,12 @@ class Restoran extends Model
 {
     use HasFactory;
 
-    protected $appends = ["server_time", "img_full_path",
+    protected $appends = [
+        "server_time", "img_full_path",
         "certification_name", "food_type_name", "review_avg",
         "is_resto_schedule_open", "list_operating_hours",
-        "is_favorited", "is_claimed"];
+        "is_favorited", "is_claimed"
+    ];
 
     public function typeFood()
     {
@@ -160,6 +162,7 @@ class Restoran extends Model
 
     public function getIsClaimedAttribute()
     {
+        return true;
         $user = User::find($this->user_id);
         if ($user != null) {
             if ($user->roles_id != 1) {
@@ -172,6 +175,7 @@ class Restoran extends Model
 
     public function getIsRestoScheduleOpenAttribute()
     {
+        return true;
         $now = Carbon::now();
         $start = "";
         $end = "";

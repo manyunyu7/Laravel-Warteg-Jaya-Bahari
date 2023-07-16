@@ -63,7 +63,6 @@ class RestoranController extends Controller
                 ], 200);
             }
         }
-
     }
 
     public function sortByFoodType(Request $request)
@@ -128,13 +127,14 @@ class RestoranController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
-//                "name" => 'required|string|min:6|max:255',
+                //                "name" => 'required|string|min:6|max:255',
                 "type_food_id" => "required|string", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
                 "certification_id" => "required|string", Rule::in([1, 2, 3, 4]),
-//                "description" => "required|string|min:10|max:600 ",
-//                "address" => "required|string|min:10|max:600 ",
+                //                "description" => "required|string|min:10|max:600 ",
+                //                "address" => "required|string|min:10|max:600 ",
                 "phone_number" => "required|string|min:11",
                 "lat" => 'required|between:-90,90',
                 "long" => 'required|between:-180,180',
@@ -153,7 +153,8 @@ class RestoranController extends Controller
                 "image.required" => 'image cannot be empty',
                 "image.image" => "Image must be an image",
                 "is_visible.required" => "is_visible cannot be empty",
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -199,7 +200,6 @@ class RestoranController extends Controller
                 'data' => null
             ], 400);
         }
-
     }
 
     public function show($restoId)
@@ -268,13 +268,15 @@ class RestoranController extends Controller
 
     public function editImage(Request $request, $restoId)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
                 "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
             ],
             [
                 "image.image" => "Image must be an image",
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -338,15 +340,16 @@ class RestoranController extends Controller
                 'data' => null
             ], 400);
         }
-
     }
 
     public function editCertification(Request $request, $restoId)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
                 "certification_id" => "required", Rule::in([1, 2, 3, 4]),
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -385,10 +388,12 @@ class RestoranController extends Controller
 
     public function editType(Request $request, $restoId)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
                 "type_food_id" => "required", Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -427,7 +432,8 @@ class RestoranController extends Controller
 
     public function editAddress(Request $request, $restoId)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
                 "lat" => 'required|between:-90,90',
                 "long" => 'required|between:-180,180',
@@ -438,7 +444,8 @@ class RestoranController extends Controller
                 "long.required" => "longitude cannot be empty",
                 "address.required" => "address cannot be empty",
                 "address.string" => "address must be a string",
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -458,6 +465,8 @@ class RestoranController extends Controller
         $restoran->address = $request->address;
         $restoran->lat = $request->lat;
         $restoran->long = $request->long;
+        $restoran->kelurahan = $request->kelurahan;
+        $restoran->kecamatan = $request->kecamatan;
 
         if ($restoran->save()) {
             return response()->json([
@@ -478,14 +487,16 @@ class RestoranController extends Controller
 
     public function editPhoneNumber(Request $request, $restoId)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
                 "phone_number" => "required|string|min:11",
             ],
             [
                 "phone_number.required" => "phone_number cannot be empty",
                 "phone_number.string" => "phone_number must be a string",
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -523,13 +534,15 @@ class RestoranController extends Controller
 
     public function editVisibility(Request $request, $restoId)
     {
-        $validator = Validator::make($request->all(),
+        $validator = Validator::make(
+            $request->all(),
             [
                 "is_visible" => 'required|boolean'
             ],
             [
                 "is_visible.required" => "is_visible cannot be empty",
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
