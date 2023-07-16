@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\DataBangunanController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Fe\FeProductController;
 use App\Http\Controllers\Fe\FeMasjidController;
@@ -18,6 +19,13 @@ Route::middleware('api')->group(function () {
             Route::prefix('users')->group(function () {
                 Route::get('{id}/profile', [FeAuthController::class, 'getUserProfile']);
                 Route::post('{id}/reset-password', [FeAuthController::class, 'resetUserPassword']);
+            });
+
+            Route::prefix('info_bangunan')->group(function () {
+                Route::post(
+                    "update-lt-lb",
+                    [DataBangunanController::class, 'saveLuasTanah']
+                );
             });
 
 
@@ -99,8 +107,8 @@ Route::middleware('api')->group(function () {
                 });
             });
 
-            Route::prefix('foods')->group(function(){
-                Route::get('{id}/update-availability', [FeOrderCartController::class,'changeFoodAvailability']);
+            Route::prefix('foods')->group(function () {
+                Route::get('{id}/update-availability', [FeOrderCartController::class, 'changeFoodAvailability']);
             });
 
 
@@ -115,7 +123,6 @@ Route::middleware('api')->group(function () {
                     Route::post('createCart/{restoId}', [FeOrderCartController::class, 'createCart']);
                 });
             });
-
         });
     });
 });
