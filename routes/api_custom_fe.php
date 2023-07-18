@@ -30,7 +30,7 @@ Route::middleware('api')->group(function () {
                 Route::get('type', [FeMasjidController::class, 'getMasjidType']);
             });
 
-            Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
+//            Route::get('prayTime/{city}', [PrayerTimeController::class, 'getPrayTime']);
 
             Route::prefix('reviewMasjid')->group(function () {
                 Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
