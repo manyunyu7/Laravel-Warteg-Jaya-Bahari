@@ -91,7 +91,7 @@ Route::middleware('api')->group(function () {
                     );
                     Route::post(
                         "lalin-parkir",
-                        [FeRestoController::class, 'updateLtLb']
+                        [FeRestoController::class, 'updateLalinParkir']
                     );
                 });
 
