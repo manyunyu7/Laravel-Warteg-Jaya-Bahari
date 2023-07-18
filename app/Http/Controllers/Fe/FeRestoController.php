@@ -398,10 +398,13 @@ class FeRestoController extends Controller
         $jumlah_lantai = $request->input('jumlah_lantai', '');
         $bisaDimajukan = $request->input('bisa_dimajukan', '');
         $ijinDomisili = $request->input('ijin_domisili', '');
+        $peruntukanBangunan = $request->input('peruntukan_bangunan', '');
+
 
         $existingRecord->resto_id = $resto_id;
         $existingRecord->panjang_bangunan = $panjang_bangunan;
         $existingRecord->lebar_bangunan = $lebar_bangunan;
+        $existingRecord->peruntukan_bangunan = $peruntukanBangunan;
         $existingRecord->panjang_tanah = $panjang_tanah;
         $existingRecord->lebar_tanah = $lebar_tanah;
         $existingRecord->jumlah_lantai = $jumlah_lantai;
