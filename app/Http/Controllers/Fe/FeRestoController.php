@@ -429,6 +429,7 @@ class FeRestoController extends Controller
             $existingRecord = new DataBangunanResto();
         }
 
+
         $existingRecord->resto_id = $resto_id;
         $existingRecord->{'5_menit_mobil'} = $request->input('5_menit_mobil', '0');
         $existingRecord->{'5_menit_motor'} = $request->input('5_menit_motor', '0');
