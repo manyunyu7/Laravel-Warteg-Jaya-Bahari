@@ -429,15 +429,6 @@ class FeRestoController extends Controller
             $existingRecord = new DataBangunanResto();
         }
 
-
-        // Retrieve the values sent from the Android app
-        $parkirMobil = $request->input('parkir_mobil');
-        $parkirMotor = $request->input('parkir_motor');
-        $fiveMinuteMotor = $request->input('5_menit_motor');
-        $fiveMinuteMobil = $request->input('5_menit_mobil');
-        $fiveMinuteBusTruk = $request->input('5_menit_bus_truk');
-
-
         $existingRecord->resto_id = $resto_id;
         $existingRecord->{'5_menit_mobil'} = $request->input('5_menit_mobil', '0');
         $existingRecord->{'5_menit_motor'} = $request->input('5_menit_motor', '0');
@@ -447,13 +438,13 @@ class FeRestoController extends Controller
 
         if ($existingRecord->save()) {
             return response()->json([
-                'message' => 'Data saved successfully',
+                'message' => 'Data Lalin saved successfully',
                 'status' => true,
                 'data' => $existingRecord
             ]);
         } else {
             return response()->json([
-                'message' => 'Data saved successfully',
+                'message' => 'Data Lalin saved successfully',
                 'status' => false
             ]);
         }
