@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Fe;
 
+use App\Models\DataBangunanResto;
 use App\Http\Controllers\Controller;
 use App\Models\Certification;
 use App\Models\Food;
@@ -30,14 +31,14 @@ class FeRestoController extends Controller
         $type_food_id = $request->type_food_id;
         $cert = $request->certification_id;
 
-        if ($request->sortBy=="distance"){
+        if ($request->sortBy == "distance") {
             $perPage = 9999;
         }
 
         $obj =  Restoran::where([
-            ['name', 'LIKE', '%'.$name.'%'],
-            ['type_food_id', 'LIKE', '%'.$type_food_id.'%'],
-            ['certification_id', 'LIKE', '%'.$cert.'%'],
+            ['name', 'LIKE', '%' . $name . '%'],
+            ['type_food_id', 'LIKE', '%' . $type_food_id . '%'],
+            ['certification_id', 'LIKE', '%' . $cert . '%'],
         ])->paginate($perPage, ['*'], 'page', $page);
 
 
@@ -45,45 +46,52 @@ class FeRestoController extends Controller
         return $obj;
     }
 
-    public function getByCategory(Request $request,$id){
+    public function getByCategory(Request $request, $id)
+    {
         $perPage = $request->perPage;
         $page = $request->page;
-        $datas = Product::where("category_id","=",$id)->paginate($perPage, ['*'], 'page', $page);
+        $datas = Product::where("category_id", "=", $id)->paginate($perPage, ['*'], 'page', $page);
         return $datas;
     }
 
 
-    public function getAllRaw(){
+    public function getAllRaw()
+    {
         return Restoran::all();
     }
 
-    public function getAllOrderStatus(){
+    public function getAllOrderStatus()
+    {
         $obj = OrderStatu::all();
         return $obj;
     }
 
-    public function getAllFoodCategoryOnResto($id){
-        $obj = FoodCategory::where("resto_id",'=',"$id")->get();
+    public function getAllFoodCategoryOnResto($id)
+    {
+        $obj = FoodCategory::where("resto_id", '=', "$id")->get();
         return $obj;
     }
 
-    public function getAllCert(){
+    public function getAllCert()
+    {
         return Certification::all();
     }
 
-    public function myResto(){
-        $obj = Restoran::where("user_id","=",Auth::id())->get();
+    public function myResto()
+    {
+        $obj = Restoran::where("user_id", "=", Auth::id())->get();
 
         return response()->json([
             'success' => true,
             'code' => 200,
             'message' => 'success store masjid',
             'data' => $obj
-        ],200);
+        ], 200);
     }
 
-    public function getAllFoodOnResto($id){
-        $obj = Food::where("restoran_id",'=',$id)->get();
+    public function getAllFoodOnResto($id)
+    {
+        $obj = Food::where("restoran_id", '=', $id)->get();
         return $obj;
     }
 
@@ -93,12 +101,14 @@ class FeRestoController extends Controller
         return $datas;
     }
 
-    public function getFoodRestaurantByCategory($id){
-        return Food::where("category_id",'=',$id)->get();
+    public function getFoodRestaurantByCategory($id)
+    {
+        return Food::where("category_id", '=', $id)->get();
     }
-    public function updateRestoCert(Request $request,$id){
+    public function updateRestoCert(Request $request, $id)
+    {
         $resto = Restoran::findOrFail($id);
-        $resto->certification_id=$request->certification_id;
+        $resto->certification_id = $request->certification_id;
 
         if ($resto->save()) {
             return response()->json([
@@ -106,19 +116,20 @@ class FeRestoController extends Controller
                 'code' => 200,
                 'message' => 'success update data',
                 'data' => $resto
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add review restoran',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
-    public function updateRestoType(Request $request,$id){
+    public function updateRestoType(Request $request, $id)
+    {
         $resto = Restoran::findOrFail($id);
-        $resto->type_food_id=$request->type_food_id;
+        $resto->type_food_id = $request->type_food_id;
 
         if ($resto->save()) {
             return response()->json([
@@ -126,19 +137,20 @@ class FeRestoController extends Controller
                 'code' => 200,
                 'message' => 'success update data',
                 'data' => $resto
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add review restoran',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
-    public function updateAddress(Request $request,$id){
+    public function updateAddress(Request $request, $id)
+    {
         $resto = Restoran::findOrFail($id);
-        $resto->type_food_id=$request->type_food_id;
+        $resto->type_food_id = $request->type_food_id;
 
         if ($resto->save()) {
             return response()->json([
@@ -146,20 +158,21 @@ class FeRestoController extends Controller
                 'code' => 200,
                 'message' => 'success update data',
                 'data' => $resto
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add review restoran',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
-    public function updatePhone(Request $request,$id){
+    public function updatePhone(Request $request, $id)
+    {
         $resto = Restoran::findOrFail($id);
-        $resto->phone_number=$request->phone;
+        $resto->phone_number = $request->phone;
 
         if ($resto->save()) {
             return response()->json([
@@ -167,34 +180,36 @@ class FeRestoController extends Controller
                 'code' => 200,
                 'message' => 'success update data',
                 'data' => $resto
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed add review restoran',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
-    public function getFoodType(){
+    public function getFoodType()
+    {
         $datas = TypeFood::all();
         return $datas;
     }
 
-    public function getBasedCertif(Request $request,$id){
-        return Restoran::where("certification_id","=",$id)->paginate();
+    public function getBasedCertif(Request $request, $id)
+    {
+        return Restoran::where("certification_id", "=", $id)->paginate();
     }
 
-    public function getReviews(Request $request,$restoId)
+    public function getReviews(Request $request, $restoId)
     {
         $page = $request->page;
         $perPage = $request->perPage;
         $object = new \stdClass();
-        $masjidReviews = RestoranReview::where("restoran_id", '=', $restoId)->paginate($perPage,['*'],'page',$page);
+        $masjidReviews = RestoranReview::where("restoran_id", '=', $restoId)->paginate($perPage, ['*'], 'page', $page);
 
-        $AllReviews = RestoranReview::where("restoran_id",'=',$restoId)->get();
+        $AllReviews = RestoranReview::where("restoran_id", '=', $restoId)->get();
         $reviewCount = $this->getReviewCount($AllReviews);
         $object->reviews = $masjidReviews;
         $object->review_count = $reviewCount;
@@ -211,7 +226,7 @@ class FeRestoController extends Controller
         $ratings4 = 0;
         $ratings5 = 0;
 
-        $avg=0;
+        $avg = 0;
 
         foreach ($datas as $data) {
             if ($data->rating_id == 1) {
@@ -232,12 +247,12 @@ class FeRestoController extends Controller
         }
 
 
-        $totalRatings = ((1.0*$ratings1)+(2.0*$ratings2)+(3.0*$ratings3)+(4.0*$ratings4)+(5.0*$ratings5));
+        $totalRatings = ((1.0 * $ratings1) + (2.0 * $ratings2) + (3.0 * $ratings3) + (4.0 * $ratings4) + (5.0 * $ratings5));
         $ratingCounts = $datas->count();
-        $avg=0;
+        $avg = 0;
 
-        if($totalRatings!=0){
-            $avg = $totalRatings/$ratingCounts;
+        if ($totalRatings != 0) {
+            $avg = $totalRatings / $ratingCounts;
         }
 
 
@@ -252,7 +267,8 @@ class FeRestoController extends Controller
         return $object;
     }
 
-    public function storeRestaurantCategory(Request $request,$id){
+    public function storeRestaurantCategory(Request $request, $id)
+    {
         $categoryName = $request->name;
 
         $obj = new FoodCategory();
@@ -265,29 +281,31 @@ class FeRestoController extends Controller
                 'code' => 200,
                 'message' => 'success',
                 'data' => $obj
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
                 'code' => 400,
                 'message' => 'failed',
                 'data' => null
-            ],400);
+            ], 400);
         }
     }
 
-    public function getNearestRestaurant(Request $request){
+    public function getNearestRestaurant(Request $request)
+    {
         $latitude = $request->lat;
         $longitude = $request->long;
 
         $nearest = Restoran::select(DB::raw('*'))
-        // ->orderBy(DB::raw("3959 * acos( cos( radians({$latitude}) ) * cos( radians( lat ) ) * cos( radians( long ) - radians(-{$longitude}) ) + sin( radians({$latitude}) ) * sin(radians(lat)) )"), 'ASC')
-        ->get();
+            // ->orderBy(DB::raw("3959 * acos( cos( radians({$latitude}) ) * cos( radians( lat ) ) * cos( radians( long ) - radians(-{$longitude}) ) + sin( radians({$latitude}) ) * sin(radians(lat)) )"), 'ASC')
+            ->get();
 
         return $nearest;
     }
 
-    public function getDetailRestaurant($id){
+    public function getDetailRestaurant($id)
+    {
         $restoId = $id;
         $restoran = Restoran::find($id);
 
@@ -295,17 +313,17 @@ class FeRestoController extends Controller
 
         $totReview = RestoranReview::where('restoran_id', $restoId)->count();
         $rating1 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 1)->get()->count();
-        $rating2= RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
+        $rating2 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 2)->get()->count();
         $rating3 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 3)->get()->count();
         $rating4 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 4)->get()->count();
         $rating5 = RestoranReview::where('restoran_id', $restoId)->where('rating_id', 5)->get()->count();
-        $sum = ($rating1+$rating2+$rating3+$rating4+$rating5)/5;
-        $totalRatings = ((1.0*$rating1)+(2.0*$rating2)+(3.0*$rating3)+(4.0*$rating4)+(5.0*$rating5));
+        $sum = ($rating1 + $rating2 + $rating3 + $rating4 + $rating5) / 5;
+        $totalRatings = ((1.0 * $rating1) + (2.0 * $rating2) + (3.0 * $rating3) + (4.0 * $rating4) + (5.0 * $rating5));
 
         $ratingCounts = $totReview;
-        $avg=0;
-        if($totalRatings!=0){
-            $avg = $totalRatings/$ratingCounts;
+        $avg = 0;
+        if ($totalRatings != 0) {
+            $avg = $totalRatings / $ratingCounts;
         }
 
         $photos = $this->getRestoPhotos($restoId);
@@ -317,7 +335,7 @@ class FeRestoController extends Controller
                 'message' => 'restoran not found',
                 'data' => null
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => true,
                 'code' => 200,
@@ -350,16 +368,94 @@ class FeRestoController extends Controller
 
         $arrPath = array();
         array_push($arrPath, $resto->img_full_path);
-        foreach($restoReview as $item)
-        {
+        foreach ($restoReview as $item) {
             $restoPhotos = RestoranReviewImage::where('restoran_review_id', $item->id)->get();
-            foreach($restoPhotos as $img)
-            {
-                array_push($arrPath, url('').'/'. $img->path);
+            foreach ($restoPhotos as $img) {
+                array_push($arrPath, url('') . '/' . $img->path);
             }
         }
 
         return $arrPath;
     }
 
+
+    public function updateLtLb(Request $request, $id)
+    {
+        $resto_id = $id; // Provide the specific resto_id value you want to check
+        $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+        } else {
+            $existingRecord = new DataBangunanResto();
+        }
+
+        // Retrieve the request input for the specified fields
+        $panjang_bangunan = $request->input('panjang_bangunan', '0');
+        $lebar_bangunan = $request->input('lebar_bangunan', '0');
+        $panjang_tanah = $request->input('panjang_tanah', '0');
+        $lebar_tanah = $request->input('lebar_tanah', '0');
+        $jumlah_lantai = $request->input('jumlah_lantai', '0');
+
+        $existingRecord->resto_id = $resto_id;
+        $existingRecord->panjang_bangunan = $panjang_bangunan;
+        $existingRecord->lebar_bangunan = $lebar_bangunan;
+        $existingRecord->panjang_tanah = $panjang_tanah;
+        $existingRecord->lebar_tanah = $lebar_tanah;
+        $existingRecord->jumlah_lantai = $jumlah_lantai;
+
+        if ($existingRecord->save()) {
+            return response()->json([
+                'message' => 'Data saved successfully',
+                'status' => true,
+                'data' => $existingRecord
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Data saved successfully',
+                'status' => false
+            ]);
+        }
+    }
+
+    public function updateLalinParkir(Request $request, $id)
+    {
+        $resto_id = $id; // Provide the specific resto_id value you want to check
+        $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+        } else {
+            $existingRecord = new DataBangunanResto();
+        }
+
+
+        // Retrieve the values sent from the Android app
+        $parkirMobil = $request->input('parkir_mobil');
+        $parkirMotor = $request->input('parkir_motor');
+        $fiveMinuteMotor = $request->input('5_menit_motor');
+        $fiveMinuteMobil = $request->input('5_menit_mobil');
+        $fiveMinuteBusTruk = $request->input('5_menit_bus_truk');
+
+
+        $existingRecord->resto_id = $resto_id;
+        $existingRecord->{'5_menit_mobil'} = $request->input('5_menit_mobil', '0');
+        $existingRecord->{'5_menit_motor'} = $request->input('5_menit_motor', '0');
+        $existingRecord->{'5_menit_truk'} = $request->input('5_menit_bus_truk', '0');
+        $existingRecord->{'parkir_motor'} = $request->input('parkir_motor', '0');
+        $existingRecord->{'parkir_mobil'} = $request->input('parkir_mobil', '0');
+
+        if ($existingRecord->save()) {
+            return response()->json([
+                'message' => 'Data saved successfully',
+                'status' => true,
+                'data' => $existingRecord
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Data saved successfully',
+                'status' => false
+            ]);
+        }
+    }
 }

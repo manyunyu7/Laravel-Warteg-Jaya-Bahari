@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\DataBangunanController;
 use App\Http\Controllers\Main\MasjidReviewController;
 use App\Http\Controllers\Fe\FeProductController;
 use App\Http\Controllers\Fe\FeMasjidController;
@@ -10,9 +8,13 @@ use App\Http\Controllers\Fe\FeRestoController;
 use App\Http\Controllers\Fe\FeForumController;
 use App\Http\Controllers\Fe\FeOrderCartController;
 use App\Http\Controllers\Fe\FeAuthController;
-
+use App\Http\Controllers\SurveyorController;
 
 Route::middleware('api')->group(function () {
+
+    Route::get('salaam', [SurveyorController::class, 'testing']);
+
+
     Route::prefix('v1')->group(function () {
 
         Route::prefix("fe")->group(function () {
@@ -20,14 +22,6 @@ Route::middleware('api')->group(function () {
                 Route::get('{id}/profile', [FeAuthController::class, 'getUserProfile']);
                 Route::post('{id}/reset-password', [FeAuthController::class, 'resetUserPassword']);
             });
-
-            Route::prefix('info_bangunan')->group(function () {
-                Route::post(
-                    "update-lt-lb",
-                    [DataBangunanController::class, 'saveLuasTanah']
-                );
-            });
-
 
             Route::prefix('masjids')->group(function () {
                 Route::get('search', [FeMasjidController::class, 'search']);
@@ -42,14 +36,6 @@ Route::middleware('api')->group(function () {
                 Route::post('store/{masjidId}', [MasjidReviewController::class, 'store']);
             });
 
-            Route::prefix('keyword')->group(function () {
-                Route::post('store', [KeywordController::class, 'store']);
-                Route::get('all', [KeywordController::class, 'index']);
-                Route::get('detail/{keywordId}', [KeywordController::class, 'show']);
-                Route::put('update/{keywordId}', [KeywordController::class, 'update']);
-                Route::delete('delete/{keywordId}', [KeywordController::class, 'destroy']);
-            });
-
             Route::prefix('forums')->group(function () {
                 Route::get('category', [FeForumController::class, 'getForumCategory']);
                 Route::get('all-paginate', [FeForumController::class, 'getForumPaginate']);
@@ -57,7 +43,6 @@ Route::middleware('api')->group(function () {
                 Route::post('unlike/{forumId}', [FeForumController::class, 'unlikeForum']);
                 Route::get('comment/{forumId}', [FeForumController::class, 'getComment']);
             });
-
 
             Route::prefix('comments')->group(function () {
                 Route::post('like/{commentId}', [FeForumController::class, 'likeComment']);
@@ -100,6 +85,14 @@ Route::middleware('api')->group(function () {
                     Route::post('resto-type', [FeRestoController::class, 'updateRestoType']);
                     Route::post('address', [FeRestoController::class, 'updateAddress']);
                     Route::post('phone', [FeRestoController::class, 'updatePhone']);
+                    Route::post(
+                        "lt-lb",
+                        [FeRestoController::class, 'updateLtLb']
+                    );
+                    Route::post(
+                        "lalin-parkir",
+                        [FeRestoController::class, 'updateLtLb']
+                    );
                 });
 
                 Route::prefix('reviewResto')->group(function () {

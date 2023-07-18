@@ -12,7 +12,7 @@ class Restoran extends Model
     use HasFactory;
 
     protected $appends = [
-        "server_time", "img_full_path",
+        "server_time", "img_full_path", "data_bangunan",
         "certification_name", "food_type_name", "review_avg",
         "is_resto_schedule_open", "list_operating_hours",
         "is_favorited", "is_claimed"
@@ -195,5 +195,10 @@ class Restoran extends Model
         } else {
             return false;
         }
+    }
+
+    public function getDataBangunanAttribute()
+    {
+        return DataBangunanResto::where('resto_id', '=', $this->id)->first();
     }
 }
