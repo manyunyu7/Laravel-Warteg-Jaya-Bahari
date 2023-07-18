@@ -432,7 +432,7 @@ class FeRestoController extends Controller
         $existingRecord->resto_id = $resto_id;
         $existingRecord->{'5_menit_mobil'} = $request->input('5_menit_mobil', '0');
         $existingRecord->{'5_menit_motor'} = $request->input('5_menit_motor', '0');
-        $existingRecord->{'5_menit_truk'} = $request->input('5_menit_bus_truk', '0');
+        $existingRecord->{'5_menit_truk'} = $request->input('5_menit_truk', '0');
         $existingRecord->{'parkir_motor'} = $request->input('parkir_motor', '0');
         $existingRecord->{'parkir_mobil'} = $request->input('parkir_mobil', '0');
 
