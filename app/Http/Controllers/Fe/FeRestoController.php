@@ -436,6 +436,7 @@ class FeRestoController extends Controller
         $existingRecord->{'5_menit_truk'} = $request->input('5_menit_truk', '0');
         $existingRecord->{'parkir_motor'} = $request->input('parkir_motor', '0');
         $existingRecord->{'parkir_mobil'} = $request->input('parkir_mobil', '0');
+        $existingRecord->{'jenis_jalan'} = $request->input('jenis_jalan', '0');
 
         if ($existingRecord->save()) {
             return response()->json([
