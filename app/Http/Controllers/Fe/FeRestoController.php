@@ -391,11 +391,13 @@ class FeRestoController extends Controller
         }
 
         // Retrieve the request input for the specified fields
-        $panjang_bangunan = $request->input('panjang_bangunan', '0');
-        $lebar_bangunan = $request->input('lebar_bangunan', '0');
-        $panjang_tanah = $request->input('panjang_tanah', '0');
-        $lebar_tanah = $request->input('lebar_tanah', '0');
-        $jumlah_lantai = $request->input('jumlah_lantai', '0');
+        $panjang_bangunan = $request->input('panjang_bangunan', '');
+        $lebar_bangunan = $request->input('lebar_bangunan', '');
+        $panjang_tanah = $request->input('panjang_tanah', '');
+        $lebar_tanah = $request->input('lebar_tanah', '');
+        $jumlah_lantai = $request->input('jumlah_lantai', '');
+        $bisaDimajukan = $request->input('bisa_dimajukan', '');
+        $ijinDomisili = $request->input('ijin_domisili', '');
 
         $existingRecord->resto_id = $resto_id;
         $existingRecord->panjang_bangunan = $panjang_bangunan;
@@ -403,6 +405,8 @@ class FeRestoController extends Controller
         $existingRecord->panjang_tanah = $panjang_tanah;
         $existingRecord->lebar_tanah = $lebar_tanah;
         $existingRecord->jumlah_lantai = $jumlah_lantai;
+        $existingRecord->ijin_domisili = $ijinDomisili;
+        $existingRecord->bisa_dimajukan = $bisaDimajukan;
 
         if ($existingRecord->save()) {
             return response()->json([
