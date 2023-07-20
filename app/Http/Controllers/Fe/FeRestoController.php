@@ -506,6 +506,8 @@ class FeRestoController extends Controller
         $existingRecord->{'nama_pemilik_sertifikat'} = $request->input('nama_pemilik_sertifikat', '0');
         $existingRecord->{'jenis_sertifikat'} = $request->input('jenis_sertifikat', '');
         $existingRecord->{'jenis_pemilik_sertifikat'} = $request->input('jenis_pemilik_sertifikat', '');
+        $existingRecord->{'is_sewa'} = $request->input('is_sewa', '');
+        $existingRecord->{'harga_sewa'} = $request->input('harga_sewa', '');
 
         if ($existingRecord->save()) {
             return response()->json([
