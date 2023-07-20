@@ -35,12 +35,11 @@ class FeRestoController extends Controller
             $perPage = 9999;
         }
 
-        $obj =  Restoran::where([
+        $obj = Restoran::where([
             ['name', 'LIKE', '%' . $name . '%'],
             ['type_food_id', 'LIKE', '%' . $type_food_id . '%'],
             ['certification_id', 'LIKE', '%' . $cert . '%'],
         ])->paginate($perPage, ['*'], 'page', $page);
-
 
 
         return $obj;
@@ -105,6 +104,7 @@ class FeRestoController extends Controller
     {
         return Food::where("category_id", '=', $id)->get();
     }
+
     public function updateRestoCert(Request $request, $id)
     {
         $resto = Restoran::findOrFail($id);
@@ -126,6 +126,7 @@ class FeRestoController extends Controller
             ], 400);
         }
     }
+
     public function updateRestoType(Request $request, $id)
     {
         $resto = Restoran::findOrFail($id);
@@ -147,6 +148,7 @@ class FeRestoController extends Controller
             ], 400);
         }
     }
+
     public function updateAddress(Request $request, $id)
     {
         $resto = Restoran::findOrFail($id);
@@ -536,22 +538,25 @@ class FeRestoController extends Controller
         }
 
         $existingRecord->resto_id = $resto_id;
-        $existingRecord->{'is_sekolah_100_exist'} = $request->input('nama_pemilik_sertifikat', '');
-        $existingRecord->{'jenis_sertifikat'} = $request->input('jenis_sertifikat', '');
-        $existingRecord->{'jenis_pemilik_sertifikat'} = $request->input('jenis_pemilik_sertifikat', '');
-        $existingRecord->{'is_sewa'} = $request->input('is_sewa', '');
-        $existingRecord->{'harga_sewa'} = $request->input('harga_sewa', '');
-        $existingRecord->{'masa_berlaku_sertifikat'} = $request->input('masa_berlaku_sertifikat', '');
+        $existingRecord->{'is_alfamart_100_exist'} = $request->input('is_alfamart_100_exist', '');
+        $existingRecord->{'is_indomaret_100_exist'} = $request->input('is_indomaret_100_exist', '');
+        $existingRecord->{'is_spbu_100_exist'} = $request->input('is_spbu_100_exist', '');
+        $existingRecord->{'is_univ_100_exist'} = $request->input('is_univ_100_exist', '');
+        $existingRecord->{'is_counter_usaha_lain_100_exist'} = $request->input('is_counter_usaha_lain_100_exist', '');
+        $existingRecord->{'is_masjid_100_exist'} = $request->input('is_masjid_100_exist', '');
+        $existingRecord->{'is_gereja_100_exist'} = $request->input('is_gereja_100_exist', '');
+        $existingRecord->{'is_sekolah_100_exist'} = $request->input('is_sekolah_100_exist', '');
+        $existingRecord->{'is_bengkel_100_exist'} = $request->input('is_bengkel_100_exist', '');
 
         if ($existingRecord->save()) {
             return response()->json([
-                'message' => 'Data Legal saved successfully',
+                'message' => 'Data Lingkungan saved successfully',
                 'status' => true,
                 'data' => $existingRecord
             ]);
         } else {
             return response()->json([
-                'message' => 'Data Legal saved error',
+                'message' => 'Data Lingkungan saved error',
                 'status' => false
             ]);
         }

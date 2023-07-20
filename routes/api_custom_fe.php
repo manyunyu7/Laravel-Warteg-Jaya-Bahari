@@ -103,7 +103,7 @@ Route::middleware('api')->group(function () {
                     );
                     Route::post(
                         "info-lingkungan",
-                        [FeRestoController::class, 'updateListrikAir']
+                        [FeRestoController::class, 'updateLingkungan']
                     );
                 });
 
