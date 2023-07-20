@@ -93,6 +93,10 @@ Route::middleware('api')->group(function () {
                         "lalin-parkir",
                         [FeRestoController::class, 'updateLalinParkir']
                     );
+                    Route::post(
+                        "listrik-air",
+                        [FeRestoController::class, 'updateListrikAir']
+                    );
                 });
 
                 Route::prefix('reviewResto')->group(function () {
