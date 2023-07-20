@@ -97,6 +97,10 @@ Route::middleware('api')->group(function () {
                         "listrik-air",
                         [FeRestoController::class, 'updateListrikAir']
                     );
+                    Route::post(
+                        "legal",
+                        [FeRestoController::class, 'updateLegal']
+                    );
                 });
 
                 Route::prefix('reviewResto')->group(function () {

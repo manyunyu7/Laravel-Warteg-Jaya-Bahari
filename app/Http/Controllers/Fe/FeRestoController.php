@@ -490,4 +490,35 @@ class FeRestoController extends Controller
             ]);
         }
     }
+
+    public function updateLegal(Request $request, $id)
+    {
+        $resto_id = $id; // Provide the specific resto_id value you want to check
+        $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+        } else {
+            $existingRecord = new DataBangunanResto();
+        }
+
+        $existingRecord->resto_id = $resto_id;
+        $existingRecord->{'nama_pemilik_sertifikat'} = $request->input('nama_pemilik_sertifikat', '0');
+        $existingRecord->{'jenis_sertifikat'} = $request->input('jenis_sertifikat', '');
+        $existingRecord->{'jenis_pemilik_sertifikat'} = $request->input('jenis_pemilik_sertifikat', '');
+
+        if ($existingRecord->save()) {
+            return response()->json([
+                'message' => 'Data Legal Air saved successfully',
+                'status' => true,
+                'data' => $existingRecord
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Data Legal Air saved error',
+                'status' => false
+            ]);
+        }
+    }
+
 }
