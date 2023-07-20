@@ -13,7 +13,15 @@ class AddLocationLegendOnDataBangunanRestos extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('data_bangunan_restos', function (Blueprint $table) {
+            $table->string('is_alfamart_100_exist')->nullable();
+            $table->string('is_indomaret_100_exist')->nullable();
+            $table->string('is_spbu_100_exist')->nullable();
+            $table->string('is_univ_100_exist')->nullable();
+            $table->string('is_counter_usaha_lain_100_exist')->nullable();
+            $table->string('is_masjid_100_exist')->nullable();
+            $table->string('is_gereja_100_exist')->nullable();
+        });
     }
 
     /**
@@ -23,6 +31,15 @@ class AddLocationLegendOnDataBangunanRestos extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('data_bangunan_restos', function (Blueprint $table) {
+            $table->dropColumn('is_alfamart_100_exist');
+            $table->dropColumn('is_indomaret_100_exist');
+            $table->dropColumn('is_spbu_100_exist');
+            $table->dropColumn('is_univ_100_exist');
+            $table->dropColumn('is_counter_usaha_lain_100_exist');
+            $table->dropColumn('is_masjid_100_exist');
+            $table->dropColumn('resto_id');
+            $table->dropColumn('is_gereja_100_exist');
+        });
     }
 }
