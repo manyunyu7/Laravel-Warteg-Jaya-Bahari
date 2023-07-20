@@ -90,16 +90,16 @@ Route::middleware('api')->group(function () {
                         [FeRestoController::class, 'updateLtLb']
                     );
                     Route::post(
+                        "legal",
+                        [FeRestoController::class, 'updateLegal']
+                    );
+                    Route::post(
                         "lalin-parkir",
                         [FeRestoController::class, 'updateLalinParkir']
                     );
                     Route::post(
                         "listrik-air",
                         [FeRestoController::class, 'updateListrikAir']
-                    );
-                    Route::post(
-                        "legal",
-                        [FeRestoController::class, 'updateLegal']
                     );
                 });
 

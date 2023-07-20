@@ -509,13 +509,13 @@ class FeRestoController extends Controller
 
         if ($existingRecord->save()) {
             return response()->json([
-                'message' => 'Data Legal Air saved successfully',
+                'message' => 'Data Legal saved successfully',
                 'status' => true,
                 'data' => $existingRecord
             ]);
         } else {
             return response()->json([
-                'message' => 'Data Legal Air saved error',
+                'message' => 'Data Legal saved error',
                 'status' => false
             ]);
         }
