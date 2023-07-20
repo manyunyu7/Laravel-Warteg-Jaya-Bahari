@@ -458,4 +458,35 @@ class FeRestoController extends Controller
             ]);
         }
     }
+
+
+    public function updateListrikAir(Request $request, $id)
+    {
+        $resto_id = $id; // Provide the specific resto_id value you want to check
+        $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+        } else {
+            $existingRecord = new DataBangunanResto();
+        }
+
+        $existingRecord->resto_id = $resto_id;
+        $existingRecord->{'fasilitas_listrik_watt'} = $request->input('fasilitas_listrik_watt', '0');
+        $existingRecord->{'fasilitas_air'} = $request->input('fasilitas_air', '');
+        $existingRecord->{'saluran_air'} = $request->input('saluran_air', '');
+
+        if ($existingRecord->save()) {
+            return response()->json([
+                'message' => 'Data Listrik Air saved successfully',
+                'status' => true,
+                'data' => $existingRecord
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Data Listrik Air saved error',
+                'status' => false
+            ]);
+        }
+    }
 }
