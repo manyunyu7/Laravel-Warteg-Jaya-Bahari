@@ -493,7 +493,7 @@ class FeRestoController extends Controller
 
     public function updateLegal(Request $request, $id)
     {
-        $resto_id = $id; // Provide the specific resto_id value you want to check
+        $resto_id = $id;
         $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
 
         if ($existingRecord) {
