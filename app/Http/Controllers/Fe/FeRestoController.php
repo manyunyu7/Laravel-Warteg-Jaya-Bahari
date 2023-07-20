@@ -503,7 +503,7 @@ class FeRestoController extends Controller
         }
 
         $existingRecord->resto_id = $resto_id;
-        $existingRecord->{'nama_pemilik_sertifikat'} = $request->input('nama_pemilik_sertifikat', '0');
+        $existingRecord->{'nama_pemilik_sertifikat'} = $request->input('nama_pemilik_sertifikat', '');
         $existingRecord->{'jenis_sertifikat'} = $request->input('jenis_sertifikat', '');
         $existingRecord->{'jenis_pemilik_sertifikat'} = $request->input('jenis_pemilik_sertifikat', '');
         $existingRecord->{'is_sewa'} = $request->input('is_sewa', '');
