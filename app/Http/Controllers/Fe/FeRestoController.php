@@ -524,4 +524,37 @@ class FeRestoController extends Controller
         }
     }
 
+    public function updateLingkungan(Request $request, $id)
+    {
+        $resto_id = $id;
+        $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+        } else {
+            $existingRecord = new DataBangunanResto();
+        }
+
+        $existingRecord->resto_id = $resto_id;
+        $existingRecord->{'nama_pemilik_sertifikat'} = $request->input('nama_pemilik_sertifikat', '');
+        $existingRecord->{'jenis_sertifikat'} = $request->input('jenis_sertifikat', '');
+        $existingRecord->{'jenis_pemilik_sertifikat'} = $request->input('jenis_pemilik_sertifikat', '');
+        $existingRecord->{'is_sewa'} = $request->input('is_sewa', '');
+        $existingRecord->{'harga_sewa'} = $request->input('harga_sewa', '');
+        $existingRecord->{'masa_berlaku_sertifikat'} = $request->input('masa_berlaku_sertifikat', '');
+
+        if ($existingRecord->save()) {
+            return response()->json([
+                'message' => 'Data Legal saved successfully',
+                'status' => true,
+                'data' => $existingRecord
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Data Legal saved error',
+                'status' => false
+            ]);
+        }
+    }
+
 }
