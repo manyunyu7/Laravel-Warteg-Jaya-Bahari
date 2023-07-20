@@ -69,10 +69,9 @@ class RestoranReviewController extends Controller
             if ($image != null) {
                 foreach ($image as $img)
                 {
-                    $path = 'uploads/img/resto_reviews/';
                     $name = Auth::user()->name.'_'.uniqid().'.'.$img->getClientOriginalExtension();
-                    if ($img->move($path,$name)) {
-                        $files[] = $path.$name;
+                    if ($img->move(public_path('storage'), $name)) {
+                        $files[] = $name;
                     }
                 }
             }
@@ -133,12 +132,6 @@ class RestoranReviewController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($restoId, Request $request)
     {
         $page = $request->page;
@@ -202,7 +195,7 @@ class RestoranReviewController extends Controller
     public function destroy($reviewId)
     {
         $review = RestoranReview::find($reviewId);
-        $image = RestoranReviewImage::where('restoran_review_id', $reviewId)->pluck('path')->all();
+        $reviewImage = RestoranReviewImage::where('restoran_review_id', $reviewId);
         if ($review == null) {
             return response()->json([
                 'success' => false,
@@ -210,36 +203,31 @@ class RestoranReviewController extends Controller
                 'message' => "restoran review not found"
             ],404);
         }else{
-            // if ($image != null) {
-            //     foreach ($image as $img) {
-            //         $path = $img;
-            //         if (file_exists($path)) {
-            //             try {
-            //                 unlink($path);
-            //                 RestoranReviewImage::where('path', $img)->delete();
-            //             } catch (\Throwable $th) {
-            //                 return response()->json([
-            //                     'success' => false,
-            //                     'code' => 400,
-            //                     'message' => $th->getMessage(),
-            //                 ],400);
-            //             }
-            //         }
-            //     }
-            // }
-
-            if ($review->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'success delete review restoran',
-                ],200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => 'failed delete review restoran',
-                ],400);
+            if ($reviewImage->exists()) {
+                try {
+                    $reviewImage->delete();
+                    if ($review->delete()) {
+                        return response()->json([
+                            'success' => true,
+                            'code' => 200,
+                            'message' => 'success delete review restoran',
+                        ],200);
+                    }
+                } catch (\Throwable $th) {
+                    return response()->json([
+                        'success' => false,
+                        'code' => 400,
+                        'message' => $th->getMessage(),
+                    ],400);
+                }
+            }else{
+                if ($review->delete()) {
+                    return response()->json([
+                        'success' => true,
+                        'code' => 200,
+                        'message' => 'success delete review restoran',
+                    ],200);
+                }
             }
         }
     }

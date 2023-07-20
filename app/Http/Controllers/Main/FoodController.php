@@ -115,7 +115,11 @@ class FoodController extends Controller
 
     public function getFood($restoId, $categoryId)
     {
-        $foods = Food::where('restoran_id', $restoId)->where('category_id', $categoryId)->get();
+        $foods = Food::where([
+            'restoran_id' => $restoId,
+            'category_id' => $categoryId
+        ])->get();
+
         if ($foods == null) {
             return response()->json([
                 'success' => false,

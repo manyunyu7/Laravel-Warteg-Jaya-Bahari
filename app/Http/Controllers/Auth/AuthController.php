@@ -51,7 +51,7 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'password do not match',
                 'data' => null
-            ]);
+            ],400);
         }
 
         $data = User::create([
@@ -68,14 +68,14 @@ class AuthController extends Controller
                 'code' => 400,
                 'message' => 'Failed registered user',
                 'data' => null
-            ]);
+            ],400);
         }else{
             return response()->json([
                 'success' => true,
                 'code' => 200,
                 'message' => 'Success registered user',
                 'data' => $data
-            ]);
+            ],200);
         }
     }
 
@@ -267,7 +267,7 @@ class AuthController extends Controller
         $file = $request->file('img');
         $ekstension = $file->getClientOriginalExtension();
         $name = time() .'_'.$userName.'.'.$ekstension;
-        $request->img->move(public_path('uploads/img/users'), $name);
+        $request->img->move(public_path('storage'), $name);
         $user = auth()->user();
         $user->photo = $name;
 
