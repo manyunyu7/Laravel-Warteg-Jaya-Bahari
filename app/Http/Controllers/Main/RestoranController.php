@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Main;
 
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use App\Models\Restoran;
 use App\Models\RestoranReview;
@@ -266,15 +267,16 @@ class RestoranController extends Controller
         }
     }
 
-    public function editImage(Request $request, $restoId)
+    public function editMain(Request $request, $id)
     {
         $validator = Validator::make(
             $request->all(),
             [
-                "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048',
+                "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048|required'
             ],
             [
-                "image.image" => "Image must be an image",
+                "image.required" => 'Image cannot be empty',
+                "image.image" => "Invalid image format",
             ]
         );
 
@@ -282,66 +284,48 @@ class RestoranController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $restoran = Restoran::find($restoId);
+        $restaurant = Restoran::find($id);
 
-        if ($restoran == null) {
+        if (!$restaurant) {
             return response()->json([
                 'success' => false,
                 'code' => 404,
-                'message' => 'restoran not found',
+                'message' => 'Restaurant not found',
                 'data' => null
             ], 404);
         }
 
-        if ($request->hasFile('image')) {
+        // Delete the existing image file if it exists (optional, based on your requirements)
+        if (!empty($restaurant->image) && File::exists(public_path($restaurant->image))) {
+            File::delete(public_path($restaurant->image));
+        }
 
-            if (file_exists($path)) {
-                try {
-                    unlink($path);
-                } catch (Exception $e) {
-                    return response()->json([
-                        'success' => false,
-                        'code' => 400,
-                        'message' => $e->getMessage(),
-                    ], 400);
-                }
-            }
+        $file = $request->file('image');
+        $extension = $file->getClientOriginalExtension();
 
-            $img = $request->file('image');
-            $path_string = "storage/restoran";
-            $path = public_path($path_string);
-            $ekstension = $img->getClientOriginalExtension();
-            $name = 'restoran' . '_' . time() . '_' . $restoran->name . '.' . $ekstension;
-            $request->image->move($path, $name);
+        $path_string = "storage/restoran";
+        $path = public_path($path_string);
+        $name = 'restoran' . '_' . time() . '_' . $restaurant->name . '.' . $extension;
+        $file->move($path, $name);
 
-            $restoran->image = $path_string . "/" . $name;
-
-
-            if ($restoran->save()) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 200,
-                    'message' => 'success update restoran data',
-                    'data' => $restoran
-                ], 200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'code' => 400,
-                    'message' => 'failed update restoran data',
-                    'data' => null
-                ], 400);
-            }
+        $restaurant->image = $path_string . "/" . $name;
+        $restaurant->name = $request->name;
+        if ($restaurant->save()) {
+            return response()->json([
+                'success' => true,
+                'code' => 200,
+                'message' => 'Restaurant image updated successfully',
+                'data' => $restaurant
+            ], 200);
         } else {
             return response()->json([
                 'success' => false,
-                'code' => 400,
-                'message' => 'No file to upload',
+                'code' => 500,
+                'message' => 'Failed to update restaurant image',
                 'data' => null
-            ], 400);
+            ], 500);
         }
     }
-
     public function editCertification(Request $request, $restoId)
     {
         $validator = Validator::make(

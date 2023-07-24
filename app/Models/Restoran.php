@@ -65,12 +65,12 @@ class Restoran extends Model
 
     public function getImgFullPathAttribute()
     {
-        if (str_contains($this->image, "/uploads"))
-            return url("") . "$this->image";
-        if (str_contains($this->image, "storage")) {
-            return asset("") . "/" . $this->image;
+        if (str_contains($this->image, "/uploads")) {
+            return url($this->image);
+        } elseif (str_contains($this->image, "storage")) {
+            return asset($this->image);
         } else {
-            return asset("") . "/storage/restoran/" . $this->image;
+            return asset("storage/restoran/" . $this->image);
         }
     }
 
