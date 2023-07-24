@@ -15,7 +15,7 @@ class Restoran extends Model
         "server_time", "img_full_path", "data_bangunan",
         "certification_name", "food_type_name", "review_avg",
         "is_resto_schedule_open", "list_operating_hours",
-        "is_favorited", "is_claimed","owner"
+        "is_favorited", "is_claimed","owner","owner_name"
     ];
 
     public function typeFood()
@@ -205,5 +205,15 @@ class Restoran extends Model
     public function getOwnerAttribute()
     {
         return User::where('id', '=', $this->user_id)->first();
+    }
+
+    public function getOwnerNameAttribute()
+    {
+        $user = User::where('id', '=', $this->user_id)->first();
+        if($user!=null){
+            return $user->name;
+        }else{
+            return "";
+        }
     }
 }
