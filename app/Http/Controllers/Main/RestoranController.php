@@ -269,7 +269,6 @@ class RestoranController extends Controller
 
     public function editMain(Request $request, $id)
     {
-        return $request->all();
 
         $restaurant = Restoran::find($id);
 
