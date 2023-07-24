@@ -295,24 +295,28 @@ class RestoranController extends Controller
             ], 404);
         }
 
-        // Delete the existing image file if it exists (optional, based on your requirements)
-        if (!empty($restaurant->image) && File::exists(public_path($restaurant->image))) {
-            File::delete(public_path($restaurant->image));
+        if ($request->hasFile('image')) {
+            // Delete the existing image file if it exists (optional, based on your requirements)
+            if (!empty($restaurant->image) && File::exists(public_path($restaurant->image))) {
+                File::delete(public_path($restaurant->image));
+            }
+
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+
+            $path_string = "storage/restoran";
+            $path = public_path($path_string);
+            $name = 'restoran' . '_' . time() . '_' . $restaurant->name . '.' . $extension;
+            $file->move($path, $name);
+
+            $restaurant->image = $path_string . "/" . $name;
         }
 
-        $file = $request->file('image');
-        $extension = $file->getClientOriginalExtension();
-
-        $path_string = "storage/restoran";
-        $path = public_path($path_string);
-        $name = 'restoran' . '_' . time() . '_' . $restaurant->name . '.' . $extension;
-        $file->move($path, $name);
-
-        $restaurant->image = $path_string . "/" . $name;
         $restaurant->name = $request->name;
         if ($restaurant->save()) {
             return response()->json([
                 'success' => true,
+                'status' => true,
                 'code' => 200,
                 'message' => 'Restaurant image updated successfully',
                 'data' => $restaurant
@@ -320,12 +324,14 @@ class RestoranController extends Controller
         } else {
             return response()->json([
                 'success' => false,
+                'status' => false,
                 'code' => 500,
                 'message' => 'Failed to update restaurant image',
                 'data' => null
             ], 500);
         }
     }
+
     public function editCertification(Request $request, $restoId)
     {
         $validator = Validator::make(
