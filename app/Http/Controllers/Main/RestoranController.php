@@ -269,20 +269,7 @@ class RestoranController extends Controller
 
     public function editMain(Request $request, $id)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                "image" => 'mimes:jpeg,png,jpg,gif,svg|max:12048|required'
-            ],
-            [
-                "image.required" => 'Image cannot be empty',
-                "image.image" => "Invalid image format",
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+        return $request->all();
 
         $restaurant = Restoran::find($id);
 
