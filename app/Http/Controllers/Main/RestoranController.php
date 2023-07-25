@@ -157,9 +157,10 @@ class RestoranController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+//        if ($validator->fails()) {
+//            return response()->json($validator->errors()->toJson(), 400);
+//        }
+
         $status = $request->is_visible;
         $restoran = new Restoran();
         $restoran->name = $request->name;
