@@ -13,6 +13,7 @@ use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -113,6 +114,10 @@ class FeRestoController extends Controller
     public function myResto()
     {
         $obj = Restoran::where("user_id", "=", Auth::id())->get();
+
+        if(Auth::user()->role=="5"){
+            $obj = Restoran::all();
+        }
 
         return response()->json([
             'success' => true,
