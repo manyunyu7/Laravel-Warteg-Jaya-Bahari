@@ -318,6 +318,7 @@ class RestoranController extends Controller
         }
     }
 
+
     public function editCertification(Request $request, $restoId)
     {
         $validator = Validator::make(
