@@ -115,7 +115,7 @@ class FeRestoController extends Controller
     {
         $obj = Restoran::where("user_id", "=", Auth::id())->get();
 
-        if(Auth::user()->role=="5"){
+        if(Auth::user()->roles_id=="5"){
             $obj = Restoran::all();
         }
 
