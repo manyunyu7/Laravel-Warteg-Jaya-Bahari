@@ -163,15 +163,15 @@ class RestoranController extends Controller
 
         $status = $request->is_visible;
         $restoran = new Restoran();
-        $restoran->name = $request->name;
-        $restoran->user_id = Auth::id();
-        $restoran->type_food_id = $request->type_food_id;
-        $restoran->certification_id = $request->certification_id;
-        $restoran->description = $request->description;
-        $restoran->address = $request->address;
-        $restoran->phone_number = $request->phone_number;
-        $restoran->lat = $request->lat;
-        $restoran->long = $request->long;
+        $restoran->name = $request->name ?? "";
+        $restoran->user_id = Auth::id() ?? "";
+        $restoran->type_food_id = $request->type_food_id ?? "";
+        $restoran->certification_id = $request->certification_id ?? "";
+        $restoran->description = $request->description ?? "";
+        $restoran->address = $request->address ?? "";
+        $restoran->phone_number = $request->phone_number ?? "";
+        $restoran->lat = $request->lat ?? "";
+        $restoran->long = $request->long ?? "";
 
 
         $file = $request->file('image');
