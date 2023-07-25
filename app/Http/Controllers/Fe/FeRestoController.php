@@ -249,7 +249,12 @@ class FeRestoController extends Controller
         $perPage = $request->perPage;
         $object = new \stdClass();
         $masjidReviews = RestoranReview::where("restoran_id", '=', $restoId)->paginate($perPage, ['*'], 'page', $page);
-
+        if (Auth::user()->roles_id != 5) {
+            // If the roles_id of the authenticated user is NOT equal to 5
+            $masjidReviews = RestoranReview::where('restoran_id', '=', $restoId)
+                ->where('comment', '!=', '-')
+                ->paginate($perPage, ['*'], 'page', $page);
+        }
         $AllReviews = RestoranReview::where("restoran_id", '=', $restoId)->get();
         $reviewCount = $this->getReviewCount($AllReviews);
         $object->reviews = $masjidReviews;
