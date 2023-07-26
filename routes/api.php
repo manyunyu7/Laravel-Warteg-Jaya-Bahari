@@ -131,7 +131,7 @@ Route::prefix('v1')->group(function () {
         Route::get('myResto', [RestoranController::class, 'getRestoByOwner']);
         Route::post('store', [RestoranController::class, 'store']);
         Route::get('myDetailResto/{restoran}', [RestoranController::class, 'getRestoDetailByOwner']);
-        Route::post('editImage/{restoId}', [RestoranController::class, 'editImage']);
+        Route::post('editMain/{restoId}', [RestoranController::class, 'editMain']);
         Route::put('editCertification/{restoId}', [RestoranController::class, 'editCertification']);
         Route::put('editType/{restoId}', [RestoranController::class, 'editType']);
         Route::post('editAddress/{restoId}', [RestoranController::class, 'editAddress']);

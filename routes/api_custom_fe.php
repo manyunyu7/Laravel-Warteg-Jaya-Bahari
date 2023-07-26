@@ -83,6 +83,7 @@ Route::middleware('api')->group(function () {
                 Route::prefix("{id}/update")->group(function () {
                     Route::post('cert', [FeRestoController::class, 'updateRestoCert']);
                     Route::post('resto-type', [FeRestoController::class, 'updateRestoType']);
+                    Route::post('video', [FeRestoController::class, 'updateRestoVideo']);
                     Route::post('address', [FeRestoController::class, 'updateAddress']);
                     Route::post('phone', [FeRestoController::class, 'updatePhone']);
                     Route::post(
@@ -100,6 +101,10 @@ Route::middleware('api')->group(function () {
                     Route::post(
                         "listrik-air",
                         [FeRestoController::class, 'updateListrikAir']
+                    );
+                    Route::post(
+                        "info-lingkungan",
+                        [FeRestoController::class, 'updateLingkungan']
                     );
                 });
 

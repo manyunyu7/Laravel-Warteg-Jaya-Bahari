@@ -13,6 +13,7 @@ use App\Models\Restoran;
 use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,12 +36,11 @@ class FeRestoController extends Controller
             $perPage = 9999;
         }
 
-        $obj =  Restoran::where([
+        $obj = Restoran::where([
             ['name', 'LIKE', '%' . $name . '%'],
             ['type_food_id', 'LIKE', '%' . $type_food_id . '%'],
             ['certification_id', 'LIKE', '%' . $cert . '%'],
         ])->paginate($perPage, ['*'], 'page', $page);
-
 
 
         return $obj;
@@ -77,9 +77,47 @@ class FeRestoController extends Controller
         return Certification::all();
     }
 
+    public function updateRestoVideo(Request $request, $id)
+    {
+        $restaurant = Restoran::find($id);
+
+        if (!$restaurant) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restaurant not found',
+                'data' => null
+            ], 404);
+        }
+
+        $restaurant->video_youtube_link = $request->video_link;
+        if ($restaurant->save()) {
+            return response()->json([
+                'success' => true,
+                'status' => true,
+                'code' => 200,
+                'message' => 'Restaurant updated successfully',
+                'data' => $restaurant
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => false,
+                'code' => 500,
+                'message' => 'Failed to update restaurant image',
+                'data' => null
+            ], 500);
+        }
+    }
+
+
     public function myResto()
     {
         $obj = Restoran::where("user_id", "=", Auth::id())->get();
+
+        if(Auth::user()->roles_id=="5"){
+            $obj = Restoran::all();
+        }
 
         return response()->json([
             'success' => true,
@@ -105,6 +143,7 @@ class FeRestoController extends Controller
     {
         return Food::where("category_id", '=', $id)->get();
     }
+
     public function updateRestoCert(Request $request, $id)
     {
         $resto = Restoran::findOrFail($id);
@@ -126,6 +165,7 @@ class FeRestoController extends Controller
             ], 400);
         }
     }
+
     public function updateRestoType(Request $request, $id)
     {
         $resto = Restoran::findOrFail($id);
@@ -147,6 +187,7 @@ class FeRestoController extends Controller
             ], 400);
         }
     }
+
     public function updateAddress(Request $request, $id)
     {
         $resto = Restoran::findOrFail($id);
@@ -208,7 +249,12 @@ class FeRestoController extends Controller
         $perPage = $request->perPage;
         $object = new \stdClass();
         $masjidReviews = RestoranReview::where("restoran_id", '=', $restoId)->paginate($perPage, ['*'], 'page', $page);
-
+        if (Auth::user()->roles_id != 5) {
+            // If the roles_id of the authenticated user is NOT equal to 5
+            $masjidReviews = RestoranReview::where('restoran_id', '=', $restoId)
+                ->where('comment', '!=', '-')
+                ->paginate($perPage, ['*'], 'page', $page);
+        }
         $AllReviews = RestoranReview::where("restoran_id", '=', $restoId)->get();
         $reviewCount = $this->getReviewCount($AllReviews);
         $object->reviews = $masjidReviews;
@@ -519,6 +565,42 @@ class FeRestoController extends Controller
         } else {
             return response()->json([
                 'message' => 'Data Legal saved error',
+                'status' => false
+            ]);
+        }
+    }
+
+    public function updateLingkungan(Request $request, $id)
+    {
+        $resto_id = $id;
+        $existingRecord = DataBangunanResto::where('resto_id', $resto_id)->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+        } else {
+            $existingRecord = new DataBangunanResto();
+        }
+
+        $existingRecord->resto_id = $resto_id;
+        $existingRecord->{'is_alfamart_100_exist'} = $request->input('is_alfamart_100_exist', '');
+        $existingRecord->{'is_indomaret_100_exist'} = $request->input('is_indomaret_100_exist', '');
+        $existingRecord->{'is_spbu_100_exist'} = $request->input('is_spbu_100_exist', '');
+        $existingRecord->{'is_univ_100_exist'} = $request->input('is_univ_100_exist', '');
+        $existingRecord->{'is_counter_usaha_lain_100_exist'} = $request->input('is_counter_usaha_lain_100_exist', '');
+        $existingRecord->{'is_masjid_100_exist'} = $request->input('is_masjid_100_exist', '');
+        $existingRecord->{'is_gereja_100_exist'} = $request->input('is_gereja_100_exist', '');
+        $existingRecord->{'is_sekolah_100_exist'} = $request->input('is_sekolah_100_exist', '');
+        $existingRecord->{'is_bengkel_100_exist'} = $request->input('is_bengkel_100_exist', '');
+
+        if ($existingRecord->save()) {
+            return response()->json([
+                'message' => 'Data Lingkungan saved successfully',
+                'status' => true,
+                'data' => $existingRecord
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Data Lingkungan saved error',
                 'status' => false
             ]);
         }

@@ -15,7 +15,7 @@ class Restoran extends Model
         "server_time", "img_full_path", "data_bangunan",
         "certification_name", "food_type_name", "review_avg",
         "is_resto_schedule_open", "list_operating_hours",
-        "is_favorited", "is_claimed"
+        "is_favorited", "is_claimed","owner","owner_name"
     ];
 
     public function typeFood()
@@ -65,12 +65,12 @@ class Restoran extends Model
 
     public function getImgFullPathAttribute()
     {
-        if (str_contains($this->image, "/uploads"))
-            return url("") . "$this->image";
-        if (str_contains($this->image, "storage")) {
-            return asset("") . "/" . $this->image;
+        if (str_contains($this->image, "/uploads")) {
+            return url($this->image);
+        } elseif (str_contains($this->image, "storage")) {
+            return asset($this->image);
         } else {
-            return asset("") . "/storage/restoran/" . $this->image;
+            return asset("storage/restoran/" . $this->image);
         }
     }
 
@@ -200,5 +200,20 @@ class Restoran extends Model
     public function getDataBangunanAttribute()
     {
         return DataBangunanResto::where('resto_id', '=', $this->id)->first();
+    }
+
+    public function getOwnerAttribute()
+    {
+        return User::where('id', '=', $this->user_id)->first();
+    }
+
+    public function getOwnerNameAttribute()
+    {
+        $user = User::where('id', '=', $this->user_id)->first();
+        if($user!=null){
+            return $user->name;
+        }else{
+            return "";
+        }
     }
 }
