@@ -13,7 +13,7 @@ class AddFlagColumnToRestos extends Migration
      */
     public function up()
     {
-        Schema::table('restos', function (Blueprint $table) {
+        Schema::table('restorans', function (Blueprint $table) {
             $table->string('flag')->nullable()->after('address'); // Adjust 'column_name' to the column where you want the new column to be placed
         });
     }
@@ -25,7 +25,7 @@ class AddFlagColumnToRestos extends Migration
      */
     public function down()
     {
-        Schema::table('restos', function (Blueprint $table) {
+        Schema::table('restorans', function (Blueprint $table) {
             $table->dropColumn('flag');
         });
     }
