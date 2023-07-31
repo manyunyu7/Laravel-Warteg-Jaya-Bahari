@@ -78,12 +78,14 @@ Route::middleware('api')->group(function () {
                 Route::get('{id}/photos', [FeRestoController::class, 'getRestoPhotos']);
 
                 Route::get('{id}/getAllOrders', [FeOrderCartController::class, 'orderByResto']);
+                Route::get('flag', [FeRestoController::class, 'getFlag']);
 
 
                 Route::prefix("{id}/update")->group(function () {
                     Route::post('cert', [FeRestoController::class, 'updateRestoCert']);
                     Route::post('resto-type', [FeRestoController::class, 'updateRestoType']);
                     Route::post('video', [FeRestoController::class, 'updateRestoVideo']);
+                    Route::post('flag', [FeRestoController::class, 'updateFlag']);
                     Route::post('address', [FeRestoController::class, 'updateAddress']);
                     Route::post('phone', [FeRestoController::class, 'updatePhone']);
                     Route::post(

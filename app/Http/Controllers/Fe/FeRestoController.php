@@ -111,6 +111,46 @@ class FeRestoController extends Controller
     }
 
 
+    public function getFlag(Request $request, $id)
+    {
+        $restaurant = Restoran::where("flag",'=',$request->flag)->get();
+        return $restaurant;
+    }
+
+    public function updateFlag(Request $request, $id)
+    {
+        $restaurant = Restoran::find($id);
+
+        if (!$restaurant) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restaurant not found',
+                'data' => null
+            ], 404);
+        }
+
+        $restaurant->flag = $request->flag;
+        if ($restaurant->save()) {
+            return response()->json([
+                'success' => true,
+                'status' => true,
+                'code' => 200,
+                'message' => 'Restaurant updated successfully',
+                'data' => $restaurant
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => false,
+                'code' => 500,
+                'message' => 'Failed to update restaurant image',
+                'data' => null
+            ], 500);
+        }
+    }
+
+
     public function myResto()
     {
         $obj = Restoran::where("user_id", "=", Auth::id())->get();
