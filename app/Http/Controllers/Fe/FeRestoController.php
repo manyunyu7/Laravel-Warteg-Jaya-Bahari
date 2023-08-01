@@ -159,6 +159,7 @@ class FeRestoController extends Controller
 
         if (!$resto) {
             return response()->json([
+                'status' => false,
                 'success' => false,
                 'code' => 404,
                 'message' => 'Restaurant not found or you are not authorized to delete',
@@ -171,6 +172,7 @@ class FeRestoController extends Controller
         $resto->save();
 
         return response()->json([
+            'status' => true,
             'success' => true,
             'code' => 200,
             'message' => 'Restaurant soft deleted successfully',
