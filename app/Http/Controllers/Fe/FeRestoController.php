@@ -165,6 +165,10 @@ class FeRestoController extends Controller
             if($request->flag!="ALL"){
                 $obj->where("flag", "=", $request->flag);
             }
+
+            if($request->flag=="DRAFT"){
+                $obj->where("flag", "=", "DRAFT")->orWhereNull("flag");
+            }
         }
 
         // Get the result from the query builder
