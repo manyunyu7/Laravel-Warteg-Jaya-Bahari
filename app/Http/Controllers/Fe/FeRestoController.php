@@ -151,10 +151,10 @@ class FeRestoController extends Controller
         }
     }
 
-    public function deleteResto(Request $request)
+    public function deleteResto(Request $request,$id)
     {
         // Find the restaurant based on the 'id'
-        $resto = Restoran::where('id', $request->id)
+        $resto = Restoran::where('id', $id)
             ->first();
 
         if (!$resto) {
@@ -212,7 +212,7 @@ class FeRestoController extends Controller
             'data' => $result
         ], 200);
     }
-    
+
     public function getAllFoodOnResto($id)
     {
         $obj = Food::where("restoran_id", '=', $id)->get();

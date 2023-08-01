@@ -65,6 +65,7 @@ Route::middleware('api')->group(function () {
                 Route::get('cert', [FeRestoController::class, 'getAllCert']);
                 Route::get('all-raw', [FeRestoController::class, 'all-raw']);
                 Route::get('{id}/detail', [FeRestoController::class, 'getDetailRestaurant']);
+                Route::get('{id}/delete', [FeRestoController::class, 'deleteResto']);
                 Route::get('{id}/food-category', [FeRestoController::class, 'getAllFoodCategoryOnResto']);
                 Route::post('{id}/food-category', [FeRestoController::class, 'storeRestaurantCategory']);
                 Route::get('food/category/{id}', [FeRestoController::class, 'getFoodRestaurantByCategory']);
