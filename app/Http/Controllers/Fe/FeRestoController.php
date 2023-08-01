@@ -151,7 +151,7 @@ class FeRestoController extends Controller
         }
     }
 
-    public function deleteResto(Request $request,$id)
+    public function deleteResto(Request $request, $id)
     {
         // Find the restaurant based on the 'id'
         $resto = Restoran::where('id', $id)
@@ -193,9 +193,13 @@ class FeRestoController extends Controller
                 $obj->where("flag", "=", $request->flag);
             } else {
                 // If the flag is "ALL", check for "DRAFT" or empty/null
-                $obj->where(function ($query) {
-                    $query->where("flag", "=", "DRAFT")->orWhereNull("flag");
-                });
+
+                if ($request->flag == "DRAFT") {
+                    $obj->where(function ($query) {
+                        $query->where("flag", "=", "DRAFT")->orWhereNull("flag");
+                    });
+                }
+
             }
         }
 
