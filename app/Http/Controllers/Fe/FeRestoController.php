@@ -113,7 +113,7 @@ class FeRestoController extends Controller
 
     public function getFlag(Request $request, $id)
     {
-        $restaurant = Restoran::where("flag",'=',$request->flag)->get();
+        $restaurant = Restoran::where("flag", '=', $request->flag)->get();
         return $restaurant;
     }
 
@@ -151,22 +151,30 @@ class FeRestoController extends Controller
     }
 
 
-    public function myResto()
+    public function myResto(Request $request)
     {
-        $obj = Restoran::where("user_id", "=", Auth::id())->get();
-
-        if(Auth::user()->roles_id=="5"){
-            $obj = Restoran::all();
+        // Initialize the query builder based on user roles
+        if (Auth::user()->roles_id == "5") {
+            $obj = Restoran::query();
+        } else {
+            $obj = Restoran::where("user_id", "=", Auth::id());
         }
+
+        // Add the additional condition for the "label" field if the request parameter is not null
+        if ($request->label != null) {
+            $obj->where("label", "=", $request->label);
+        }
+
+        // Get the result from the query builder
+        $result = $obj->get();
 
         return response()->json([
             'success' => true,
             'code' => 200,
             'message' => 'success store masjid',
-            'data' => $obj
+            'data' => $result
         ], 200);
     }
-
     public function getAllFoodOnResto($id)
     {
         $obj = Food::where("restoran_id", '=', $id)->get();
