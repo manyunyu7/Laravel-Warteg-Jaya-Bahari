@@ -14,6 +14,7 @@ use App\Models\RestoranReview;
 use App\Models\RestoranReviewImage;
 use App\Models\TypeFood;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -150,6 +151,32 @@ class FeRestoController extends Controller
         }
     }
 
+    public function deleteResto(Request $request)
+    {
+        // Find the restaurant based on the 'id'
+        $resto = Restoran::where('id', $request->id)
+            ->first();
+
+        if (!$resto) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => 'Restaurant not found or you are not authorized to delete',
+                'data' => null
+            ], 404);
+        }
+
+        // Perform a soft delete by updating the 'deleted_at' column with the current datetime
+        $resto->deleted_at = Carbon::now();
+        $resto->save();
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Restaurant soft deleted successfully',
+            'data' => null
+        ], 200);
+    }
 
     public function myResto(Request $request)
     {
@@ -162,14 +189,18 @@ class FeRestoController extends Controller
 
         // Add the additional condition for the "label" field if the request parameter is not null
         if ($request->flag != null) {
-            if($request->flag!="ALL"){
+            if ($request->flag != "ALL") {
                 $obj->where("flag", "=", $request->flag);
-            }
-
-            if($request->flag=="DRAFT"){
-                $obj->where("flag", "=", "DRAFT")->orWhereNull("flag");
+            } else {
+                // If the flag is "ALL", check for "DRAFT" or empty/null
+                $obj->where(function ($query) {
+                    $query->where("flag", "=", "DRAFT")->orWhereNull("flag");
+                });
             }
         }
+
+        // Add the condition to filter soft-deleted records where 'deleted_at' is empty (null)
+        $obj->whereNull('deleted_at');
 
         // Get the result from the query builder
         $result = $obj->get();
@@ -181,6 +212,7 @@ class FeRestoController extends Controller
             'data' => $result
         ], 200);
     }
+    
     public function getAllFoodOnResto($id)
     {
         $obj = Food::where("restoran_id", '=', $id)->get();
