@@ -194,11 +194,11 @@ class FeRestoController extends Controller
             } else {
                 // If the flag is "ALL", check for "DRAFT" or empty/null
 
-                if ($request->flag == "DRAFT") {
-                    $obj->where(function ($query) {
-                        $query->where("flag", "=", "DRAFT")->orWhereNull("flag");
-                    });
-                }
+//                if ($request->flag == "DRAFT") {
+//                    $obj->where(function ($query) {
+//                        $query->where("flag", "=", "DRAFT")->orWhereNull("flag");
+//                    });
+//                }
 
             }
         }
