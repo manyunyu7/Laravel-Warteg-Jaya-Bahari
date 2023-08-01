@@ -163,6 +163,7 @@ class RestoranController extends Controller
 
         $status = $request->is_visible;
         $restoran = new Restoran();
+        $restoran->flag = "DRAFT";
         $restoran->name = $request->name ?? "";
         $restoran->user_id = Auth::id() ?? "";
         $restoran->type_food_id = $request->type_food_id ?? "";
