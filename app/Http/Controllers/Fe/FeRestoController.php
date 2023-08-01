@@ -161,8 +161,10 @@ class FeRestoController extends Controller
         }
 
         // Add the additional condition for the "label" field if the request parameter is not null
-        if ($request->label != null) {
-            $obj->where("label", "=", $request->label);
+        if ($request->flag != null) {
+            if($request->flag!="ALL"){
+                $obj->where("label", "=", $request->flag);
+            }
         }
 
         // Get the result from the query builder
