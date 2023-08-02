@@ -17,7 +17,7 @@ Route::middleware('api')->group(function () {
 
     Route::prefix('v1')->group(function () {
 
-        Route::get('surveyed-location', [FeAuthController::class, 'surveyedResto']);
+        Route::get('surveyed-location', [FeRestoController::class, 'surveyedResto']);
 
         Route::prefix("fe")->group(function () {
             Route::prefix('users')->group(function () {
