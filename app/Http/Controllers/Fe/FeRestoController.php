@@ -180,6 +180,25 @@ class FeRestoController extends Controller
         ], 200);
     }
 
+    public function surveyedResto(Request $request)
+    {
+        $obj = Restoran::query();
+        $obj->whereNull('deleted_at');
+
+        // Set the number of items per page (you can adjust this number based on your requirements)
+        $perPage = 10;
+
+        // Get the paginated result from the query builder
+        $result = $obj->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'success',
+            'data' => $result
+        ], 200);
+    }
+
     public function myResto(Request $request)
     {
         // Initialize the query builder based on user roles
