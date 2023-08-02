@@ -205,6 +205,11 @@ class FeRestoController extends Controller
             }
         }
 
+        if (Auth::user()->role == "5") {
+            // Remove the "DRAFT" flag from the result
+            $obj->where("flag", "!=", "DRAFT");
+        }
+
         // Add the condition to filter soft-deleted records where 'deleted_at' is empty (null)
         $obj->whereNull('deleted_at');
 
