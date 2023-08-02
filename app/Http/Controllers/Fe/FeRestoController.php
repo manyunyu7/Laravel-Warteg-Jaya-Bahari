@@ -205,7 +205,7 @@ class FeRestoController extends Controller
             }
         }
 
-        if (Auth::user()->role == "5") {
+        if (Auth::user()->roles_id == "5") {
             // Remove the "DRAFT" flag from the result
             $obj->where("flag", "!=", "DRAFT");
         }
